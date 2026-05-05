@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -9,16 +9,7 @@ import {
 } from '../../slices/notificationSlice';
 import { getNotificationIcon, getRouteForNotification, formatNotifDate } from '../../utils/notificationUtils';
 
-const TABS = ['All', 'Attendance', 'Timesheets', 'Leave', 'Lifecycle', 'Organization', 'Security'];
 
-const TAB_MAPPING = {
-  'Attendance': 'timetracker',
-  'Timesheets': 'timesheet',
-  'Leave': 'leave',
-  'Lifecycle': 'user',
-  'Organization': 'department',
-  'Security': 'security'
-};
 
 export default function NotificationsPage() {
   const dispatch = useDispatch();
@@ -27,11 +18,8 @@ export default function NotificationsPage() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   
-  const tabParam = searchParams.get('tab');
-  const initialTabIdx = tabParam ? TABS.indexOf(tabParam) : 0;
   const notifId = searchParams.get('id');
   
-  const [activeTab, setActiveTab] = useState(initialTabIdx !== -1 ? initialTabIdx : 0);
   const [page, setPage] = useState(1);
   const [selectedNotif, setSelectedNotif] = useState(null);
   const limit = 20;
@@ -47,25 +35,18 @@ export default function NotificationsPage() {
   }, [notifId, items]);
 
   useEffect(() => {
-    const params = { page, limit };
-    const mappedType = TAB_MAPPING[TABS[activeTab]];
-    if (mappedType) params.entityType = mappedType;
-    dispatch(fetchNotifications(params));
-  }, [activeTab, page, dispatch]);
+    dispatch(fetchNotifications({ page, limit }));
+  }, [page, dispatch]);
 
-  const handleTabChange = (idx) => {
-    setActiveTab(idx);
-    setSearchParams({ tab: TABS[idx] }, { replace: true });
-    setPage(1);
-  };
+
 
   const handleClick = (notif) => {
-    setSearchParams({ tab: TABS[activeTab], id: notif._id });
+    setSearchParams({ id: notif._id });
     if (!notif.isRead) dispatch(markAsRead(notif._id));
   };
 
   const handleBackToList = () => {
-    setSearchParams({ tab: TABS[activeTab] });
+    setSearchParams({});
   };
 
   const handleDelete = (e, id) => {
@@ -110,22 +91,7 @@ export default function NotificationsPage() {
             )}
           </div>
 
-          {/* Filtering Tabs - Multi-Category */}
-          <div className="flex flex-wrap gap-1 bg-gray-50 p-1 rounded-xl mb-1">
-            {TABS.map((tab, idx) => (
-              <button
-                key={tab}
-                onClick={() => handleTabChange(idx)}
-                className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
-                  activeTab === idx
-                    ? 'bg-white text-teal-600 shadow-sm border border-gray-100'
-                    : 'text-gray-400 hover:text-gray-600'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+
         </div>
 
         {/* Notification List Content */}
@@ -138,7 +104,7 @@ export default function NotificationsPage() {
 
           {!loading && items.length === 0 && (
             <div className="py-20 px-8 text-center">
-              <p className="text-sm text-gray-400">No {TABS[activeTab] !== 'All' ? TABS[activeTab] : ''} notifications.</p>
+              <p className="text-sm text-gray-400">No notifications.</p>
             </div>
           )}
 

@@ -323,19 +323,29 @@ exports.getAdminAttendanceSummary = catchAsync(async (req, res) => {
   const onLeaveUserIds = approvedLeaves.map(leave => leave.employee._id.toString());
 
   // 5. Categorize
-  const present = timeLogs.filter(log => log.status !== 'Leave'); // Only actual presence records
-  const onLeave = approvedLeaves.map(leave => ({
+  // Divide actual timeLogs into explicit categories
+  const present = timeLogs.filter(log => log.status !== 'Absent' && log.status !== 'Leave' && log.status !== 'On Leave');
+  const explicitAbsentLogs = timeLogs.filter(log => log.status === 'Absent');
+  const explicitLeaveLogs = timeLogs.filter(log => log.status === 'Leave' || log.status === 'On Leave');
+
+  // Virtual leaves (approved LeaveRequest where there is no explicit timeLog on that day)
+  const virtualLeaves = approvedLeaves
+    .filter(leave => !presentUserIds.includes(leave.employee._id.toString()))
+    .map(leave => ({
       user: leave.employee,
       status: 'On Leave',
       leaveType: leave.leaveType,
       date: targetDateStart
-  }));
+    }));
 
-  // ABSENT Logic: Filter out those who haven't joined yet
-  const absentUsers = usersInScope.filter(u => {
-      const isPresent = presentUserIds.includes(u._id.toString());
-      const isOnLeave = onLeaveUserIds.includes(u._id.toString());
-      if (isPresent || isOnLeave) return false;
+  const onLeave = [...explicitLeaveLogs, ...virtualLeaves];
+
+  // Virtual absent (users with no timeLog on that day, no approved leave, and have joined)
+  const virtualAbsent = usersInScope.filter(u => {
+      const uId = u._id.toString();
+      const hasLog = presentUserIds.includes(uId);
+      const isOnLeave = onLeaveUserIds.includes(uId);
+      if (hasLog || isOnLeave) return false;
 
       // Check joining date
       if (u.joiningDate) {
@@ -349,14 +359,16 @@ exports.getAdminAttendanceSummary = catchAsync(async (req, res) => {
       date: targetDateStart
   }));
 
+  const absent = [...explicitAbsentLogs, ...virtualAbsent];
+
   res.status(200).json({
     present,
     onLeave,
-    absent: absentUsers,
+    absent,
     counts: {
       present: present.length,
       onLeave: onLeave.length,
-      absent: absentUsers.length,
+      absent: absent.length,
       total: usersInScope.length
     }
   });

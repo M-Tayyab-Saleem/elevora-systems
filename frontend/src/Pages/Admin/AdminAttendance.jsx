@@ -203,8 +203,20 @@ const AdminAttendance = () => {
         updates.totalHours = totalHours;
       }
 
-      await api.put(`/timetrackers/${editingLog._id}`, updates);
-      toast.success("Attendance updated successfully");
+      if (editingLog._id) {
+        await api.put(`/timetrackers/${editingLog._id}`, updates);
+        toast.success("Attendance updated successfully");
+      } else {
+        await api.post("/timetrackers", {
+          user: editingLog.user?._id,
+          checkInTime: updates.checkInTime,
+          checkOutTime: updates.checkOutTime,
+          status: updates.status,
+          totalHours: updates.totalHours,
+          date: editingLog.date || filterDate
+        });
+        toast.success("Attendance record created successfully");
+      }
       setIsEditModalOpen(false);
       await fetchSummary(filterDate);
     } catch (error) {

@@ -48,6 +48,7 @@ exports.createExpense = catchAsync(async (req, res, next) => {
     receiptPublicId: req.file.blobName || req.file.filename,
     blobName: req.file.blobName,
     submittedBy: req.user._id,
+    company: req.companyId,
     submittedByName: user.name,
   });
 
@@ -87,6 +88,7 @@ exports.createExpense = catchAsync(async (req, res, next) => {
 // @access  Private
 exports.getAllExpenses = catchAsync(async (req, res, next) => {
   const scope = await getSearchScope(req.user, "expense");
+  scope.company = req.companyId;
   
   const features = new APIFeatures(Expense.find(scope), req.query)
     .filter()
@@ -118,6 +120,7 @@ exports.getPendingExpenses = catchAsync(async (req, res, next) => {
   }
 
   const scope = await getSearchScope(req.user, "expense");
+  scope.company = req.companyId;
   const expenses = await Expense.find({ ...scope, status: "pending" }).sort("-createdAt");
 
   res.status(200).json({
@@ -144,7 +147,7 @@ exports.getMyExpenses = catchAsync(async (req, res, next) => {
 // @route   GET /api/web/expenses/:id
 // @access  Private
 exports.getExpenseById = catchAsync(async (req, res, next) => {
-  const expense = await Expense.findById(req.params.id);
+  const expense = await Expense.findOne({ _id: req.params.id, company: req.companyId });
 
   if (!expense) {
     throw new NotFoundError("Expense");
@@ -166,7 +169,7 @@ exports.getExpenseById = catchAsync(async (req, res, next) => {
 // @route   PUT /api/web/expenses/:id
 // @access  Private
 exports.updateExpense = catchAsync(async (req, res, next) => {
-  const expense = await Expense.findById(req.params.id);
+  const expense = await Expense.findOne({ _id: req.params.id, company: req.companyId });
 
   if (!expense) {
     throw new NotFoundError("Expense");
@@ -204,8 +207,8 @@ exports.updateExpense = catchAsync(async (req, res, next) => {
   }
 
   // Update expense
-  const updatedExpense = await Expense.findByIdAndUpdate(
-    req.params.id,
+  const updatedExpense = await Expense.findOneAndUpdate(
+    { _id: req.params.id, company: req.companyId },
     updates,
     {
       new: true,
@@ -247,7 +250,7 @@ exports.approveExpense = catchAsync(async (req, res, next) => {
     throw new ForbiddenError("You do not have permission to approve expenses");
   }
 
-  const expense = await Expense.findById(req.params.id);
+  const expense = await Expense.findOne({ _id: req.params.id, company: req.companyId });
 
   if (!expense) {
     throw new NotFoundError("Expense");
@@ -309,7 +312,7 @@ exports.rejectExpense = catchAsync(async (req, res, next) => {
     throw new BadRequestError("Rejection reason is required");
   }
 
-  const expense = await Expense.findById(req.params.id);
+  const expense = await Expense.findOne({ _id: req.params.id, company: req.companyId });
 
   if (!expense) {
     throw new NotFoundError("Expense");
@@ -359,7 +362,7 @@ exports.rejectExpense = catchAsync(async (req, res, next) => {
 // @route   DELETE /api/web/expenses/:id
 // @access  Private (Superadmin or Manager for pending expenses)
 exports.deleteExpense = catchAsync(async (req, res, next) => {
-  const expense = await Expense.findById(req.params.id);
+  const expense = await Expense.findOne({ _id: req.params.id, company: req.companyId });
 
   if (!expense) {
     throw new NotFoundError("Expense");
@@ -415,6 +418,7 @@ exports.getExpenseStats = catchAsync(async (req, res, next) => {
   }
 
   const scope = await getSearchScope(req.user, "expense");
+  scope.company = req.companyId;
 
   const stats = await Expense.aggregate([
     {
@@ -548,6 +552,34 @@ exports.processReceipt = catchAsync(async (req, res, next) => {
       throw new BadRequestError("Could not extract data from the image. Please ensure the image is clear and try again.");
     }
 
-    throw new BadRequestError(error.message || "Failed to process receipt");
+    throw new BadRequestError("Error processing document: " + error.message);
   }
+});
+
+// @desc    Export expenses
+// @route   GET /api/web/expenses/export
+// @access  Private (Admin/Superadmin)
+exports.exportExpenses = catchAsync(async (req, res, next) => {
+  const userRole = req.user.role.replace(/\s+/g, '').toLowerCase();
+  if (userRole !== 'admin' && userRole !== 'superadmin') {
+    throw new ForbiddenError("You do not have permission to export expenses");
+  }
+
+  const scope = await getSearchScope(req.user, "expense");
+  scope.company = req.companyId;
+  
+  const expenses = await Expense.find(scope)
+    .populate('submittedBy', 'name email department')
+    .sort('-createdAt');
+
+  // Convert to CSV
+  let csv = 'Employee,Email,Title,Category,Amount,Date,Status,Created At\n';
+  expenses.forEach(e => {
+    const emp = e.submittedBy || {};
+    csv += `"${emp.name || e.submittedByName}","${emp.email || ''}","${(e.title || '').replace(/"/g, '""')}","${e.category}","${e.amount}","${e.createdAt ? new Date(e.createdAt).toLocaleDateString() : ''}","${e.status}","${e.createdAt}"\n`;
+  });
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename=expenses.csv');
+  res.status(200).send(csv);
 });

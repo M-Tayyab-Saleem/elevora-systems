@@ -42,6 +42,7 @@ exports.createLeaveRequest = catchAsync(async (req, res) => {
  
   const existingLeaves = await LeaveRequest.find({
     employee: user._id,
+    company: req.companyId,
     status: { $in: ["Pending", "Approved"] }
   });
 
@@ -59,6 +60,7 @@ exports.createLeaveRequest = catchAsync(async (req, res) => {
  
   const leaveRequest = new LeaveRequest({
     employee: user._id,
+    company: req.companyId,
     employeeName: user.name,
     email: user.email,
     leaveType,
@@ -103,7 +105,8 @@ exports.createLeaveRequest = catchAsync(async (req, res) => {
   // In-app notification: notify HR/Admin/Manager users
   try {
     const hrManagers = await User.find({
-      $or: [{ role: 'HR' }, { role: 'Super Admin' }, { role: 'Admin' }]
+      $or: [{ role: 'HR' }, { role: 'Super Admin' }, { role: 'Admin' }],
+      company: req.companyId
     }).select('_id');
 
     const notifPromises = hrManagers.map(mgr =>
@@ -127,7 +130,7 @@ exports.getLeaveRequestResponses = catchAsync(async (req, res) => {
   const { id } = req.params;
  
   // Find leave request with populated responses
-  const leaveRequest = await LeaveRequest.findById(id)
+  const leaveRequest = await LeaveRequest.findOne({ _id: id, company: req.companyId })
     .populate('responses.author', 'name email avatar role')
     .select('responses employee status');
  
@@ -167,7 +170,7 @@ exports.updateLeaveResponse = catchAsync(async (req, res) => {
   }
  
   // Find the leave request
-  const leaveRequest = await LeaveRequest.findById(id);
+  const leaveRequest = await LeaveRequest.findOne({ _id: id, company: req.companyId });
   if (!leaveRequest) throw new NotFoundError("Leave request");
  
   // Find the specific response
@@ -190,7 +193,7 @@ exports.updateLeaveResponse = catchAsync(async (req, res) => {
   await leaveRequest.save();
  
   // Populate for response
-  const populatedLeaveRequest = await LeaveRequest.findById(id)
+  const populatedLeaveRequest = await LeaveRequest.findOne({ _id: id, company: req.companyId })
     .populate('responses.author', 'name email avatar role');
  
   res.status(200).json({
@@ -206,14 +209,16 @@ exports.getLeaveRequests = catchAsync(async (req, res) => {
   const currentUserId = req.user.id || req.user._id;
  
   if (roleKey === 'superadmin' || roleKey === 'hr') {
-      baseQuery = {};
+      baseQuery = { company: req.companyId };
   }
   else if (roleKey === 'manager' || roleKey === 'admin') {
       const fullTeamIds = await getTeamIds(currentUserId);
       baseQuery.employee = { $in: fullTeamIds };
+      baseQuery.company = req.companyId;
   }
   else {
       baseQuery.employee = currentUserId;
+      baseQuery.company = req.companyId;
   }
  
   const features = new APIFeatures(
@@ -243,7 +248,7 @@ exports.getLeaveRequests = catchAsync(async (req, res) => {
  
 // --- GET SINGLE LEAVE REQUEST WITH RESPONSES ---
 exports.getLeaveRequestById = catchAsync(async (req, res) => {
-  const leaveRequest = await LeaveRequest.findById(req.params.id)
+  const leaveRequest = await LeaveRequest.findOne({ _id: req.params.id, company: req.companyId })
     .populate('employee', 'name email avatar department position')
     .populate('responses.author', 'name email avatar role');
    
@@ -273,7 +278,7 @@ exports.getLeaveRequestById = catchAsync(async (req, res) => {
  
 // --- UPDATE LEAVE REQUEST ---
 exports.updateLeaveRequest = catchAsync(async (req, res) => {
-  const leaveRequest = await LeaveRequest.findById(req.params.id);
+  const leaveRequest = await LeaveRequest.findOne({ _id: req.params.id, company: req.companyId });
   if (!leaveRequest) throw new NotFoundError("Leave request");
 
   // Check if user has permission to update
@@ -337,7 +342,7 @@ exports.addLeaveResponse = catchAsync(async (req, res) => {
     throw new BadRequestError("Response content is required");
   }
  
-  const leaveRequest = await LeaveRequest.findById(id);
+  const leaveRequest = await LeaveRequest.findOne({ _id: id, company: req.companyId });
   if (!leaveRequest) throw new NotFoundError("Leave request");
  
   const currentUser = await User.findById(req.user.id);
@@ -435,7 +440,7 @@ exports.addLeaveResponse = catchAsync(async (req, res) => {
 exports.deleteLeaveResponse = catchAsync(async (req, res) => {
   const { id, responseId } = req.params;
  
-  const leaveRequest = await LeaveRequest.findById(id);
+  const leaveRequest = await LeaveRequest.findOne({ _id: id, company: req.companyId });
   if (!leaveRequest) throw new NotFoundError("Leave request");
  
   const response = leaveRequest.responses.id(responseId);
@@ -468,7 +473,7 @@ exports.updateLeaveStatus = catchAsync(async (req, res) => {
  
   if (!["Pending", "Approved", "Rejected"].includes(status)) throw new BadRequestError("Invalid status");
  
-  const leaveRequest = await LeaveRequest.findById(id);
+  const leaveRequest = await LeaveRequest.findOne({ _id: id, company: req.companyId });
   if (!leaveRequest) throw new NotFoundError("Leave request not found");
  
   const roleKey = req.user.role.replace(/\s+/g, '').toLowerCase();
@@ -599,7 +604,7 @@ exports.updateLeaveStatus = catchAsync(async (req, res) => {
  
 // --- DELETE LEAVE REQUEST ---
 exports.deleteLeaveRequest = catchAsync(async (req, res) => {
-  const leaveRequest = await LeaveRequest.findById(req.params.id);
+  const leaveRequest = await LeaveRequest.findOne({ _id: req.params.id, company: req.companyId });
   if (!leaveRequest) throw new NotFoundError("Leave request");
  
   // Check if user has permission to delete
@@ -642,7 +647,7 @@ exports.deleteLeaveRequest = catchAsync(async (req, res) => {
     });
   }
  
-  await LeaveRequest.findByIdAndDelete(req.params.id);
+  await LeaveRequest.findOneAndDelete({ _id: req.params.id, company: req.companyId });
   res.json({ success: true, message: "Leave request deleted" });
 });
  
@@ -670,7 +675,8 @@ const sendLeaveCreationNotification = async (leaveRequest) => {
       { role: 'HR' },
       { role: 'Super Admin' },
       { role: 'Admin' }
-    ]
+    ],
+    company: leaveRequest.company
   });
  
   const recipientEmails = hrAndManagers.map(user => user.email);
@@ -861,3 +867,114 @@ const generateLeaveResponseEmailTemplate = (leaveRequest, responder, responseCon
     </html>
   `;
 };
+
+// --- GET LEAVE BALANCE ---
+exports.getLeaveBalance = catchAsync(async (req, res) => {
+  const user = await User.findById(req.user.id || req.user._id);
+  if (!user) throw new NotFoundError("User not found");
+
+  res.json({
+    success: true,
+    data: {
+      leaves: user.leaves || {},
+      bookedLeaves: user.bookedLeaves || 0,
+      avalaibleLeaves: user.avalaibleLeaves || 0
+    }
+  });
+});
+
+// --- BULK UPDATE STATUS ---
+exports.bulkUpdateStatus = catchAsync(async (req, res) => {
+  const { ids, status } = req.body;
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    throw new BadRequestError("No leave IDs provided");
+  }
+  if (!["Pending", "Approved", "Rejected"].includes(status)) {
+    throw new BadRequestError("Invalid status");
+  }
+
+  const roleKey = req.user.role.replace(/\s+/g, '').toLowerCase();
+  if (!['superadmin', 'admin', 'hr'].includes(roleKey)) {
+     throw new ForbiddenError("Managers have read-only access to leaves. Contact HR for approvals.");
+  }
+
+  const results = [];
+  for (const id of ids) {
+    try {
+      // Mock req and res for updateLeaveStatus logic
+      // It's cleaner to just update it directly here
+      const leaveRequest = await LeaveRequest.findOne({ _id: id, company: req.companyId });
+      if (!leaveRequest || leaveRequest.status === status) continue;
+
+      // Ensure admin team hierarchy
+      if (roleKey === 'admin') {
+         const adminTeam = await getTeamIds(req.user.id || req.user._id);
+         if (!adminTeam.includes(leaveRequest.employee.toString())) continue;
+      }
+
+      const daysDiff = calculateBusinessDays(leaveRequest.startDate, leaveRequest.endDate);
+      const updateObj = { $set: { "leaveHistory.$[elem].status": status } };
+      const oldStatus = leaveRequest.status;
+
+      if (status === "Rejected" && oldStatus !== "Rejected") {
+        updateObj.$inc = {
+          [`leaves.${leaveRequest.leaveType.toLowerCase()}`]: daysDiff,
+          bookedLeaves: -daysDiff,
+          avalaibleLeaves: daysDiff
+        };
+      } else if (status === "Approved" && oldStatus === "Rejected") {
+        updateObj.$inc = {
+          [`leaves.${leaveRequest.leaveType.toLowerCase()}`]: -daysDiff,
+          bookedLeaves: daysDiff,
+          avalaibleLeaves: -daysDiff
+        };
+      }
+
+      await User.findByIdAndUpdate(leaveRequest.employee, updateObj, {
+        arrayFilters: [{ "elem.leaveId": leaveRequest._id }]
+      });
+
+      leaveRequest.status = status;
+      await leaveRequest.save();
+      results.push(id);
+    } catch (err) {
+      console.error("Bulk update error for id", id, err);
+    }
+  }
+
+  res.json({
+    success: true,
+    message: `Successfully updated ${results.length} requests to ${status}`,
+    data: results
+  });
+});
+
+// --- EXPORT LEAVES ---
+exports.exportLeaves = catchAsync(async (req, res) => {
+  const roleKey = req.user.role.replace(/\s+/g, '').toLowerCase();
+  let baseQuery = { company: req.companyId };
+  
+  if (!['superadmin', 'hr', 'admin'].includes(roleKey)) {
+    throw new ForbiddenError("You don't have permission to export leaves");
+  }
+
+  if (roleKey === 'admin') {
+    const fullTeamIds = await getTeamIds(req.user.id || req.user._id);
+    baseQuery.employee = { $in: fullTeamIds };
+  }
+
+  const leaves = await LeaveRequest.find(baseQuery)
+    .populate('employee', 'name email department')
+    .sort('-createdAt');
+
+  // Convert to CSV
+  let csv = 'Employee,Email,Department,Leave Type,Start Date,End Date,Reason,Status,Applied At\n';
+  leaves.forEach(l => {
+    const emp = l.employee || {};
+    csv += `"${emp.name || l.employeeName}","${emp.email || l.email}","${emp.department || ''}","${l.leaveType}","${l.startDate}","${l.endDate}","${(l.reason || '').replace(/"/g, '""')}","${l.status}","${l.appliedAt}"\n`;
+  });
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename=leaves.csv');
+  res.status(200).send(csv);
+});

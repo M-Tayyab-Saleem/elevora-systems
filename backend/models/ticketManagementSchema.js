@@ -10,6 +10,12 @@ const ticketSchema = new mongoose.Schema({
     ref: 'User',
     required: false 
   },
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+    required: true,
+    index: true
+  },
   subject: {
     type: String,
     required: true

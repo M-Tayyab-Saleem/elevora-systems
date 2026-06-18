@@ -26,6 +26,31 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: "Employee",
     },
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: false, // Make false for backward compatibility if needed, but optimally true
+      index: true
+    },
+    theme: {
+      type: String,
+      enum: ['light', 'dark', 'violet', 'slate', 'system'],
+      default: 'system'
+    },
+    notificationPreferences: {
+      email: {
+        ticketUpdates: { type: Boolean, default: true },
+        leaveApprovals: { type: Boolean, default: true },
+        expenseUpdates: { type: Boolean, default: true },
+        dailyDigest: { type: Boolean, default: false }
+      },
+      push: {
+        ticketUpdates: { type: Boolean, default: true },
+        leaveApprovals: { type: Boolean, default: true },
+        expenseUpdates: { type: Boolean, default: true },
+        directMessages: { type: Boolean, default: true }
+      }
+    },
     // --- NEW FIELD: DUAL ROLE SUPPORT ---
     isTechnician: {
       type: Boolean,

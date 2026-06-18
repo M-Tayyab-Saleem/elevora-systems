@@ -21,6 +21,7 @@ exports.createTicket = catchAsync(async (req, res) => {
     subject,
     description,
     ticketID,
+    company: req.companyId,
     attachments: [],
     closedBy: req.user?.id,
     assignedTo: null
@@ -51,7 +52,8 @@ const admins = await User.find({
       role: 'Manager',
       isTechnician: true
     }
-  ]
+  ],
+  company: req.companyId
 });  
 const adminEmails = admins.map(admin => admin.email);
   const recipients = [...new Set([emailAddress, ...adminEmails])];
@@ -74,7 +76,7 @@ const adminEmails = admins.map(admin => admin.email);
  
 // --- 2. GET ALL TICKETS (The Global Fetch) ---
 exports.getAllTickets = catchAsync(async (req, res) => {
-  let query = {};
+  let query = { company: req.companyId };
  
   // --- REFINED RBAC LOGIC ---
   const isSuperAdmin = req.user.role === 'Super Admin';
@@ -115,18 +117,31 @@ exports.getAllTickets = catchAsync(async (req, res) => {
   res.status(200).json(tickets);
 });
  
-// --- 3. GET TICKETS FOR USER ---
-exports.getUserTickets = catchAsync(async (req, res) => {
-  const email = req.query.email;
-  const tickets = await Ticket.find({ email })
+// --- 3. GET MY TICKETS ---
+exports.getMyTickets = catchAsync(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const tickets = await Ticket.find({ closedBy: req.user.id, company: req.companyId })
     .populate('closedBy')
-    .populate('assignedTo');
-  res.status(200).json(tickets);
+    .populate('assignedTo')
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Ticket.countDocuments({ closedBy: req.user.id, company: req.companyId });
+
+  res.status(200).json({
+    success: true,
+    data: tickets,
+    pagination: { total, page, limit }
+  });
 });
  
 // --- 4. GET SINGLE TICKET ---
 exports.getTicketById = catchAsync(async (req, res) => {
-  const ticket = await Ticket.findById(req.params.id)
+  const ticket = await Ticket.findOne({ _id: req.params.id, company: req.companyId })
     .populate('closedBy', 'name email avatar')
     .populate('assignedTo', 'name email avatar');
    
@@ -139,7 +154,7 @@ exports.updateTicket = catchAsync(async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
  
-  const ticket = await Ticket.findById(id);
+  const ticket = await Ticket.findOne({ _id: id, company: req.companyId });
   if (!ticket) throw new NotFoundError("Ticket");
  
   Object.assign(ticket, updates);
@@ -150,7 +165,7 @@ exports.updateTicket = catchAsync(async (req, res) => {
  
 // --- 6. DELETE TICKET ---
 exports.deleteTicket = catchAsync(async (req, res) => {
-  const ticket = await Ticket.findById(req.params.id);
+  const ticket = await Ticket.findOne({ _id: req.params.id, company: req.companyId });
   if (!ticket) throw new NotFoundError("Ticket");
 
   // Notify creator before deletion
@@ -187,7 +202,7 @@ exports.updateTicketStatus = catchAsync(async (req, res) => {
     return res.status(400).json({ message: "Invalid status. Use: Open, In Progress, or Closed" });
   }
  
-  const ticket = await Ticket.findById(id).populate('closedBy', '_id');
+  const ticket = await Ticket.findOne({ _id: id, company: req.companyId }).populate('closedBy', '_id');
   
   if (!ticket) {
     return res.status(404).json({ message: "Ticket not found" });
@@ -239,8 +254,8 @@ exports.updateTicketPriority = catchAsync(async (req, res) => {
     return res.status(400).json({ message: "Invalid priority" });
   }
  
-  const ticket = await Ticket.findByIdAndUpdate(
-    id,
+  const ticket = await Ticket.findOneAndUpdate(
+    { _id: id, company: req.companyId },
     { priority },
     { new: true }
   );
@@ -279,7 +294,7 @@ exports.updateTicketAssignee = catchAsync(async (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
  
-  const ticket = await Ticket.findById(id);
+  const ticket = await Ticket.findOne({ _id: id, company: req.companyId });
   if (!ticket) {
     return res.status(404).json({ message: "Ticket not found" });
   }
@@ -290,8 +305,8 @@ exports.updateTicketAssignee = catchAsync(async (req, res) => {
     throw new ForbiddenError("You cannot assign or be assigned to your own ticket.");
   }
 
-  const ticketUpdated = await Ticket.findByIdAndUpdate(
-    id,
+  const ticketUpdated = await Ticket.findOneAndUpdate(
+    { _id: id, company: req.companyId },
     { assignedTo },
     { new: true }
   ).populate('assignedTo');
@@ -323,7 +338,7 @@ exports.addTicketResponse = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { content, avatar } = req.body;
  
-  const ticket = await Ticket.findById(id);
+  const ticket = await Ticket.findOne({ _id: id, company: req.companyId });
   if (!ticket) throw new NotFoundError("Ticket");
  
   const newResponse = {
@@ -359,7 +374,7 @@ exports.addTicketResponse = catchAsync(async (req, res) => {
 exports.downloadTicketAttachment = catchAsync(async (req, res) => {
   const { id, attachmentId } = req.params;
  
-  const ticket = await Ticket.findById(id);
+  const ticket = await Ticket.findOne({ _id: id, company: req.companyId });
   if (!ticket) throw new NotFoundError("Ticket");
  
   const attachment = ticket.attachments.id(attachmentId);

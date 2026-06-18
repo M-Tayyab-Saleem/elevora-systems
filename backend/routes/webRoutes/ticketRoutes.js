@@ -17,6 +17,7 @@ const { isLoggedIn } = require("../../middlewares/authMiddleware");
 
 // --- FIX: Specific routes must come BEFORE dynamic routes like /:id ---
 router.get("/all", isLoggedIn, ticketController.getAllTickets); 
+router.get("/my-tickets", isLoggedIn, ticketController.getMyTickets);
 
 router.route("/")
   .post(isLoggedIn, handleUpload(upload.array("attachments", 5)), validate(createTicketSchema), ticketController.createTicket)

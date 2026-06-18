@@ -1,4 +1,3 @@
-// projectController.js
 const Project = require("../models/projectSchema");
 const Task = require("../models/taskSchema");
 const catchAsync = require("../utils/catchAsync");
@@ -19,11 +18,11 @@ exports.createProject = catchAsync(async (req, res) => {
     isPublic,
     startDate,
     dueDate,
+    company: req.companyId,
   });
 
   const savedProject = await project.save();
 
-  // Notify all initial team members they've been added
   if (savedProject.team && savedProject.team.length > 0) {
     savedProject.team.forEach(memberId => {
       createNotification({
@@ -36,38 +35,72 @@ exports.createProject = catchAsync(async (req, res) => {
     });
   }
 
-  res.status(201).json(savedProject);
+  res.status(201).json({ status: 'success', data: savedProject, message: 'Created successfully' });
 });
 
 // Get All Projects
 exports.getAllProjects = catchAsync(async (req, res) => {
-  const projects = await Project.find()
-    .populate("team", "name email")
-    .populate("owner", "name email");
-  res.status(200).json(projects);
+  const { page = 1, limit = 20, search = '', status, myProjects } = req.query;
+  const skip = (page - 1) * limit;
+
+  const userId = req.user.id || req.user._id;
+
+  const filter = {
+    company: req.companyId,
+    ...(status && { status }),
+    ...(search && {
+      $or: [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ]
+    }),
+    ...(myProjects === 'true' && {
+      $or: [{ owner: userId }, { team: userId }],
+    })
+  };
+
+  const [data, total] = await Promise.all([
+    Project.find(filter)
+      .populate("team", "name email avatar")
+      .populate("owner", "name email avatar")
+      .skip(skip)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 }),
+    Project.countDocuments(filter)
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data,
+    pagination: {
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      pages: Math.ceil(total / limit)
+    }
+  });
 });
 
 // Get Project by ID
 exports.getProjectById = catchAsync(async (req, res) => {
-  const project = await Project.findById(req.params.id)
-    .populate("team", "name email")
-    .populate("owner", "name email");
+  const project = await Project.findOne({ _id: req.params.id, company: req.companyId })
+    .populate("team", "name email avatar")
+    .populate("owner", "name email avatar");
 
   if (!project) throw new NotFoundError("Project");
 
-  res.status(200).json(project);
+  res.status(200).json({ status: 'success', data: project });
 });
 
 // Update Project
 exports.updateProject = catchAsync(async (req, res) => {
   const { title, description, team, status, strict, isPublic, startDate, dueDate } = req.body;
 
-  const project = await Project.findById(req.params.id);
+  const project = await Project.findOne({ _id: req.params.id, company: req.companyId });
   if (!project) throw new NotFoundError("Project");
 
   const previousTeam = project.team.map(id => id.toString());
 
-  // Update fields
   project.title = title || project.title;
   project.description = description || project.description;
   project.team = team || project.team;
@@ -79,7 +112,6 @@ exports.updateProject = catchAsync(async (req, res) => {
 
   const updatedProject = await project.save();
 
-  // Notify newly added team members
   if (team && team.length > 0) {
     const newMembers = team.filter(id => !previousTeam.includes(id.toString()));
     newMembers.forEach(memberId => {
@@ -93,7 +125,6 @@ exports.updateProject = catchAsync(async (req, res) => {
     });
   }
 
-  // Notify team on status change
   if (status && status !== project.status) {
     const recipients = [...new Set([...updatedProject.team.map(id => id.toString()), updatedProject.owner.toString()])];
     recipients.forEach(memberId => {
@@ -107,21 +138,19 @@ exports.updateProject = catchAsync(async (req, res) => {
     });
   }
 
-  res.status(200).json(updatedProject);
+  res.status(200).json({ status: 'success', data: updatedProject, message: 'Updated successfully' });
 });
 
 // Delete Project
 exports.deleteProject = catchAsync(async (req, res) => {
-  const project = await Project.findById(req.params.id);
+  const project = await Project.findOne({ _id: req.params.id, company: req.companyId });
   if (!project) throw new NotFoundError("Project");
 
-  // Check if there are tasks associated with this project
-  const tasksCount = await Task.countDocuments({ project: project._id });
+  const tasksCount = await Task.countDocuments({ project: project._id, company: req.companyId });
   if (tasksCount > 0) {
     throw new BadRequestError("Cannot delete project with associated tasks");
   }
 
-  // Notify team and manager before deletion
   const recipients = [...new Set([...project.team.map(id => id.toString()), project.owner.toString()])];
   recipients.forEach(memberId => {
     createNotification({
@@ -129,13 +158,12 @@ exports.deleteProject = catchAsync(async (req, res) => {
       type: 'PROJECT_DELETED',
       title: 'Project Deleted',
       message: `Project "${project.title}" has been deleted or archived.`,
-      // relatedEntity is tricky for deleted projects, but we can pass the ID for historical reference
       relatedEntity: { entityType: 'project', entityId: project._id },
     }).catch(err => console.error('Notification failed:', err));
   });
 
   await project.deleteOne();
-  res.status(200).json({ message: "Project deleted successfully" });
+  res.status(200).json({ status: 'success', message: "Project deleted successfully", data: null });
 });
 
 // Get Projects for User
@@ -143,10 +171,11 @@ exports.getUserProjects = catchAsync(async (req, res) => {
   const userId = req.user.id || req.user._id;
 
   const projects = await Project.find({
+    company: req.companyId,
     $or: [{ owner: userId }, { team: userId }],
   })
-    .populate("team", "name email")
-    .populate("owner", "name email");
+    .populate("team", "name email avatar")
+    .populate("owner", "name email avatar");
 
-  res.status(200).json(projects);
+  res.status(200).json({ status: 'success', data: projects });
 });

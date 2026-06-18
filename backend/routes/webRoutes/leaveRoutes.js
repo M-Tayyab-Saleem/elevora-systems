@@ -10,6 +10,10 @@ router.use(isLoggedIn);
  
 // --- FIX: Add the specific route the frontend is calling ---
 router.get("/getAllLeaves", leaveController.getLeaveRequests);
+router.get("/team", leaveController.getLeaveRequests); // Same logic handles team hierarchy
+router.get("/my-balance", leaveController.getLeaveBalance);
+router.patch("/bulk-status", leaveController.bulkUpdateStatus);
+router.get("/export", leaveController.exportLeaves);
  
 // Main leave request routes
 router
@@ -26,6 +30,7 @@ router
  
 // Status update route
 router.put("/:id/status", leaveController.updateLeaveStatus);
+router.patch("/:id/status", leaveController.updateLeaveStatus);
  
 // ============================================
 // RESPONSE ROUTES (NEW ADDITIONS)

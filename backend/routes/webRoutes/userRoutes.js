@@ -2,7 +2,18 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { userProfileStorage } = require("../../storageConfig");
-const upload = multer({ storage: userProfileStorage });
+const upload = multer({ 
+  storage: userProfileStorage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (allowed.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only .jpeg, .png, and .webp formats allowed!'), false);
+    }
+  }
+});
 const userController = require("../../controllers/userController");
 const todoController = require("../../controllers/todoController");
 const { userUpdateSchema } = require("../../JoiSchema/UserJoiSchema");
@@ -31,6 +42,12 @@ router.post('/:id/upload-cover', isLoggedIn, upload.single('coverImage'), userCo
 
 // Search & Specific User
 router.route("/search").get(isLoggedIn, userController.getUserById);
+
+// My Profile & Settings (Must come before /:id)
+router.put('/profile', isLoggedIn, userController.updateMyProfile);
+router.put('/settings', isLoggedIn, userController.updateMySettings);
+
+router.get("/:id/summary", isLoggedIn, userController.getUserSummary);
 
 router
   .route("/:id")

@@ -5,6 +5,8 @@ const { BadRequestError, NotFoundError, ForbiddenError } = require("../utils/Exp
 const sendEmail = require('../utils/emailService');
 const { getSearchScope } = require("../utils/rbac");
 const { createNotification } = require('../utils/notificationService');
+const Task = require('../models/taskSchema');
+const TimeLog = require('../models/timeLogsSchema');
 
 // --- HELPER: Check Write Permissions ---
 const checkWritePermission = async (actor, targetUserId = null, targetRole = null) => {
@@ -216,17 +218,52 @@ exports.resendInvitation = catchAsync(async (req, res) => {
 });
 
 exports.getAllUsers = catchAsync(async (req, res) => {
-  const { status } = req.query;
+  const { page = 1, limit = 20, search = '', status, role, department } = req.query;
+  const skip = (page - 1) * limit;
+
   const rbacFilter = await getSearchScope(req.user, 'usermanagement'); 
+  const query = { ...rbacFilter, company: req.companyId };
 
-  const query = { ...rbacFilter };
-  if (status) query.empStatus = status;
+  if (status && status !== 'All') query.empStatus = status;
+  if (role && role !== 'All') query.role = role;
+  
+  if (search) {
+    query.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } },
+      { empID: { $regex: search, $options: 'i' } }
+    ];
+  }
 
-  const users = await User.find(query)
-    .populate("department", "name")
-    .populate("reportsTo", "name designation");
+  if (department && department !== 'All') {
+    const dept = await Department.findOne({ name: department, company: req.companyId });
+    if (dept) {
+      query.department = dept._id;
+    } else {
+      query.department = null; 
+    }
+  }
 
-  res.status(200).json(users);
+  const [data, total] = await Promise.all([
+    User.find(query)
+      .populate("department", "name")
+      .populate("reportsTo", "name designation")
+      .skip(skip)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 }),
+    User.countDocuments(query)
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data,
+    pagination: {
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      pages: Math.ceil(total / limit)
+    }
+  });
 });
 
 exports.getUserById = catchAsync(async (req, res) => {
@@ -236,6 +273,33 @@ exports.getUserById = catchAsync(async (req, res) => {
     .populate({ path: "reportsTo", select: "name email designation avatar role" });
   if (!user) throw new NotFoundError("User not found");
   res.status(200).json(user);
+});
+
+exports.getUserSummary = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) throw new NotFoundError("User not found");
+
+  const taskCount = await Task.countDocuments({ assignee: id, company: req.companyId, status: { $ne: 'Done' } });
+  const leavesTaken = user.bookedLeaves || 0;
+  
+  const timeLogs = await TimeLog.find({ user: id, company: req.companyId });
+  const hoursLogged = timeLogs.reduce((total, log) => {
+    if (log.duration) return total + log.duration;
+    if (log.startTime && log.endTime) {
+       return total + (new Date(log.endTime) - new Date(log.startTime)) / (1000 * 60 * 60);
+    }
+    return total;
+  }, 0);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      taskCount,
+      leavesTaken,
+      hoursLogged: Math.round(hoursLogged * 10) / 10
+    }
+  });
 });
 
 // --- SECURED UPDATE USER (With Wage Protection) ---
@@ -486,4 +550,48 @@ exports.uploadCover = catchAsync(async (req, res) => {
   const user = await User.findByIdAndUpdate(id, { coverImage: fileUrl }, { new: true });
   if (!user) throw new NotFoundError("User not found");
   res.status(200).json({ status: 'success', coverUrl: user.coverImage });
+});
+
+// --- SETTINGS & PROFILE ---
+exports.updateMyProfile = catchAsync(async (req, res) => {
+  const userId = req.user._id || req.user.id;
+  const updates = { ...req.body };
+  
+  // Restricted fields that users cannot update themselves
+  const restrictedFields = [
+    "role", "salary", "hourlyWage", "department", "reportsTo", 
+    "designation", "email", "empID", "empStatus", 
+    "joiningDate", "empType", "avalaibleLeaves", "bookedLeaves", "isTechnician", "company"
+  ];
+  restrictedFields.forEach(field => delete updates[field]);
+
+  const user = await User.findByIdAndUpdate(userId, updates, { new: true, runValidators: true });
+  if (!user) throw new NotFoundError("User not found");
+  
+  res.status(200).json({ status: 'success', data: user });
+});
+
+exports.updateMySettings = catchAsync(async (req, res) => {
+  const userId = req.user._id || req.user.id;
+  const { theme, notificationPreferences } = req.body;
+  
+  const updates = {};
+  if (theme) updates.theme = theme;
+  
+  // Handle nested object update for notificationPreferences
+  if (notificationPreferences) {
+    const user = await User.findById(userId);
+    if (!user) throw new NotFoundError("User not found");
+    
+    // Deep merge preferences to avoid overwriting unspecified fields
+    updates.notificationPreferences = {
+      email: { ...user.notificationPreferences?.email, ...notificationPreferences.email },
+      push: { ...user.notificationPreferences?.push, ...notificationPreferences.push }
+    };
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
+  if (!updatedUser) throw new NotFoundError("User not found");
+  
+  res.status(200).json({ status: 'success', data: updatedUser });
 });

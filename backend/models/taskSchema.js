@@ -14,6 +14,12 @@ const taskSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+        required: true,
+        index: true
+    },
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",

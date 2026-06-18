@@ -120,6 +120,7 @@ const isLoggedIn = async (req, res, next) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        company: user.company,
         department: user.department,
         isTechnician: user.isTechnician,
         avatar: user.avatar

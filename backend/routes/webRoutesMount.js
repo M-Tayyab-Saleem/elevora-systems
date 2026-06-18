@@ -26,38 +26,42 @@ const adminDashboardRoutes = require("./webRoutes/adminDashboardRoutes");
 const notificationRoutes = require("./webRoutes/notificationRoutes");
 const expenseRoutes = require("./webRoutes/expenseRoutes"); // NEW
 
-// --- STEP 3: THE FIX (Bridge Routes) ---
+const companyScope = require('../middlewares/companyScope');
+
 // Fix for Leave Management
-router.get("/getAllLeaves", isLoggedIn, leaveController.getLeaveRequests);
+router.get("/getAllLeaves", isLoggedIn, companyScope, leaveController.getLeaveRequests);
 
 // Fix for Approve Timesheets
-router.get("/getAllTimesheets", isLoggedIn, timesheetController.getAllTimesheets);
-router.get("/getWeeklyTimesheets", isLoggedIn, timesheetController.getWeeklyTimesheets);
+router.get("/getAllTimesheets", isLoggedIn, companyScope, timesheetController.getAllTimesheets);
+router.get("/getWeeklyTimesheets", isLoggedIn, companyScope, timesheetController.getWeeklyTimesheets);
 
 // NEW: Bridge routes for Expenses (if frontend calls root endpoints)
-router.get("/getAllExpenses", isLoggedIn, expenseController.getAllExpenses);
-router.get("/getPendingExpenses", isLoggedIn, expenseController.getPendingExpenses);
-router.get("/getMyExpenses", isLoggedIn, expenseController.getMyExpenses);
+router.get("/getAllExpenses", isLoggedIn, companyScope, expenseController.getAllExpenses);
+router.get("/getPendingExpenses", isLoggedIn, companyScope, expenseController.getPendingExpenses);
+router.get("/getMyExpenses", isLoggedIn, companyScope, expenseController.getMyExpenses);
 
 // Fix: Universal download for all Azure blobs
 router.get("/download", isLoggedIn, downloadController.downloadFile);
 
+// Apply companyScope globally for all below authenticated routes
+const authenticatedAndScoped = [isLoggedIn, companyScope];
+
 // --- STEP 4: Standard Route Mounting ---
-router.use("/auth", authRoutes);
-router.use("/users", userRoutes);
-router.use("/leaves", leaveRoutes);
-router.use("/logs", logRoutes);
-router.use("/companies", companyRoutes);
-router.use("/projects", projectRoutes);
-router.use("/tasks", taskRoutes);
-router.use("/tickets", ticketRoutes);
-router.use("/timetrackers", timeTrackerRoutes);
-router.use("/holidays", holidayRoutes);
-router.use("/time-logs", timeLogRoutes);
-router.use("/timesheets", timesheetRoutes);
-router.use("/departments", departmentRoutes);
-router.use("/admin-dashboard", adminDashboardRoutes);
-router.use("/notifications", notificationRoutes);
-router.use("/expenses", expenseRoutes); // NEW
+router.use("/auth", authRoutes); // Auth routes manage their own company logic
+router.use("/users", ...authenticatedAndScoped, userRoutes);
+router.use("/leaves", ...authenticatedAndScoped, leaveRoutes);
+router.use("/logs", ...authenticatedAndScoped, logRoutes);
+router.use("/companies", ...authenticatedAndScoped, companyRoutes);
+router.use("/projects", ...authenticatedAndScoped, projectRoutes);
+router.use("/tasks", ...authenticatedAndScoped, taskRoutes);
+router.use("/tickets", ...authenticatedAndScoped, ticketRoutes);
+router.use("/timetrackers", ...authenticatedAndScoped, timeTrackerRoutes);
+router.use("/holidays", ...authenticatedAndScoped, holidayRoutes);
+router.use("/time-logs", ...authenticatedAndScoped, timeLogRoutes);
+router.use("/timesheets", ...authenticatedAndScoped, timesheetRoutes);
+router.use("/departments", ...authenticatedAndScoped, departmentRoutes);
+router.use("/admin-dashboard", ...authenticatedAndScoped, adminDashboardRoutes);
+router.use("/notifications", ...authenticatedAndScoped, notificationRoutes);
+router.use("/expenses", ...authenticatedAndScoped, expenseRoutes); // NEW
 
 module.exports = router;

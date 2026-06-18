@@ -22,5 +22,6 @@ router
   .delete(isLoggedIn, taskController.deleteTask);
 
 router.post("/:id/comments", isLoggedIn, taskController.addComment);
+router.patch("/:id/status", isLoggedIn, taskController.updateTaskStatus);
 
 module.exports = router;

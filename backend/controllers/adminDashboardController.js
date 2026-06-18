@@ -21,18 +21,18 @@ exports.getDashboardStats = catchAsync(async (req, res, next) => {
   todayEnd.setUTCHours(23, 59, 59, 999);
 
   // --- RBAC Scoping Logic ---
-  let userQuery = { empStatus: "Active" };
-  let ticketQuery = { status: { $ne: "Closed" } };
-  let leaveQuery = { status: "Pending" };
-  let timesheetQuery = { status: "Pending" };
-  let attendanceQuery = { date: { $gte: todayStart, $lte: todayEnd } };
-  let projectQuery = { status: { $ne: "Cancelled" } };
-  let projectAggregateMatch = {};
+  let userQuery = { empStatus: "Active", company: req.companyId };
+  let ticketQuery = { status: { $ne: "Closed" }, company: req.companyId };
+  let leaveQuery = { status: "Pending", company: req.companyId };
+  let timesheetQuery = { status: "Pending", company: req.companyId };
+  let attendanceQuery = { date: { $gte: todayStart, $lte: todayEnd }, company: req.companyId };
+  let projectQuery = { status: { $ne: "Cancelled" }, company: req.companyId };
+  let projectAggregateMatch = { company: req.companyId };
   let fullTeam = null;
 
   // 1. HR Specific: See All People/Attendance, but NO Tickets
   if (role === 'HR') {
-    ticketQuery = { _id: null }; // Force 0 tickets for HR 
+    ticketQuery = { _id: null, company: req.companyId }; // Force 0 tickets for HR 
   }
 
   // 2. Manager Specific: Scope strictly to Subordinates
@@ -42,13 +42,13 @@ exports.getDashboardStats = catchAsync(async (req, res, next) => {
     const rawTeam = [...directReports, ...indirectReports, _id];
     fullTeam = rawTeam.map(id => new mongoose.Types.ObjectId(id));
 
-    userQuery = { _id: { $in: fullTeam }, empStatus: "Active" };
-    leaveQuery = { employee: { $in: fullTeam }, status: "Pending" };
-    timesheetQuery = { user: { $in: fullTeam }, status: "Pending" };
-    attendanceQuery = { user: { $in: fullTeam }, date: { $gte: todayStart, $lte: todayEnd } };
-    ticketQuery = { closedBy: { $in: fullTeam }, status: { $ne: "Closed" } };
-    projectQuery = { status: { $ne: "Cancelled" }, $or: [{ owner: { $in: fullTeam } }, { team: { $in: fullTeam } }] };
-    projectAggregateMatch = { $or: [{ owner: { $in: fullTeam } }, { team: { $in: fullTeam } }] };
+    userQuery = { _id: { $in: fullTeam }, empStatus: "Active", company: req.companyId };
+    leaveQuery = { employee: { $in: fullTeam }, status: "Pending", company: req.companyId };
+    timesheetQuery = { user: { $in: fullTeam }, status: "Pending", company: req.companyId };
+    attendanceQuery = { user: { $in: fullTeam }, date: { $gte: todayStart, $lte: todayEnd }, company: req.companyId };
+    ticketQuery = { closedBy: { $in: fullTeam }, status: { $ne: "Closed" }, company: req.companyId };
+    projectQuery = { status: { $ne: "Cancelled" }, $or: [{ owner: { $in: fullTeam } }, { team: { $in: fullTeam } }], company: req.companyId };
+    projectAggregateMatch = { $or: [{ owner: { $in: fullTeam } }, { team: { $in: fullTeam } }], company: req.companyId };
   }
 
   // Admin and Super Admin default to the initial global queries.
@@ -78,9 +78,10 @@ exports.getDashboardStats = catchAsync(async (req, res, next) => {
       { $group: { _id: "$status", count: { $sum: 1 } } }
     ]),
 
-    Holiday.findOne({ date: { $gte: todayStart } }).sort({ date: 1 }).select("holidayName date day"),
+    Holiday.findOne({ date: { $gte: todayStart }, company: req.companyId }).sort({ date: 1 }).select("holidayName date day"),
 
     Department.aggregate([
+      { $match: { company: req.companyId } },
       {
         $lookup: {
           from: "users",
@@ -105,7 +106,7 @@ exports.getDashboardStats = catchAsync(async (req, res, next) => {
       { $group: { _id: "$status", count: { $sum: 1 } } }
     ]),
 
-    Log.find().sort({ createdAt: -1 }).limit(5).lean()
+    Log.find({ company: req.companyId }).sort({ createdAt: -1 }).limit(5).lean()
   ]);
 
   // Process Attendance Data

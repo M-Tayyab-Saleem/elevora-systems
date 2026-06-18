@@ -33,6 +33,9 @@ router.use(isLoggedIn);
 // Get statistics (admin/manager/superadmin only)
 router.get("/stats", restrictTo("admin", "manager", "superadmin"), expenseController.getExpenseStats);
 
+// Export expenses (admin/superadmin only)
+router.get("/export", restrictTo("admin", "superadmin"), expenseController.exportExpenses);
+
 // Get my expenses (for current user)
 router.get("/my-expenses", expenseController.getMyExpenses);
 

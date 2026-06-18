@@ -10,8 +10,16 @@ const CronJobs = require('./cronjobs');
 const path = require("path");
 
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(helmet());
+
+const authLimiter = rateLimit({ windowMs: 15*60*1000, max: 20 });
+app.use('/api/v1/auth', authLimiter);
 
 const corsOptions = {
   origin: ['https://abidipro.abidisolutions.com', 'http://localhost:5173', 'http://localhost:3001', 'http://localhost:3000', "http://localhost:5174","http://localhost:5175" , "http://192.168.100.91:5173"],
@@ -28,10 +36,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/web', require('./routes/webRoutesMount'));
+app.use('/api/v1', require('./routes/webRoutesMount'));
 
 // Add this route WITHOUT isLoggedIn middleware
-app.get('/api/web/test-auth', async (req, res) => {
+app.get('/api/v1/test-auth', async (req, res) => {
   const authHeader = req.headers.authorization;
   
   if (!authHeader) {

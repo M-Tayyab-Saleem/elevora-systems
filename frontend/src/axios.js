@@ -1,6 +1,6 @@
 import axios from "axios";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { msalConfig, loginRequest } from "./authConfig";
+import { msalConfig, loginRequest, msalInstance } from "./authConfig";
 import { toast } from "react-toastify"; // Import toast
 
 let store;
@@ -31,11 +31,10 @@ export const injectStore = (_store) => {
     store = _store;
 };
 
-const msalInstance = new PublicClientApplication(msalConfig);
 let msalInitialized = false;
 
 const api = axios.create({
-    baseURL: "http://localhost:4000/api/web",
+    baseURL: "http://localhost:4000/api/v1",
     timeout: 30000,
     withCredentials: true
 });
@@ -74,8 +73,9 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const status = error.response?.status;
+        const ignoreAuthRedirect = error.config?.ignoreAuthRedirect;
 
-        if (status === 401) {
+        if (status === 401 && !ignoreAuthRedirect) {
             console.warn("[AXIOS] 401 Unauthorized — logging out");
 
             try {

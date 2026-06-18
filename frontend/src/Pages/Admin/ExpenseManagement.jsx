@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ModernSelect from "../../Components/ui/ModernSelect";
-import FilterBar from "../../Components/FilterBar";
+import ExpenseFilters from "../../Components/ExpenseFilter";
 import ExpenseStats from "../../Components/ExpenseStats";
 import ExpenseTable from "../../Components/ExpenseTable";
 import ExpenseForm from "../../Components/ExpenseForm";
@@ -21,32 +21,15 @@ import { downloadFile } from "../../utils/downloadFile";
 const ExpenseManagement = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   
-  // Consolidated Filter State
-  const [filterValues, setFilterValues] = useState({
-    search: "",
-    status: "all",
-    category: "all",
-    user: "all",
-    dateStart: new Date(new Date().setDate(new Date().getDate() - 30)),
-    dateEnd: new Date()
-  });
-
-  const handleFilterChange = (key, value) => {
-    setFilterValues(prev => ({ ...prev, [key]: value }));
-  };
-
-  const handleResetFilters = () => {
-    setFilterValues({
-      search: "",
-      status: "all",
-      category: "all",
-      user: "all",
-      dateStart: new Date(new Date().setDate(new Date().getDate() - 30)),
-      dateEnd: new Date()
-    });
-  };
+  // Filter State
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [selectedUser, setSelectedUser] = useState("all");
+  const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate() - 30)));
+  const [endDate, setEndDate] = useState(new Date());
 
   // Modal States
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -90,7 +73,7 @@ const ExpenseManagement = () => {
         // Get users if admin/manager/superadmin
         if (role === 'admin' || role === 'manager' || role === 'superadmin') {
           const usersRes = await api.get("/users");
-          setUsers(usersRes.data);
+          setUsers(Array.isArray(usersRes.data) ? usersRes.data : usersRes.data.data || []);
         }
       } catch (error) {
         console.error("Init Error:", error.response?.data);
@@ -109,13 +92,15 @@ const ExpenseManagement = () => {
       const sortedExpenses = res.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setExpenses(sortedExpenses);
     } catch (error) {
-        console.error("get expenses Error:", error.response?.data);
+        console.error("get expenses Error//////////////////////////////////////:", error.response?.data);
+
       toast.error("Failed to fetch expenses");
     }
   };
 
   const canApprove = currentUserRole === 'admin' || currentUserRole === 'manager' || currentUserRole === 'superadmin';
   const canEdit = currentUserRole === 'superadmin';
+  const isManager = currentUserRole === 'manager';
 
   // --- EXPENSE ACTIONS ---
   const handleApprove = async (expenseId) => {
@@ -177,7 +162,7 @@ const ExpenseManagement = () => {
       receiptPublicId: expense.receiptPublicId || "",
       rejectionReason: expense.rejectionReason || ""
     });
-    setEditMode("edit");
+    setEditMode("edit"); // Always open edit form when clicking edit button
     setIsEditModalOpen(true);
   };
 
@@ -241,31 +226,29 @@ const ExpenseManagement = () => {
 
   // --- FILTERING ---
   const filteredExpenses = expenses.filter((exp) => {
-    const { search, status, category, user, dateStart, dateEnd } = filterValues;
-    
     // Date filter
     const expDate = new Date(exp.createdAt);
     expDate.setHours(0, 0, 0, 0);
     
-    const start = dateStart ? new Date(dateStart) : null;
+    const start = startDate ? new Date(startDate) : null;
     if (start) start.setHours(0, 0, 0, 0);
     
-    const end = dateEnd ? new Date(dateEnd) : null;
+    const end = endDate ? new Date(endDate) : null;
     if (end) end.setHours(23, 59, 59, 999);
     
     const matchesDate = (!start || expDate >= start) && (!end || expDate <= end);
     
     // Status filter
-    const matchesStatus = status === "all" || exp.status === status;
+    const matchesStatus = statusFilter === "all" || exp.status === statusFilter;
     
     // Category filter
-    const matchesCategory = category === "all" || exp.category === category;
+    const matchesCategory = categoryFilter === "all" || exp.category === categoryFilter;
     
-    // User filter
-    const matchesUser = user === "all" || exp.submittedBy?._id === user || exp.submittedBy === user;
+    // User filter (for admin/superadmin)
+    const matchesUser = selectedUser === "all" || exp.submittedBy?._id === selectedUser || exp.submittedBy === selectedUser;
     
     // Search filter
-    const searchLower = search.toLowerCase();
+    const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
       exp.title?.toLowerCase().includes(searchLower) ||
       exp.description?.toLowerCase().includes(searchLower) ||
@@ -290,53 +273,41 @@ const ExpenseManagement = () => {
       .reduce((sum, e) => sum + (e.amount || 0), 0)
   };
 
-  const filterConfig = [
-    { type: 'search', key: 'search', placeholder: 'Search expenses...' },
-    {
-      type: 'dateRange',
-      key: 'date',
-      label: 'Date Range'
-    },
-    {
-      type: 'select',
-      key: 'status',
-      label: 'Status',
-      options: [
-        { value: 'all', label: 'All Status' },
-        { value: 'pending', label: 'Pending' },
-        { value: 'approved', label: 'Approved' },
-        { value: 'rejected', label: 'Rejected' }
-      ]
-    },
-    {
-      type: 'select',
-      key: 'category',
-      label: 'Category',
-      options: [
-        { value: 'all', label: 'All Categories' },
-        { value: 'travel', label: 'Travel' },
-        { value: 'food', label: 'Food' },
-        { value: 'supplies', label: 'Supplies' },
-        { value: 'equipment', label: 'Equipment' },
-        { value: 'other', label: 'Other' }
-      ]
-    },
-    ...(currentUser?.role === 'Admin' || currentUser?.role === 'Manager' || currentUser?.role === 'Super Admin' ? [
-      {
-        type: 'select',
-        key: 'user',
-        label: 'Employee',
-        options: [
-          { value: 'all', label: 'All Employees' },
-          ...users.map(u => ({ value: u._id, label: u.name }))
-        ]
-      }
-    ] : [])
-  ];
   return (
-    <div className="flex-1 min-w-0 overflow-hidden w-full bg-transparent min-h-screen p-4 flex flex-col">
+    <div className="w-full bg-transparent min-h-screen p-4">
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideIn {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+        .animate-slideIn {
+          animation: slideIn 0.3s ease-out;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+      `}</style>
+
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-sm rounded-[1.2rem] shadow-md border border-white/50 mb-4 p-4 flex-shrink-0">
+      <div className="bg-white/90 backdrop-blur-sm rounded-[1.2rem] shadow-md border border-white/50 mb-4 p-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-base font-bold text-slate-800 uppercase tracking-tight">
@@ -350,62 +321,72 @@ const ExpenseManagement = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsSubmitModalOpen(true)}
-              className="btn btn-primary gap-2 shadow-lg shadow-blue-100"
+              className="px-6 py-3 bg-[#64748b] text-white rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-widest shadow-lg shadow-slate-100 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2"
             >
               <Upload size={14} /> Submit Expense
+            </button>
+            <button
+              onClick={handleDownload}
+              className="px-6 py-3 bg-white text-slate-700 rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-widest shadow-md border border-slate-200 hover:bg-slate-50 active:scale-95 transition-all flex items-center gap-2"
+            >
+              <Download size={14} /> Export CSV
             </button>
           </div>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="flex-shrink-0">
-        <ExpenseStats stats={stats} />
-      </div>
+      <ExpenseStats stats={stats} />
 
       {/* Filters */}
-      <FilterBar
-        filters={filterConfig}
-        values={filterValues}
-        onChange={handleFilterChange}
-        onReset={handleResetFilters}
-        onExport={handleDownload}
-        totalResults={filteredExpenses.length}
+      <ExpenseFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        startDate={startDate}
+        onStartDateChange={setStartDate}
+        endDate={endDate}
+        onEndDateChange={setEndDate}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+        categoryFilter={categoryFilter}
+        onCategoryFilterChange={setCategoryFilter}
+        selectedUser={selectedUser}
+        onUserChange={setSelectedUser}
+        users={users}
+        showUserFilter={currentUser?.role === "Admin" || currentUser?.role === "Manager" || currentUser?.role === "Super Admin"}
       />
 
       {/* Expenses Table */}
-      <div className="flex-1 overflow-hidden mt-4">
-        <div className="bg-white/90 backdrop-blur-sm rounded-[1.2rem] shadow-md border border-white/50 h-full flex flex-col overflow-hidden">
-          <ExpenseTable
-            expenses={filteredExpenses}
-            loading={loading}
-            onView={(expense) => {
-              setSelectedExpense(expense);
-              setIsDetailModalOpen(true);
-            }}
-            onEdit={handleEditClick}
-            canEdit={canEdit}
-          />
-        </div>
+      <div className="bg-white/90 backdrop-blur-sm rounded-[1.2rem] shadow-md border border-white/50 p-4 mb-4">
+        <ExpenseTable
+          expenses={filteredExpenses}
+          loading={loading}
+          onView={(expense) => {
+            setSelectedExpense(expense);
+            setIsDetailModalOpen(true);
+          }}
+          onEdit={handleEditClick}
+          canEdit={canEdit}
+        />
       </div>
 
       {/* Submit Expense Modal */}
       {isSubmitModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9999] flex justify-center items-center p-4">
-          <div className="modal-container-standard">
-            <div className="px-6 py-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
-              <h3 className="text-base font-black text-slate-800 uppercase tracking-widest">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9999] flex justify-center items-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-[1.2rem] shadow-2xl w-full max-w-2xl my-8 overflow-hidden animate-fadeIn border border-white/50">
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 sticky top-0">
+              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-widest">
                 Submit New Expense
               </h3>
               <button 
                 onClick={() => setIsSubmitModalOpen(false)} 
-                className="text-slate-400 hover:text-red-500 transition-colors"
+                className="text-primary-color/40 hover:text-error transition-colors"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="modal-body-scroll p-6">
+            <div className="p-6 max-h-[calc(100vh-200px)] overflow-y-auto">
               <ExpenseForm
                 onSubmitSuccess={() => {
                   setIsSubmitModalOpen(false);
@@ -430,7 +411,7 @@ const ExpenseManagement = () => {
           onReject={(expense) => {
             setEditingExpense(expense);
             setEditFormData({ ...editFormData, rejectionReason: "" });
-            setEditMode("reject");
+            setEditMode("reject"); // Open reject form when coming from detail modal reject button
             setIsEditModalOpen(true);
           }}
           onEdit={handleEditClick}
@@ -444,9 +425,9 @@ const ExpenseManagement = () => {
       {/* Edit/Reject Modal */}
       {isEditModalOpen && editingExpense && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9999] flex justify-center items-center p-4">
-          <div className="modal-container-sm">
-            <div className="px-6 py-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
-              <h3 className="text-base font-black text-slate-800 uppercase tracking-widest">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fadeIn border border-slate-200">
+            <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
+              <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">
                 {editMode === "reject" ? 'Reject Expense' : 'Edit Expense'}
               </h3>
               <button
@@ -461,8 +442,9 @@ const ExpenseManagement = () => {
               </button>
             </div>
 
-            <div className="modal-body-scroll p-6 space-y-5">
+            <div className="p-6 space-y-4">
               {editMode === "reject" ? (
+                // Reject Form
                 <div>
                   <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">
                     Rejection Reason <span className="text-rose-500">*</span>
@@ -470,45 +452,67 @@ const ExpenseManagement = () => {
                   <textarea
                     value={editFormData.rejectionReason}
                     onChange={(e) => setEditFormData({ ...editFormData, rejectionReason: e.target.value })}
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:ring-4 focus:ring-blue-50/50 focus:bg-white outline-none bg-slate-50 text-slate-700 min-h-[120px] resize-none transition-all"
+                    className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm font-medium focus:ring-2 focus:ring-slate-400 outline-none bg-white text-slate-700 min-h-[100px] resize-none"
                     placeholder="Please provide a reason for rejection..."
                   />
+
+                  <div className="flex gap-3 mt-6">
+                    <button
+                      onClick={() => {
+                        setIsEditModalOpen(false);
+                        setEditingExpense(null);
+                        setEditMode("edit");
+                      }}
+                      className="flex-1 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 uppercase tracking-wider transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleReject(editingExpense._id, editFormData.rejectionReason);
+                      }}
+                      className="flex-1 py-2 bg-rose-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-600 shadow-md shadow-rose-500/20 flex justify-center items-center gap-2 transition-all"
+                    >
+                      <XCircle size={14} /> Reject
+                    </button>
+                  </div>
                 </div>
               ) : (
+                // Edit Form
                 <>
                   <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                    <label className="block text-[10px] font-black text-primary-color/40 uppercase tracking-widest mb-2">
                       Title
                     </label>
                     <input
                       type="text"
                       value={editFormData.title}
                       onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:ring-4 focus:ring-blue-50/50 focus:bg-white outline-none bg-slate-50 transition-all"
+                      className="w-full border border-default rounded-xl px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary-light outline-none bg-card-surface text-primary-color"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                    <label className="block text-[10px] font-black text-primary-color/40 uppercase tracking-widest mb-2">
                       Description
                     </label>
                     <textarea
                       value={editFormData.description}
                       onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:ring-4 focus:ring-blue-50/50 focus:bg-white outline-none bg-slate-50 transition-all"
+                      className="w-full border border-default rounded-xl px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary-light outline-none bg-card-surface text-primary-color"
                       rows="3"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                    <label className="block text-[10px] font-black text-primary-color/40 uppercase tracking-widest mb-2">
                       Amount ($)
                     </label>
                     <input
                       type="number"
                       value={editFormData.amount}
                       onChange={(e) => setEditFormData({ ...editFormData, amount: e.target.value })}
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:ring-4 focus:ring-blue-50/50 focus:bg-white outline-none bg-slate-50 transition-all"
+                      className="w-full border border-default rounded-xl px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary-light outline-none bg-card-surface text-primary-color"
                       min="0"
                       step="0.01"
                     />
@@ -544,51 +548,40 @@ const ExpenseManagement = () => {
 
                   {editFormData.receiptUrl && (
                     <div className="mt-2">
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                      <label className="block text-[10px] font-black text-primary-color/40 uppercase tracking-widest mb-2">
                         Current Receipt
                       </label>
                       <button 
                         type="button"
                         onClick={() => downloadFile(editFormData.receiptPublicId || editFormData.receiptUrl, `receipt-${editFormData.title}`)}
-                        className="flex items-center gap-2 text-blue-600 hover:underline text-sm font-bold transition-all"
+                        className="flex items-center gap-2 text-blue-600 hover:underline text-sm font-medium transition-all"
                       >
                         <FileText size={16} />
-                        VIEW RECEIPT
+                        View Receipt
                       </button>
                     </div>
                   )}
+
+                  <div className="flex gap-3 mt-6">
+                    <button
+                      onClick={() => {
+                        setIsEditModalOpen(false);
+                        setEditingExpense(null);
+                        setEditMode("edit");
+                      }}
+                      className="flex-1 py-2 text-xs font-bold text-primary-color/50 hover:text-primary-color uppercase tracking-wider transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSaveEdit}
+                      className="flex-1 py-2 bg-primary-color text-primary-color/50 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-primary-color/80 shadow-md shadow-primary-color/10 flex justify-center items-center gap-2 transition-all"
+                    >
+                      <Save size={14} /> Save Changes
+                    </button>
+                  </div>
                 </>
               )}
-            </div>
-
-            <div className="px-6 py-6 border-t border-slate-100 flex gap-4 bg-slate-50/50 sticky bottom-0">
-              <button
-                onClick={() => {
-                  setIsEditModalOpen(false);
-                  setEditingExpense(null);
-                  setEditMode("edit");
-                }}
-                className="btn btn-ghost flex-1 py-3"
-              >
-                CANCEL
-              </button>
-              <button
-                onClick={() => {
-                  if (editMode === "reject") {
-                    handleReject(editingExpense._id, editFormData.rejectionReason);
-                  } else {
-                    handleSaveEdit();
-                  }
-                }}
-                className={`btn flex-1 gap-2 shadow-lg ${
-                  editMode === "reject" 
-                    ? "bg-rose-500 hover:bg-rose-600 shadow-rose-200 text-white" 
-                    : "btn-primary shadow-blue-100"
-                }`}
-              >
-                {editMode === "reject" ? <XCircle size={14} /> : <Save size={14} />}
-                {editMode === "reject" ? 'REJECT EXPENSE' : 'SAVE CHANGES'}
-              </button>
             </div>
           </div>
         </div>

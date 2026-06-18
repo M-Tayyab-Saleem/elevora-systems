@@ -149,14 +149,13 @@ const ProjectHeader = ({ project }) => {
               ))
             ) : (
               <div className="flex items-center gap-3">
-                <div className="flex -space-x-2 overflow-visible">
+                <div className="flex -space-x-2">
                   {[1, 2, 3, 4].map(i => (
                     <img
                       key={i}
                       src={`/diverse-team-meeting.png?height=40&width=40&query=team member ${i}`}
                       alt={`Team member ${i}`}
-                      title={`Team member ${i}`}
-                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white flex-shrink-0 relative hover:z-10 transition-transform hover:scale-110"
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white flex-shrink-0"
                     />
                   ))}
                 </div>

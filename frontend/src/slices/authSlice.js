@@ -7,13 +7,14 @@ export const syncAzureUser = createAsyncThunk(
   "auth/syncAzureUser",
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.get("/auth/me");
+      const response = await api.get("/auth/me", { ignoreAuthRedirect: true });
       
       dispatch(setUser(response.data));
       
       return response.data;
     } catch (error) {
-      console.error("Sync error:", error.response?.data || error.message);
+      // Suppress noisy console error on startup if there is no session
+      // console.error("Sync error:", error.response?.data || error.message);
       return rejectWithValue(error.response?.data?.message || "Sync failed");
     }
   }
@@ -56,7 +57,7 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(syncAzureUser.rejected, (state, action) => {
-        console.error("Sync rejected:", action.payload);
+        // console.error("Sync rejected:", action.payload); // Suppressed to reduce noise
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;

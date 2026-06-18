@@ -42,3 +42,7 @@ export const msalConfig = {
 export const loginRequest = {
   scopes: ["api://574e37f1-c661-4ff5-bc60-0cd610a26663/Abidi-Pro"]
 };
+
+// Create a singleton instance to be shared across the application
+import { PublicClientApplication } from "@azure/msal-browser";
+export const msalInstance = new PublicClientApplication(msalConfig);

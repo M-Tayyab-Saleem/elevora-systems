@@ -128,7 +128,7 @@ const OrgChartPage = () => {
  const fetchOrgChart = async () => {
  try {
  const response = await api.get('/users/org-chart');
- setData(response.data.data);
+ setData(response.data.data || []);
  } catch (error) {
  console.error("Failed to fetch chart", error);
  } finally {
@@ -190,7 +190,7 @@ const OrgChartPage = () => {
  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600"></div>
  <p>Mapping Hierarchy...</p>
  </div>
- ) : data.length > 0 ? (
+ ) : data?.length > 0 ? (
  data.map((rootNode, idx) => (
  <div key={rootNode._id} className={idx > 0 ? "ml-16" : ""}>
  <OrgNode

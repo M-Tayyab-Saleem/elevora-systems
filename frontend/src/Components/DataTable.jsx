@@ -65,8 +65,8 @@ const DataTable = ({
  {col.label}
  {col.sortable && (
  <span className="flex flex-col">
- <ChevronUp className={`w-3 h-3 ${sortConfig.key === col.key && sortConfig.direction === 'asc' ? 'text-amber-600' : 'text-slate-300'}`} />
- <ChevronDown className={`w-3 h-3 -mt-1 ${sortConfig.key === col.key && sortConfig.direction === 'desc' ? 'text-amber-600' : 'text-slate-300'}`} />
+ <ChevronUp className={`w-3 h-3 ${sortConfig.key === col.key && sortConfig.direction === 'asc' ? 'text-brand' : 'text-slate-300'}`} />
+ <ChevronDown className={`w-3 h-3 -mt-1 ${sortConfig.key === col.key && sortConfig.direction === 'desc' ? 'text-brand' : 'text-slate-300'}`} />
  </span>
  )}
  </div>
@@ -216,7 +216,7 @@ const DataTable = ({
  <button
  onClick={() => pagination.onChange(pagination.page - 1, pagination.limit)}
  disabled={pagination.page === 1}
- className="px-4 py-2 bg-app border border-subtle rounded-xl text-xs font-black text-muted hover:text-amber-600 hover:border-amber-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all uppercase tracking-widest"
+ className="px-4 py-2 bg-app border border-subtle rounded-xl text-xs font-black text-muted hover:text-brand hover:border-brand/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all uppercase tracking-widest"
  >
  Previous
  </button>
@@ -235,7 +235,7 @@ const DataTable = ({
  onClick={() => pagination.onChange(pageNum, pagination.limit)}
  className={`w-9 h-9 flex items-center justify-center rounded-xl text-xs font-black transition-all ${
  pagination.page === pageNum
- ? 'bg-amber-600 text-white shadow-lg shadow-amber-200'
+ ? 'bg-brand text-white shadow-lg shadow-brand/30'
  : 'text-muted hover:bg-app hover:text-muted'
  }`}
  >

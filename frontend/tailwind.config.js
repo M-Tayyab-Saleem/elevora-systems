@@ -9,6 +9,9 @@ export default {
         'brand-primary': 'var(--color-brand-primary)',
         'brand-sec': 'var(--color-brand-secondary)',
         'brand-accent': 'var(--color-brand-accent)',
+        // Always-legible brand text for body copy/icons/tags.
+        // In light mode it is a readable dark gold; in dark mode a bright gold.
+        'brand-text': 'var(--color-brand-text)',
         app: 'var(--color-bg-app)',
         surface: 'var(--color-bg-primary)',
         card: 'var(--color-bg-secondary)',
@@ -19,6 +22,12 @@ export default {
         border: 'var(--color-border-primary)',
         'border-subtle': 'var(--color-border-secondary)',
         'border-accent': 'var(--color-border-accent)',
+        // Semantic status tokens — readable in BOTH themes.
+        success: 'var(--status-fg)',
+        warning: 'var(--status-warning-fg)',
+        danger: 'var(--status-danger-fg)',
+        error: 'var(--status-danger-fg)',
+        info: 'var(--status-info-fg)',
         amber: {
           50: 'color-mix(in srgb, var(--color-brand-secondary) 25%, transparent)',
           100: 'var(--color-brand-secondary)',

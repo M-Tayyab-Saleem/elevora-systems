@@ -78,8 +78,8 @@ const userSlice = createSlice({
  })
  .addCase(refreshUserData.fulfilled, (state, action) => {
  state.refreshing = false;
- // The API returns { success: true, data: userObject }, so we extract data
- state.userInfo = action.payload.data || action.payload;
+        // The API returns the unwrapped data due to axios interceptor
+        state.userInfo = action.payload;
  })
  .addCase(refreshUserData.rejected, (state, action) => {
  state.refreshing = false;
@@ -98,10 +98,11 @@ const userSlice = createSlice({
  if (!state.userInfo.leaveHistory) {
  state.userInfo.leaveHistory = [];
  }
- state.userInfo.leaveHistory.unshift(action.payload);
- 
- const leaveType = action.payload.leaveType;
- const days = action.payload.days || 1;
+        const payloadData = action.payload.data || action.payload;
+        state.userInfo.leaveHistory.unshift(payloadData);
+        
+        const leaveType = payloadData.leaveType;
+        const days = payloadData.daysTaken || payloadData.days || 1;
  
  if (state.userInfo.leaves) {
  if (leaveType === 'PTO' && state.userInfo.leaves.pto !== undefined) {

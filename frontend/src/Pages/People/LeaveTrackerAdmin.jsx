@@ -290,31 +290,31 @@ const LeaveTrackerAdmin = () => {
  key: "date",
  label: "Date",
  sortable: true,
- render: (row) => <span className="text-main">{row.date}</span>
+ render: (_, row) => <span className="text-main">{row.date}</span>
  },
  {
  key: "id",
  label: "ID",
  sortable: true,
- render: (row) => <span className="text-main font-mono text-xs">{row.id.substring(0, 8)}...</span>
+ render: (_, row) => <span className="text-main font-mono text-xs">{row.id ? `${row.id.substring(0, 8)}...` : '-'}</span>
  },
  {
  key: "name",
  label: "Name",
  sortable: true,
- render: (row) => <span className="text-main font-medium">{row.name}</span>
+ render: (_, row) => <span className="text-main font-medium">{row.name}</span>
  },
  {
  key: "email",
  label: "Email",
  sortable: true,
- render: (row) => <span className="text-muted">{row.email}</span>
+ render: (_, row) => <span className="text-muted">{row.email}</span>
  },
  {
  key: "leaveType",
  label: "Leave Type",
  sortable: true,
- render: (row) => (
+ render: (value, row) => (
  <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 whitespace-nowrap">
  {row.leaveType}
  </span>
@@ -324,7 +324,7 @@ const LeaveTrackerAdmin = () => {
  key: "reason",
  label: "Reason",
  sortable: false,
- render: (row) => (
+ render: (_, row) => (
  <div className="max-w-[220px] text-muted" title={row.reason}>
  <span
  style={{
@@ -343,13 +343,13 @@ const LeaveTrackerAdmin = () => {
  key: "duration",
  label: "Duration",
  sortable: true,
- render: (row) => <span className="text-main font-medium whitespace-nowrap">{row.duration}</span>
+ render: (_, row) => <span className="text-main font-medium whitespace-nowrap">{row.duration}</span>
  },
  {
  key: "status",
  label: "Status",
  sortable: true,
- render: (row) => (
+ render: (value, row) => (
  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${getStatusColor(row.status)}`}>
  {row.status}
  </span>
@@ -371,7 +371,7 @@ const LeaveTrackerAdmin = () => {
  key: "leaveType",
  label: "Leave Type",
  sortable: true,
- render: (row) => (
+ render: (value, row) => (
  <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 whitespace-nowrap">
  {row.leaveType}
  </span>
@@ -381,19 +381,19 @@ const LeaveTrackerAdmin = () => {
  key: "startDate",
  label: "Start Date",
  sortable: true,
- render: (row) => <span className="text-muted whitespace-nowrap">{formatDisplayDate(row.startDate)}</span>
+ render: (_, row) => <span className="text-muted whitespace-nowrap">{formatDisplayDate(row.startDate)}</span>
  },
  {
  key: "endDate",
  label: "End Date",
  sortable: true,
- render: (row) => <span className="text-muted whitespace-nowrap">{formatDisplayDate(row.endDate)}</span>
+ render: (_, row) => <span className="text-muted whitespace-nowrap">{formatDisplayDate(row.endDate)}</span>
  },
  {
  key: "duration",
  label: "Duration",
  sortable: true,
- render: (row) => {
+ render: (_, row) => {
  const duration = Math.ceil((parseISOToLocalDate(row.endDate) - parseISOToLocalDate(row.startDate)) / (1000 * 60 * 60 * 24)) + 1;
  return <span className="text-main font-medium">{duration} days</span>;
  }
@@ -402,7 +402,7 @@ const LeaveTrackerAdmin = () => {
  key: "status",
  label: "Status",
  sortable: true,
- render: (row) => (
+ render: (value, row) => (
  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${getStatusColor(row.status)}`}>
  {row.status}
  </span>
@@ -412,7 +412,7 @@ const LeaveTrackerAdmin = () => {
  key: "reason",
  label: "Reason",
  sortable: false,
- render: (row) => <div className="max-w-[150px] truncate text-muted" title={row.reason}>{row.reason || "-"}</div>
+ render: (_, row) => <div className="max-w-[150px] truncate text-muted" title={row.reason}>{row.reason || "-"}</div>
  }
  ];
 

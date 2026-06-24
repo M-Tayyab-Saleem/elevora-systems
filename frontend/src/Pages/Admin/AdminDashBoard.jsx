@@ -12,6 +12,7 @@ import {
  FaCheckCircle,
  FaUserClock
 } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import adminDashboardApi from '../../api/adminDashboardApi';
@@ -26,6 +27,7 @@ const AdminDashBoard = () => {
  const [loading, setLoading] = useState(true);
  const [data, setData] = useState(null);
  const [user, setUser] = useState(null);
+ const navigate = useNavigate();
 
  useEffect(() => {
  const fetchAllData = async () => {
@@ -108,8 +110,8 @@ const AdminDashBoard = () => {
  </div>
  );
 
- const ActionItem = ({ label, count, colorClass, icon }) => (
- <div className="flex items-center justify-between p-4 bg-surface rounded-xl border border-white/50 mb-3 transition-all duration-150 hover:bg-surface hover:shadow-md">
+ const ActionItem = ({ label, count, colorClass, icon, onClick }) => (
+ <div onClick={onClick} className="flex items-center justify-between p-4 bg-surface rounded-xl border border-white/50 mb-3 transition-all duration-150 hover:bg-surface hover:shadow-md cursor-pointer">
  <div className="flex items-center gap-3">
  <div className={`p-2.5 rounded-lg ${colorClass} text-${colorClass.split('-')[2] || 'blue'}-600`}>
  {icon}
@@ -225,6 +227,7 @@ const AdminDashBoard = () => {
  count={data.actionItems.leaves} 
  colorClass="bg-amber-100 text-amber-700" 
  icon={<FaCalendarDay size={16} />}
+ onClick={() => navigate('/admin/leaveTrackerAdmin')}
  />
  {/* Requirement: Only show Timesheets if not HR (HR is "own" only) */}
  {!isHR && (
@@ -233,6 +236,7 @@ const AdminDashBoard = () => {
  count={data.actionItems.timesheets} 
  colorClass="bg-amber-100 text-amber-700" 
  icon={<FaClipboardList size={16} />}
+ onClick={() => navigate('/admin/approve')}
  />
  )}
  {/* Requirement: Hide Tickets in Action Center for HR */}
@@ -242,6 +246,7 @@ const AdminDashBoard = () => {
  count={data.actionItems.tickets} 
  colorClass="bg-rose-100 text-rose-700" 
  icon={<FaTicketAlt size={16} />}
+ onClick={() => navigate('/admin/assign-ticket')}
  />
  )}
  </div>

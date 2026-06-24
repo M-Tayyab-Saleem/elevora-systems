@@ -128,7 +128,7 @@ const OrgChartPage = () => {
  const fetchOrgChart = async () => {
  try {
  const response = await api.get('/users/org-chart');
- setData(response.data.data || []);
+ setData(response.data || []);
  } catch (error) {
  console.error("Failed to fetch chart", error);
  } finally {

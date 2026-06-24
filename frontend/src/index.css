@@ -13,15 +13,16 @@
   --color-brand-primary: #D4AF37;         /* Golden Accent */
   --color-brand-secondary: #F3E5AB;       /* Light Gold */
   --color-brand-accent: #B8860B;          /* Dark Goldenrod */
+  --color-brand-text: #92590c;            /* Dark, readable gold for body text/icons/tags (light mode) */
   
   /* Background Colors */
-  --color-bg-app: #FDFCF8;                
+  --color-bg-app: #F5F3E9;                
   --bg-app-gradient: radial-gradient(circle at 10% 20%, rgba(218, 165, 32, 0.25) 0%, transparent 45%),
                      radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.25) 0%, transparent 45%),
                      radial-gradient(circle at 50% 50%, rgba(255, 235, 180, 0.4) 0%, transparent 60%),
                      var(--color-bg-app);
   --color-bg-primary: #FFFFFF;            
-  --color-bg-secondary: rgba(255, 255, 255, 0.55); /* Increased opacity for distinct glass */
+  --color-bg-secondary: rgba(255, 255, 255, 0.75); /* Increased opacity for distinct glass */
   --color-bg-tertiary: rgba(255, 255, 255, 0.35);  
   --color-bg-navbar: rgba(255, 255, 255, 0.85);   /* Navbar background */
   --color-bg-sidebar: rgba(255, 255, 255, 0.85);  /* Sidebar background */
@@ -39,8 +40,8 @@
   --color-text-on-brand: #ffffff;         /* Text on brand color */
   
   /* Border Colors */
-  --color-border-primary: rgba(255, 255, 255, 0.7);   /* Glass edge highlight */
-  --color-border-secondary: rgba(255, 255, 255, 0.4); /* Subtle glass edge */
+  --color-border-primary: rgba(0, 0, 0, 0.08);   /* Visible subtle border */
+  --color-border-secondary: rgba(0, 0, 0, 0.04); /* Fainter border */
   --color-border-accent: rgba(212, 175, 55, 0.3);   /* Gold borders */
   
   /* Status Colors */
@@ -48,6 +49,24 @@
   --color-warning: #f59e0b;               /* Amber */
   --color-error: #ef4444;                 /* Red */
   --color-info: #3b82f6;                  /* Blue */
+
+  /* Semantic status token sets — readable in both themes.
+     Light mode uses deep text on pale backgrounds. */
+  --status-fg: #15803d;                    /* green-700 */
+  --status-bg: rgba(16, 185, 129, 0.12);   /* green tint */
+  --status-border: rgba(16, 185, 129, 0.30);
+
+  --status-warning-fg: #b45309;            /* amber-700 */
+  --status-warning-bg: rgba(245, 158, 11, 0.12);
+  --status-warning-border: rgba(245, 158, 11, 0.30);
+
+  --status-danger-fg: #b91c1c;             /* red-700 */
+  --status-danger-bg: rgba(239, 68, 68, 0.12);
+  --status-danger-border: rgba(239, 68, 68, 0.30);
+
+  --status-info-fg: #1d4ed8;               /* blue-700 */
+  --status-info-bg: rgba(59, 130, 246, 0.12);
+  --status-info-border: rgba(59, 130, 246, 0.30);
   
   /* ===== TYPOGRAPHY ===== */
   
@@ -176,52 +195,11 @@
   --z-tooltip: 70;
 }
 
-.dark {
-  /* ===== DARK MODE COLOR PALETTE ===== */
-  
-  /* Background Colors */
-  --color-bg-app: #0f172a;                
-  --bg-app-gradient: radial-gradient(circle at 10% 20%, rgba(218, 165, 32, 0.1) 0%, transparent 45%),
-                     radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 45%),
-                     var(--color-bg-app);
-  --color-bg-primary: #1e293b;            
-  --color-bg-secondary: rgba(30, 41, 59, 0.7); 
-  --color-bg-tertiary: rgba(15, 23, 42, 0.8);  
-  --color-bg-navbar: rgba(30, 41, 59, 0.85);   
-  --color-bg-sidebar: rgba(15, 23, 42, 0.85);  
-  --color-bg-card: rgba(30, 41, 59, 0.8);      
-  --color-bg-hover: rgba(212, 175, 55, 0.15);  
-  --color-bg-active: rgba(212, 175, 55, 0.25); 
-  
-  /* Text Colors */
-  --color-text-primary: #f8fafc;          
-  --color-text-secondary: #cbd5e1;        
-  --color-text-tertiary: #94a3b8;         
-  --color-text-heading: #ffffff;          
-  --color-text-muted: #64748b;            
-  --color-text-light: #f1f5f9;            
-  --color-text-on-brand: #ffffff;         
-  
-  /* Border Colors */
-  --color-border-primary: rgba(255, 255, 255, 0.1);   
-  --color-border-secondary: rgba(255, 255, 255, 0.05); 
-  --color-border-accent: rgba(212, 175, 55, 0.2);   
-  
-  /* Component Specific */
-  --navbar-bg: var(--color-bg-navbar);
-  --navbar-text: var(--color-text-primary);
-  
-  --sidebar-bg: transparent;
-  --sidebar-item-active-bg: rgba(255, 255, 255, 0.1);
-  --sidebar-item-hover-color: var(--color-text-primary);
-  
-  --subnav-bg: var(--color-bg-navbar);
-  
-  --card-bg: var(--color-bg-secondary);
-  --card-border: var(--color-border-primary);
-  
-  --rightsidebar-bg: rgba(30, 41, 59, 0.95);
-}
+/* NOTE: The authoritative dark-mode token overrides live in the single
+   `.dark, [data-theme="dark"]` block below (search "Dark mode support").
+   Do not redefine dark tokens here — keep ONE source of truth. */
+
+
 
 /* ===== BASE STYLES ===== */
 
@@ -552,40 +530,69 @@ body {
   z-index: var(--z-tooltip);
 }
 
-/* Dark mode support */
+/* Dark mode support — SINGLE source of truth for dark tokens. */
 .dark, [data-theme="dark"] {
   /* Brand Colors */
   --color-brand-primary: #FBBF24;         /* Bright Gold */
   --color-brand-secondary: #FDE68A;
-  --color-brand-accent: #D97706;
+  --color-brand-accent: #F59E0B;          /* Lighter accent for visibility on dark */
+  --color-brand-text: #FCD34D;            /* Bright readable gold for body text/icons/tags */
 
   /* Background Colors */
   --color-bg-app: #0f172a;                /* Obsidian */
-  --bg-app-gradient: radial-gradient(circle at 10% 20%, rgba(251, 191, 36, 0.08) 0%, transparent 40%),
-                     radial-gradient(circle at 90% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 40%),
+  --bg-app-gradient: radial-gradient(circle at 10% 20%, rgba(251, 191, 36, 0.10) 0%, transparent 42%),
+                     radial-gradient(circle at 90% 80%, rgba(251, 191, 36, 0.06) 0%, transparent 42%),
                      var(--color-bg-app);
   --color-bg-primary: #1e293b;
-  --color-bg-secondary: rgba(30, 41, 59, 0.6); /* Dark Glass */
-  --color-bg-tertiary: rgba(15, 23, 42, 0.8);
-  --color-bg-navbar: rgba(30, 41, 59, 0.85);
-  --color-bg-sidebar: rgba(30, 41, 59, 0.85);
-  --color-bg-card: rgba(30, 41, 59, 0.6);
-  --color-bg-hover: rgba(251, 191, 36, 0.1);
-  --color-bg-active: rgba(251, 191, 36, 0.2);
+  --color-bg-secondary: rgba(30, 41, 59, 0.7); /* Dark Glass */
+  --color-bg-tertiary: rgba(15, 23, 42, 0.85);
+  --color-bg-navbar: rgba(30, 41, 59, 0.9);
+  --color-bg-sidebar: rgba(30, 41, 59, 0.9);
+  --color-bg-card: rgba(30, 41, 59, 0.7);
+  --color-bg-hover: rgba(251, 191, 36, 0.14);
+  --color-bg-active: rgba(251, 191, 36, 0.22);
 
   /* Text Colors */
   --color-text-primary: #f8fafc;
-  --color-text-secondary: #cbd5e1;
-  --color-text-tertiary: #94a3b8;
+  --color-text-secondary: #d6dce5;        /* bumped for readability */
+  --color-text-tertiary: #9aa6b8;         /* bumped for readability */
   --color-text-heading: #ffffff;
-  --color-text-muted: #64748b;
-  --color-text-light: #475569;
-  --color-text-on-brand: #0f172a;
+  --color-text-muted: #8a96a8;            /* bumped from #64748b for readability */
+  --color-text-light: #cbd5e1;
+  --color-text-on-brand: #1a1205;         /* dark text on bright gold */
 
   /* Border Colors */
-  --color-border-primary: rgba(255, 255, 255, 0.1);
-  --color-border-secondary: rgba(255, 255, 255, 0.05);
-  --color-border-accent: rgba(251, 191, 36, 0.3);
+  --color-border-primary: rgba(255, 255, 255, 0.14);
+  --color-border-secondary: rgba(255, 255, 255, 0.08);
+  --color-border-accent: rgba(251, 191, 36, 0.4);
+
+  /* Semantic status tokens — bright text on translucent backgrounds (dark mode) */
+  --status-fg: #4ade80;                    /* green-400 */
+  --status-bg: rgba(34, 197, 94, 0.16);
+  --status-border: rgba(34, 197, 94, 0.35);
+
+  --status-warning-fg: #fbbf24;            /* amber-400 */
+  --status-warning-bg: rgba(251, 191, 36, 0.16);
+  --status-warning-border: rgba(251, 191, 36, 0.35);
+
+  --status-danger-fg: #f87171;             /* red-400 */
+  --status-danger-bg: rgba(239, 68, 68, 0.16);
+  --status-danger-border: rgba(239, 68, 68, 0.35);
+
+  --status-info-fg: #60a5fa;               /* blue-400 */
+  --status-info-bg: rgba(59, 130, 246, 0.16);
+  --status-info-border: rgba(59, 130, 246, 0.35);
+
+  /* Component Specific */
+  --navbar-bg: var(--color-bg-navbar);
+  --navbar-text: var(--color-text-primary);
+  --sidebar-bg: transparent;
+  --sidebar-item-active-bg: rgba(255, 255, 255, 0.1);
+  --sidebar-item-hover-color: var(--color-text-primary);
+  --subnav-bg: var(--color-bg-navbar);
+  --card-bg: var(--color-bg-secondary);
+  --card-border: var(--color-border-primary);
+  --rightsidebar-bg: rgba(30, 41, 59, 0.95);
 }
 /* index.css */
 
@@ -1130,3 +1137,232 @@ body {
 .pr-10 { padding-right: 2.5rem !important; }
 .pr-11 { padding-right: 2.75rem !important; }
 .pr-12 { padding-right: 3rem !important; }
+
+/* =====================================================================
+   DARK-MODE SAFETY-NET REMAP LAYER
+   ---------------------------------------------------------------------
+   Many components were written with raw Tailwind palette colors
+   (text-amber-700, bg-amber-50, border-slate-100, text-white, ...) that
+   do NOT flip in dark mode — causing invisible gold text and pale
+   "white tag" boxes on dark surfaces.
+
+   This layer re-points those utility classes to theme-appropriate values
+   IN DARK MODE ONLY. Light mode is completely untouched. It changes only
+   colors (never layout/structure), so functionality is never affected.
+   Specificity here is .dark + single class = 0,2,0, which overrides the
+   raw Tailwind utility (0,1,0) but stays below component !important rules.
+   ===================================================================== */
+
+/* --- Pale gold/amber backgrounds → translucent brand tint (dark) --- */
+.dark .bg-amber-50,
+.dark .bg-amber-100,
+.dark .bg-yellow-50,
+.dark .bg-yellow-100 {
+  background-color: var(--color-bg-active) !important;
+}
+.dark .bg-amber-200,
+.dark .bg-yellow-200 {
+  background-color: rgba(251, 191, 36, 0.28) !important;
+}
+
+/* --- Gold text shades → bright readable brand-text (dark) ---
+   These are the classes causing the "orange/gold hard to see" problem:
+   dark amber/orange text on dark navy is invisible. Make them legible. */
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-900,
+.dark .text-orange-600,
+.dark .text-orange-700,
+.dark .text-orange-800,
+.dark .text-orange-900,
+.dark .text-yellow-600,
+.dark .text-yellow-700,
+.dark .text-yellow-800 {
+  color: var(--color-brand-text) !important;
+}
+.dark .text-amber-500,
+.dark .text-orange-500,
+.dark .text-yellow-500 {
+  color: var(--color-brand-primary) !important;
+}
+/* Brighter amber used for emphasis stays bright */
+.dark .text-amber-300,
+.dark .text-amber-400,
+.dark .text-yellow-300,
+.dark .text-yellow-400,
+.dark .text-orange-300,
+.dark .text-orange-400 {
+  color: var(--color-brand-primary) !important;
+}
+
+/* --- Gold/amber borders → brand-accent border (dark) --- */
+.dark .border-amber-50,
+.dark .border-amber-100,
+.dark .border-amber-200,
+.dark .border-yellow-50,
+.dark .border-yellow-100,
+.dark .border-yellow-200,
+.dark .border-orange-100,
+.dark .border-orange-200 {
+  border-color: var(--color-border-accent) !important;
+}
+.dark .border-amber-300,
+.dark .border-amber-400 {
+  border-color: rgba(251, 191, 36, 0.5) !important;
+}
+
+/* --- Brand/gold gradient avatars & halos (dark) --- */
+.dark .from-amber-50,
+.dark .from-amber-100,
+.dark .from-yellow-50,
+.dark .from-yellow-100 {
+  --tw-gradient-from: rgba(251, 191, 36, 0.22) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(251, 191, 36, 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+.dark .to-amber-100,
+.dark .to-amber-200,
+.dark .to-yellow-100,
+.dark .to-purple-100 {
+  --tw-gradient-to: rgba(251, 191, 36, 0.18) var(--tw-gradient-to-position) !important;
+}
+
+/* --- White backgrounds that aren't filled buttons → surface (dark) --- */
+/* Plain divs/cards using bg-white become the dark surface.
+   We avoid remapping filled brand/danger buttons (they pair bg-white with
+   a strong color intentionally). The selectors below target common
+   container patterns; element-level bg-white is handled too. */
+.dark .bg-white:not(button):not(a) {
+  background-color: var(--color-bg-primary) !important;
+}
+
+/* --- Slate grays used as backgrounds/borders → theme-aware (dark) --- */
+.dark .bg-slate-50,
+.dark .bg-slate-100,
+.dark .bg-slate-200 {
+  background-color: rgba(148, 163, 184, 0.12) !important;
+}
+.dark .bg-gray-50,
+.dark .bg-gray-100,
+.dark .bg-gray-200 {
+  background-color: rgba(148, 163, 184, 0.12) !important;
+}
+/* Loading skeletons */
+.dark .bg-slate-200\/70,
+.dark .bg-slate-300\/70 {
+  background-color: rgba(148, 163, 184, 0.18) !important;
+}
+/* Solid slate chips/badges backgrounds */
+.dark .bg-slate-300,
+.dark .bg-slate-400,
+.dark .bg-gray-300,
+.dark .bg-gray-400 {
+  background-color: rgba(148, 163, 184, 0.25) !important;
+}
+.dark .bg-slate-500,
+.dark .bg-gray-500 {
+  background-color: rgba(148, 163, 184, 0.35) !important;
+}
+
+/* --- Slate borders → theme border (dark) --- */
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-gray-100,
+.dark .border-gray-200 {
+  border-color: var(--color-border-primary) !important;
+}
+.dark .border-slate-300,
+.dark .border-gray-300 {
+  border-color: var(--color-border-secondary) !important;
+}
+.dark .border-white\/50,
+.dark .border-white\/60 {
+  border-color: var(--color-border-primary) !important;
+}
+
+/* --- Slate/gray text → readable muted tones (dark) --- */
+.dark .text-slate-300,
+.dark .text-gray-300 {
+  color: var(--color-text-secondary) !important;
+}
+.dark .text-slate-400,
+.dark .text-gray-400 {
+  color: var(--color-text-tertiary) !important;
+}
+.dark .text-slate-500,
+.dark .text-gray-500 {
+  color: var(--color-text-muted) !important;
+}
+.dark .text-slate-600,
+.dark .text-slate-700,
+.dark .text-gray-600,
+.dark .text-gray-700 {
+  color: var(--color-text-muted) !important;
+}
+/* Near-black slate headings stay near-white */
+.dark .text-slate-800,
+.dark .text-slate-900,
+.dark .text-gray-800,
+.dark .text-gray-900 {
+  color: var(--color-text-heading) !important;
+}
+
+/* --- Semantic status palette safety net (dark) ---
+   Covers StatusBadge-style bg-{color}-50 text-{color}-700 combos used
+   across the app. Keeps the hue recognizable but readable on dark. */
+.dark .bg-green-50,
+.dark .bg-emerald-50  { background-color: var(--status-bg) !important; }
+.dark .bg-green-100,
+.dark .bg-emerald-100 { background-color: rgba(34, 197, 94, 0.22) !important; }
+.dark .text-green-600,
+.dark .text-green-700,
+.dark .text-green-800,
+.dark .text-emerald-600,
+.dark .text-emerald-700,
+.dark .text-emerald-800 { color: var(--status-fg) !important; }
+.dark .border-green-100,
+.dark .border-green-200,
+.dark .border-emerald-100,
+.dark .border-emerald-200 { border-color: var(--status-border) !important; }
+
+.dark .bg-red-50   { background-color: var(--status-danger-bg) !important; }
+.dark .bg-red-100  { background-color: rgba(239, 68, 68, 0.22) !important; }
+.dark .text-red-600,
+.dark .text-red-700 { color: var(--status-danger-fg) !important; }
+.dark .border-red-100,
+.dark .border-red-200 { border-color: var(--status-danger-border) !important; }
+
+.dark .bg-blue-50,
+.dark .bg-sky-50,
+.dark .bg-indigo-50 { background-color: var(--status-info-bg) !important; }
+.dark .text-blue-600,
+.dark .text-blue-700,
+.dark .text-sky-600,
+.dark .text-indigo-600 { color: var(--status-info-fg) !important; }
+.dark .border-blue-100,
+.dark .border-blue-200 { border-color: var(--status-info-border) !important; }
+
+.dark .bg-purple-50  { background-color: rgba(168, 85, 247, 0.18) !important; }
+.dark .text-purple-600,
+.dark .text-purple-700 { color: #c4b5fd !important; }
+.dark .border-purple-100,
+.dark .border-purple-200 { border-color: rgba(168, 85, 247, 0.35) !important; }
+
+/* --- Hover washes on dark (pale hover backgrounds become subtle brand tint) --- */
+.dark .hover\:bg-amber-50:hover,
+.dark .hover\:bg-amber-100:hover,
+.dark .hover\:bg-yellow-50:hover,
+.dark .hover\:bg-yellow-100:hover { background-color: var(--color-bg-hover) !important; }
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-slate-100:hover,
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover { background-color: var(--color-bg-hover) !important; }
+.dark .hover\:bg-white:hover:not(button):not(a) { background-color: var(--color-bg-hover) !important; }
+
+/* --- Spinners / generic tinted borders on loaders (dark) --- */
+.dark .border-slate-600 { border-color: var(--color-text-muted) !important; }
+
+/* --- #E0E5EA / arbitrary light-gray chips used in some home cards (dark) --- */
+.dark .bg-\[\#E0E5EA\]\/30 { background-color: rgba(148, 163, 184, 0.12) !important; }
+

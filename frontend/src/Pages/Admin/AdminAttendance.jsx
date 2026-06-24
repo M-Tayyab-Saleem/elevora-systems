@@ -374,6 +374,7 @@ const AdminAttendance = () => {
  ];
 
  return (
+ <>
  <PageContainer
  title="Employee Attendance"
  subtitle="Monitor daily check-ins, check-outs, and working hours."
@@ -494,6 +495,7 @@ const AdminAttendance = () => {
  emptyMessage="No records found for this category."
  />
  </div>
+ </PageContainer>
 
  {isEditModalOpen && (
  <div className="fixed inset-0 bg-slate-900/40 z-[9999] flex justify-center items-center p-4">
@@ -576,8 +578,7 @@ const AdminAttendance = () => {
  allUsers={allUsers}
  />
  )}
-
- </PageContainer>
+ </>
  );
 };
 

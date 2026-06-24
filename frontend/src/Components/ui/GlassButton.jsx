@@ -23,16 +23,16 @@ export default function GlassButton({
  };
 
  // Variant classes — fully themed for both gold-white & gold-black
- const variantClasses = {
- primary:
- "bg-amber-400 dark:bg-amber-500 text-main dark:text-main shadow-md hover:bg-amber-500 dark:hover:bg-amber-400 hover:-translate-y-px",
- secondary:
- "bg-surface dark:bg-slate-800 text-main dark:text-slate-200 border border-amber-400 dark:border-amber-500 shadow-sm hover:bg-amber-50 dark:hover:bg-slate-700 hover:-translate-y-px",
- danger:
- "bg-red-500 dark:bg-red-600 text-white shadow-md hover:bg-red-600 dark:hover:bg-red-500 hover:-translate-y-px",
- ghost:
- "bg-transparent text-muted dark:text-slate-300 hover:bg-app dark:hover:bg-slate-800 hover:text-main dark:hover:text-white",
- };
+  const variantClasses = {
+    primary:
+      "bg-brand text-main shadow-md hover:bg-brand-accent hover:-translate-y-px",
+    secondary:
+      "bg-surface text-main border border-brand shadow-sm hover:bg-card-hover hover:-translate-y-px",
+    danger:
+      "bg-red-500 text-white shadow-md hover:bg-red-600 hover:-translate-y-px",
+    ghost:
+      "bg-transparent text-muted hover:bg-card-hover hover:text-main",
+  };
 
  return (
  <button

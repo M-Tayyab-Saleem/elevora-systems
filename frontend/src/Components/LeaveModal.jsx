@@ -104,7 +104,7 @@ const ApplyLeaveModal = ({ isOpen, setIsOpen, onLeaveAdded }) => {
  if (rangeError) error = rangeError;
  break;
  case "reason":
- error = validateDescription(value, { min: 20, max: 500, required: true });
+ error = validateDescription(value, { min: 2, max: 500, required: true });
  break;
  default:
  break;
@@ -196,7 +196,10 @@ const ApplyLeaveModal = ({ isOpen, setIsOpen, onLeaveAdded }) => {
  label="Leave Type"
  name="leaveType"
  value={leaveType}
- onChange={(e) => setLeaveType(e.target.value)}
+ onChange={(e) => {
+ setLeaveType(e.target.value);
+ setErrors(prev => ({ ...prev, leaveType: null }));
+ }}
  required
  placeholder="SELECT TYPE"
  options={[

@@ -97,7 +97,7 @@ const LeaveSummary = () => {
  appliedAt: leave.appliedAt ? formatDisplayDate(leave.appliedAt) : (leave.createdAt ? formatDisplayDate(leave.createdAt) : '-'),
  leaveType: leave.leaveType || leave.type || "-",
  reason: leave.reason || "-",
- duration: leave.duration || `${calculateWorkingDays(
+ duration: (leave.daysTaken ? `${leave.daysTaken} days` : null) || leave.duration || `${calculateWorkingDays(
  parseISOToLocalDate(leave.startDate), 
  parseISOToLocalDate(leave.endDate)
  )} days`,
@@ -112,7 +112,7 @@ const LeaveSummary = () => {
  try {
  // Fetch full leave details from API
  const response = await api.get(`/leaves/${leave.id}`);
- const fullLeaveData = response.data.data;
+ const fullLeaveData = response.data;
 
  setSelectedLeave({
  id: fullLeaveData._id,
@@ -142,9 +142,13 @@ const LeaveSummary = () => {
  // Handle edit leave
  const handleEditLeave = async (leave) => {
  try {
+ if (!leave.id) {
+ toast.error("Failed to load leave for editing");
+ return;
+ }
  // Fetch full leave details from API
  const response = await api.get(`/leaves/${leave.id}`);
- const fullLeaveData = response.data.data;
+ const fullLeaveData = response.data;
 
  setEditingLeave(fullLeaveData);
  setEditModalOpen(true);

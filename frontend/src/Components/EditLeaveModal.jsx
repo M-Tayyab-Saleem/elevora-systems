@@ -81,7 +81,7 @@ const EditLeaveModal = ({ isOpen, setIsOpen, leaveData, onLeaveEdited }) => {
  if (rangeError) error = rangeError;
  break;
  case "reason":
- error = validateDescription(value, { min: 20, max: 500, required: true });
+ error = validateDescription(value, { min: 2, max: 500, required: true });
  break;
  default:
  break;

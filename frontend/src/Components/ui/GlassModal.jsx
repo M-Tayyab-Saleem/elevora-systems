@@ -56,11 +56,11 @@ export default function GlassModal({
  Pure white (#fff), not translucent — pops cleanly on the beige app bg.
  max-h-[90vh] + flex flex-col lets the body scroll independently. */}
  <div
- className={`relative w-full ${maxWidth} bg-surface rounded-xl shadow-2xl border border-slate-100 flex flex-col max-h-[90vh] animate-slideInUp overflow-hidden`}
+ className={`relative w-full ${maxWidth} bg-surface rounded-xl shadow-2xl border border-border-subtle flex flex-col max-h-[90vh] animate-slideInUp overflow-hidden`}
  onClick={(e) => e.stopPropagation()}
  >
  {/* ── Header ── */}
- <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-slate-100 flex-shrink-0">
+ <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-border-subtle flex-shrink-0">
  <div>
  {typeof title === "string" ? (
  <h2
@@ -92,7 +92,7 @@ export default function GlassModal({
 
  {/* ── Footer (Optional) ── */}
  {footer && (
- <div className="flex-shrink-0 flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-surface rounded-b-xl">
+ <div className="flex-shrink-0 flex items-center justify-end gap-3 px-6 py-4 border-t border-border-subtle bg-surface rounded-b-xl">
  {footer}
  </div>
  )}

@@ -93,8 +93,8 @@ const RightSidebar = ({ isOpen, toggleSidebar }) => {
  }
 
  return (
- <div className={`${sizeClasses} rounded-full bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-white shadow-sm flex items-center justify-center`}>
- <span className={`${size === 'lg' ? 'text-lg' : 'text-xs'} font-bold text-amber-600`}>
+ <div className={`${sizeClasses} rounded-full border-2 border-border-subtle shadow-sm flex items-center justify-center`} style={{ backgroundColor: "var(--color-bg-active)" }}>
+ <span className={`${size === 'lg' ? 'text-lg' : 'text-xs'} font-bold text-brand-text`}>
  {name?.charAt(0).toUpperCase() || "U"}
  </span>
  </div>
@@ -182,28 +182,28 @@ const RightSidebar = ({ isOpen, toggleSidebar }) => {
  {/* Toggle Button */}
  <button
  onClick={toggleSidebar}
- className="absolute -left-0 top-12 z-[70] p-1.5 bg-surface border border-subtle shadow-md rounded-full text-muted hover:text-main hover:shadow-lg transition-all active:scale-90"
+ className="absolute -left-0 top-12 z-[70] p-1.5 bg-surface border border-border-subtle shadow-md rounded-full text-muted hover:text-main hover:shadow-lg transition-all active:scale-90"
  >
  {isOpen ? <ChevronRightIcon className="w-4 h-4" /> : <ChevronLeftIcon className="w-4 h-4" />}
  </button>
 
  {/* Sidebar Content */}
- <div className={`h-full w-full bg-surface rounded-[2rem] shadow-lg border border-amber-200 flex flex-col items-center py-5 px-4 overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+ <div className={`h-full w-full bg-surface rounded-[2rem] shadow-lg border border-border-subtle flex flex-col items-center py-5 px-4 overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
  }`}>
 
  {/* Profile Section */}
  <div className="flex flex-col items-center w-full">
- <div className="w-20 h-20 rounded-full border-2 border-white shadow-md overflow-hidden bg-gradient-to-br from-amber-50 to-amber-100 mb-2">
+ <div className="w-20 h-20 rounded-full border-2 border-border-subtle shadow-md overflow-hidden mb-2" style={{ backgroundColor: "var(--color-bg-active)" }}>
  {profileImage ? (
  <img src={profileImage} alt={firstName} className="w-full h-full object-cover" />
  ) : (
- <div className="h-full w-full rounded-full bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 flex items-center justify-center text-2xl font-bold">
+ <div className="h-full w-full rounded-full text-brand-text flex items-center justify-center text-2xl font-bold" style={{ backgroundColor: "var(--color-bg-active)" }}>
  {firstName.charAt(0).toUpperCase()}
  </div>
  )}
  </div>
 
- <div className="text-center bg-surface rounded-xl px-4 py-2 w-full mb-2 shadow-sm border border-amber-100">
+ <div className="text-center bg-surface rounded-xl px-4 py-2 w-full mb-2 shadow-sm border border-border-subtle">
  <h3 className="text-sm font-bold text-main">
  {currentUser?.name || "- Name -"}
  </h3>
@@ -246,7 +246,7 @@ const RightSidebar = ({ isOpen, toggleSidebar }) => {
  </div>
 
  {/* Reporting Manager */}
- <div className="w-full bg-surface rounded-xl p-3 mb-3 shadow-sm border border-amber-100">
+ <div className="w-full bg-surface rounded-xl p-3 mb-3 shadow-sm border border-border-subtle">
  <div className="flex items-center justify-between mb-2">
  <p className="text-[9px] font-bold text-muted uppercase">Reporting Manager</p>
  <UserIcon className="w-4 h-4 text-muted" />
@@ -281,7 +281,7 @@ const RightSidebar = ({ isOpen, toggleSidebar }) => {
  </div>
 
  {/* Team Overview */}
- <div className="w-full bg-surface rounded-xl p-3 flex-1 shadow-sm border border-amber-100 flex flex-col min-h-0">
+ <div className="w-full bg-surface rounded-xl p-3 flex-1 shadow-sm border border-border-subtle flex flex-col min-h-0">
  <div className="flex items-center justify-between mb-3">
  <p className="text-[9px] font-bold text-muted uppercase">Team Overview</p>
  <div className="flex items-center gap-1">

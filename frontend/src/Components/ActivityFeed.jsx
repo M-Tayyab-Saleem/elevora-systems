@@ -20,9 +20,9 @@ const ActivityFeed = ({ logs }) => {
 
  const getLevelStyles = (level) => {
  switch (level?.toLowerCase()) {
- case 'error': return { icon: ExclamationCircleIcon, color: 'text-rose-500', bg: 'bg-rose-50' };
- case 'warning': return { icon: ExclamationCircleIcon, color: 'text-amber-500', bg: 'bg-amber-50' };
- default: return { icon: CheckCircleIcon, color: 'text-emerald-500', bg: 'bg-emerald-50' };
+ case 'error': return { icon: ExclamationCircleIcon, color: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-900/30' };
+ case 'warning': return { icon: ExclamationCircleIcon, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/30' };
+ default: return { icon: CheckCircleIcon, color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-900/30' };
  }
  };
 

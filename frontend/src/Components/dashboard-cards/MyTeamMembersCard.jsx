@@ -47,7 +47,7 @@ export default function MyTeamMembersCard() {
  return (
  <div className="relative bg-background rounded-xl shadow-md p-5 pt-10 overflow-visible ">
  {/* Icon top left */}
- <div className="absolute -top-4 left-4 bg-amber-200 text-amber-800 w-10 h-10 flex items-center justify-center rounded-md shadow z-99">
+ <div className="absolute -top-4 left-4 bg-amber-200 dark:bg-amber-900/50 text-amber-800 dark:text-amber-400 w-10 h-10 flex items-center justify-center rounded-md shadow z-99">
  <FiUsers className="text-xl" />
  </div>
 

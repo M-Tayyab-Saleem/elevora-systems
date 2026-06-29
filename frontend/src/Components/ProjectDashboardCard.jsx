@@ -45,7 +45,7 @@ const ProjectDashboardCards = ({ donutData, barData }) => {
  }
  }}
  />
- <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-amber-700 font-bold text-xl">
+ <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-amber-700 dark:text-amber-400 font-bold text-xl">
  {safeDonutData.datasets[0].data[0]}%
  </div>
  </div>

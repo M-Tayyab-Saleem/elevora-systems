@@ -310,7 +310,7 @@ const LeaveTrackerAdmin = () => {
  label: "Leave Type",
  sortable: true,
  render: (value, row) => (
- <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 whitespace-nowrap">
+ <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 whitespace-nowrap">
  {row.leaveType}
  </span>
  )
@@ -367,7 +367,7 @@ const LeaveTrackerAdmin = () => {
  label: "Leave Type",
  sortable: true,
  render: (value, row) => (
- <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 whitespace-nowrap">
+ <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 whitespace-nowrap">
  {row.leaveType}
  </span>
  )

@@ -4,4 +4,4 @@ node_modules/
 # Ignore environment variables file
 .env
 
-coverage
+coverage/

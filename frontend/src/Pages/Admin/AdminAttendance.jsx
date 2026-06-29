@@ -43,7 +43,7 @@ const LiveTimer = ({ startTime }) => {
  return () => clearInterval(interval);
  }, [startTime]);
 
- return <span className="text-amber-600 font-mono font-bold tracking-wider">{duration}</span>;
+ return <span className="text-amber-600 dark:text-amber-400 font-mono font-bold tracking-wider">{duration}</span>;
 };
 
 // --- MAIN COMPONENT ---
@@ -267,13 +267,13 @@ const AdminAttendance = () => {
  const getStatusBadge = (status) => {
  switch (status) {
  case "Present":
- return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200"><CheckCircle size={12} /> Present</span>;
+ return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50"><CheckCircle size={12} /> Present</span>;
  case "Half Day":
- return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200"><AlertCircle size={12} /> Half Day</span>;
+ return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50"><AlertCircle size={12} /> Half Day</span>;
  case "Absent":
- return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200"><XCircle size={12} /> Absent</span>;
+ return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800/50"><XCircle size={12} /> Absent</span>;
  case "On Leave":
- return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200"><Calendar size={12} /> On Leave</span>;
+ return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50"><Calendar size={12} /> On Leave</span>;
  default:
  return <span className="text-muted text-xs font-bold">{status}</span>;
  }
@@ -302,7 +302,7 @@ const AdminAttendance = () => {
  label: "Employee",
  render: (_, log) => (
  <div className="flex items-center gap-3">
- <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold border-2 border-white shadow-sm">
+ <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs font-bold border-2 border-white shadow-sm">
  {log.user?.name?.charAt(0).toUpperCase() || "?"}
  </div>
  <div>
@@ -329,7 +329,7 @@ const AdminAttendance = () => {
  render: (_, log) => log.checkOutTime ? (
  <span className="text-sm font-bold text-main">{formatTime(log.checkOutTime)}</span>
  ) : log.checkInTime ? (
- <span className="text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-100 uppercase tracking-wider">Active</span>
+ <span className="text-[10px] font-black text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded border border-amber-100 uppercase tracking-wider">Active</span>
  ) : (
  <span className="text-muted">--:--</span>
  )
@@ -362,18 +362,18 @@ const AdminAttendance = () => {
                 <>
                   <button 
                     onClick={(e) => { e.stopPropagation(); if(!isSessionRunning) handleEditClick(log); }} 
-                    className={`p-2 rounded-lg transition-all ${isSessionRunning ? 'text-slate-300 cursor-not-allowed' : 'text-muted hover:text-amber-600 hover:bg-amber-50'}`} 
+                    className={`p-2 rounded-lg transition-all ${isSessionRunning ? 'text-slate-300 cursor-not-allowed' : 'text-muted hover:text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:bg-amber-900/30'}`} 
                     title={isSessionRunning ? "Cannot edit active session" : "Edit Record"}
                     disabled={isSessionRunning}
                   >
                     <Edit2 size={16} />
                   </button>
-                  <button onClick={(e) => { e.stopPropagation(); handleDeleteRecord(log._id); }} className="p-2 text-muted hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Delete Record">
+                  <button onClick={(e) => { e.stopPropagation(); handleDeleteRecord(log._id); }} className="p-2 text-muted hover:text-red-600 dark:text-red-400 hover:bg-red-50 dark:bg-red-900/30 rounded-lg transition-all" title="Delete Record">
                     <Trash2 size={16} />
                   </button>
                 </>
               ) : (
-                <button onClick={(e) => { e.stopPropagation(); handleEditClick(log); }} className="p-2 text-muted hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all" title="Add/Update Record">
+                <button onClick={(e) => { e.stopPropagation(); handleEditClick(log); }} className="p-2 text-muted hover:text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:bg-emerald-900/30 rounded-lg transition-all" title="Add/Update Record">
                   <Edit2 size={16} />
                 </button>
               )}
@@ -448,31 +448,31 @@ const AdminAttendance = () => {
  </FilterRow>
  }
  topWidgets={
- <div className="grid grid-cols-4 gap-0 glass-card p-0 overflow-hidden divide-x divide-slate-100">
- <div className="px-4 py-4 flex flex-col justify-center text-center bg-amber-50/30">
+ <div className="grid grid-cols-4 gap-0 glass-card p-0 overflow-hidden divide-x divide-slate-100 dark:divide-slate-700/50">
+ <div className="px-4 py-4 flex flex-col justify-center text-center bg-amber-50 dark:bg-amber-900/30/30 dark:bg-amber-900/10">
  <p className="text-[10px] font-black text-amber-400 uppercase tracking-widest mb-1">TOTAL</p>
  <p className="text-2xl font-black text-main">{summaryData.counts.total}</p>
  </div>
  <div
  onClick={() => { setActiveTab("present"); localStorage.setItem('admin_attendance_tab', 'present'); }}
- className={`px-4 py-4 flex flex-col justify-center text-center cursor-pointer transition-all ${activeTab === 'present' ? 'bg-emerald-100/50' : 'bg-emerald-50/30 hover:bg-emerald-50'}`}
+ className={`px-4 py-4 flex flex-col justify-center text-center cursor-pointer transition-all ${activeTab === 'present' ? 'bg-emerald-100 dark:bg-emerald-900/40/50 dark:bg-emerald-900/30' : 'bg-emerald-50 dark:bg-emerald-900/30/30 hover:bg-emerald-50 dark:bg-emerald-900/10 dark:hover:bg-emerald-900/20'}`}
  >
  <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1">PRESENT</p>
- <p className="text-2xl font-black text-emerald-700">{summaryData.counts.present}</p>
+ <p className="text-2xl font-black text-emerald-700 dark:text-emerald-400">{summaryData.counts.present}</p>
  </div>
  <div
  onClick={() => { setActiveTab("absent"); localStorage.setItem('admin_attendance_tab', 'absent'); }}
- className={`px-4 py-4 flex flex-col justify-center text-center cursor-pointer transition-all ${activeTab === 'absent' ? 'bg-rose-100/50' : 'bg-rose-50/30 hover:bg-rose-50'}`}
+ className={`px-4 py-4 flex flex-col justify-center text-center cursor-pointer transition-all ${activeTab === 'absent' ? 'bg-rose-100 dark:bg-rose-900/40/50 dark:bg-rose-900/30' : 'bg-rose-50 dark:bg-rose-900/30/30 hover:bg-rose-50 dark:bg-rose-900/10 dark:hover:bg-rose-900/20'}`}
  >
  <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">ABSENT</p>
- <p className="text-2xl font-black text-rose-700">{summaryData.counts.absent}</p>
+ <p className="text-2xl font-black text-rose-700 dark:text-rose-400">{summaryData.counts.absent}</p>
  </div>
  <div
  onClick={() => { setActiveTab("leave"); localStorage.setItem('admin_attendance_tab', 'leave'); }}
- className={`px-4 py-4 flex flex-col justify-center text-center cursor-pointer transition-all ${activeTab === 'leave' ? 'bg-amber-100/50' : 'bg-amber-50/30 hover:bg-amber-50'}`}
+ className={`px-4 py-4 flex flex-col justify-center text-center cursor-pointer transition-all ${activeTab === 'leave' ? 'bg-amber-100 dark:bg-amber-900/40/50 dark:bg-amber-900/30' : 'bg-amber-50 dark:bg-amber-900/30/30 hover:bg-amber-50 dark:bg-amber-900/10 dark:hover:bg-amber-900/20'}`}
  >
  <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-1">ON LEAVE</p>
- <p className="text-2xl font-black text-amber-700">{summaryData.counts.onLeave}</p>
+ <p className="text-2xl font-black text-amber-700 dark:text-amber-400">{summaryData.counts.onLeave}</p>
  </div>
  </div>
  }

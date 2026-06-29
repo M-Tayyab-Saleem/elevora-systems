@@ -55,8 +55,8 @@ const ExpenseForm = ({ onSubmitSuccess, onCancel }) => {
  const handleFileChange = (e) => {
  const file = e.target.files[0];
  if (file) {
- if (file.size > 5 * 1024 * 1024) {
- toast.error("File size must be less than 5MB");
+ if (file.size > 25 * 1024 * 1024) {
+ toast.error("File size must be less than 25MB");
  return;
  }
 
@@ -195,11 +195,11 @@ const ExpenseForm = ({ onSubmitSuccess, onCancel }) => {
  {step === "upload" && (
  <div className="space-y-6">
  {/* Info Banner */}
- <div className="bg-gradient-to-r from-amber-50 to-indigo-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
- <Wand2 size={20} className="text-amber-600 mt-0.5 flex-shrink-0" />
+ <div className="bg-gradient-to-r from-amber-50 to-indigo-50 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4 flex items-start gap-3">
+ <Wand2 size={20} className="text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
  <div>
  <p className="text-xs font-bold text-amber-900">AI-Powered Receipt Processing</p>
- <p className="text-[10px] text-amber-700 mt-1">
+ <p className="text-[10px] text-amber-700 dark:text-amber-400 mt-1">
  Upload your receipt or invoice and our AI will automatically extract the details for you.
  </p>
  </div>
@@ -347,11 +347,11 @@ const ExpenseForm = ({ onSubmitSuccess, onCancel }) => {
  {step === "form" && (
  <form onSubmit={handleSubmit} className="space-y-6">
  {/* Success Banner */}
- <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
- <CheckCircle size={20} className="text-green-600 flex-shrink-0" />
+ <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 dark:border-green-800/50 rounded-xl p-4 flex items-center gap-3">
+ <CheckCircle size={20} className="text-green-600 dark:text-green-400 flex-shrink-0" />
  <div>
  <p className="text-xs font-bold text-green-900">Receipt Processed Successfully!</p>
- <p className="text-[10px] text-green-700 mt-1">
+ <p className="text-[10px] text-green-700 dark:text-green-400 mt-1">
  Review and edit the auto-filled details below before submitting.
  </p>
  </div>

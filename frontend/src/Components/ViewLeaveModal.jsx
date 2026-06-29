@@ -190,8 +190,8 @@ const ViewLeaveModal = ({
  const handleAttachmentChange = (e) => {
  const file = e.target.files[0];
  if (file) {
- if (file.size > 5 * 1024 * 1024) { 
- showToast("File size must be less than 5MB", "error");
+ if (file.size > 25 * 1024 * 1024) { 
+ showToast("File size must be less than 25MB", "error");
  return;
  }
  setAttachment(file);
@@ -208,9 +208,9 @@ const ViewLeaveModal = ({
  
  const getStatusColor = (status) => {
  switch(status) {
- case "Approved": return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
- case "Rejected": return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
- default: return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
+ case "Approved": return "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 dark:bg-green-900/30 dark:text-green-400";
+ case "Rejected": return "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-400 dark:bg-red-900/30 dark:text-red-400";
+ default: return "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400 dark:bg-amber-900/30 dark:text-amber-400";
  }
  };
  
@@ -458,7 +458,7 @@ const ViewLeaveModal = ({
  </button>
  <button
  onClick={() => handleDeleteResponse(response._id)}
- className="p-1 text-muted dark:text-muted hover:text-red-600 transition"
+ className="p-1 text-muted dark:text-muted hover:text-red-600 dark:text-red-400 transition"
  title="Delete"
  >
  <Trash2 size={12} />
@@ -562,7 +562,7 @@ const ViewLeaveModal = ({
  setAttachment(null);
  setNewResponse(prev => prev.replace(`\n[Attached: ${attachment.name}]`, ''));
  }}
- className="text-brand-primary hover:text-red-600"
+ className="text-brand-primary hover:text-red-600 dark:text-red-400"
  >
  <FaTimes size={10} />
  </button>

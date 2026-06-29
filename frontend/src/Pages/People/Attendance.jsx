@@ -300,11 +300,11 @@ const Attendance = () => {
  } ${new Date(day.fullDate).toDateString() === today.toDateString() ? "animate-pulse shadow-lg" : ""}`}></div>
 
  <div className="flex-shrink-0 w-20 text-center pt-1">
- <div className={`text-xs text-muted font-medium uppercase tracking-wide ${day.dayName === 'Sat' || day.dayName === 'Sun' ? 'text-amber-600' : ''}`}>
+ <div className={`text-xs text-muted font-medium uppercase tracking-wide ${day.dayName === 'Sat' || day.dayName === 'Sun' ? 'text-amber-600 dark:text-amber-400' : ''}`}>
  {day.dayName}
  </div>
- <div className={`text-xl font-bold mt-1 ${day.dayName === 'Sat' || day.dayName === 'Sun' ? 'text-amber-800' : 'text-heading'} ${
- new Date(day.fullDate).toDateString() === today.toDateString() ? "text-amber-600" : ""
+ <div className={`text-xl font-bold mt-1 ${day.dayName === 'Sat' || day.dayName === 'Sun' ? 'text-amber-800 dark:text-amber-400' : 'text-heading'} ${
+ new Date(day.fullDate).toDateString() === today.toDateString() ? "text-amber-600 dark:text-amber-400" : ""
  }`}>
  {day.date}
  </div>
@@ -312,7 +312,7 @@ const Attendance = () => {
 
  <div
  className={`flex-grow ml-8 p-4 bg-surface rounded-xl shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer ${
- selectedDay === index ? "border-amber-300 shadow-md bg-amber-50/80" : "border-border-subtle hover:border-border-subtle"
+ selectedDay === index ? "border-amber-300 shadow-md bg-amber-50 dark:bg-amber-900/30/80" : "border-border-subtle hover:border-border-subtle"
  } border`}
  onClick={() => toggleDayDetails(index, day)}
  >
@@ -373,7 +373,7 @@ const Attendance = () => {
       onClose={() => setIsModalOpen(false)}
       maxWidth="max-w-sm"
       title={
-        <h3 className="text-sm font-black text-rose-600 uppercase tracking-widest flex items-center gap-2">
+        <h3 className="text-sm font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest flex items-center gap-2">
           <FaTimesCircle /> Absence Reason
         </h3>
       }
@@ -394,7 +394,7 @@ const Attendance = () => {
       </div>
       <div>
         <p className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1">Reason / Notes</p>
-        <div className="bg-rose-50/50 border border-rose-100 rounded-xl p-4 text-sm text-rose-800 font-medium whitespace-pre-wrap shadow-sm">
+        <div className="bg-rose-50 dark:bg-rose-900/30/50 border border-rose-100 rounded-xl p-4 text-sm text-rose-800 dark:text-rose-400 font-medium whitespace-pre-wrap shadow-sm">
           {selectedAbsentDay.notes || "No reason specified."}
         </div>
       </div>

@@ -13,7 +13,8 @@ import {
  Squares2X2Icon, ChartPieIcon, RectangleStackIcon,
  ClipboardDocumentListIcon, ShieldCheckIcon, UsersIcon,
  FolderPlusIcon, CheckBadgeIcon, TicketIcon as AssignTicketIcon,
- Cog6ToothIcon, ArrowRightOnRectangleIcon, SwatchIcon
+ Cog6ToothIcon, ArrowRightOnRectangleIcon, SwatchIcon,
+ SunIcon, MoonIcon, ComputerDesktopIcon
 } from "@heroicons/react/20/solid";
 import { DollarSignIcon } from "lucide-react";
 import GlassModal from "./ui/GlassModal";
@@ -50,15 +51,15 @@ const SubNavbarVertical = () => {
       await api.post("/auth/logout", {}, {
         headers: { _isLogoutRequest: true }
       });
+    } catch (err) {
+      console.warn("Logout API failed:", err.message);
+    } finally {
       dispatch(logout());
       
       const accounts = instance.getAllAccounts();
       if (accounts && accounts.length > 0) {
         instance.logoutRedirect({ postLogoutRedirectUri: window.location.origin });
       }
-    } catch (err) {
-      console.warn("Logout API failed:", err.message);
-      dispatch(logout());
     }
   };
 
@@ -180,7 +181,7 @@ const SubNavbarVertical = () => {
  </p>
  </div>
  <div className="flex gap-2 flex-wrap">
- {[{id: "light", icon: "☀️", label: "Light"}, {id: "dark", icon: "🌙", label: "Dark"}, {id: "system", icon: "💻", label: "System"}].map((t) => {
+ {[{id: "light", icon: <SunIcon className="w-4 h-4" />, label: "Light"}, {id: "dark", icon: <MoonIcon className="w-4 h-4" />, label: "Dark"}, {id: "system", icon: <ComputerDesktopIcon className="w-4 h-4" />, label: "System"}].map((t) => {
  const isActive = themeMode === t.id;
  return (
  <button
@@ -223,7 +224,7 @@ const SubNavbarVertical = () => {
  setIsSettingsOpen(false);
  setIsLogoutModalOpen(true);
  }}
- className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+ className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors text-red-500 hover:bg-red-50 dark:bg-red-900/30 dark:hover:bg-red-900/20"
  >
  <ArrowRightOnRectangleIcon className="h-4 w-4" />
  Sign out
@@ -240,7 +241,7 @@ const SubNavbarVertical = () => {
           onClose={() => setIsLogoutModalOpen(false)}
           title={
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 shrink-0">
+              <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400 shrink-0">
                 <ArrowRightOnRectangleIcon className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-bold" style={{ color: "var(--color-text-heading)" }}>

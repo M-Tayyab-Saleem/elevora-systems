@@ -203,8 +203,8 @@ const LeaveSummary = () => {
  label: "Status",
  render: (_, row) => (
  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-wide ${
- row.status === "Approved" ? "bg-green-100 text-green-800" : 
- row.status === "Rejected" ? "bg-red-100 text-red-800" : 
+ row.status === "Approved" ? "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400" : 
+ row.status === "Rejected" ? "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-400" : 
  "bg-yellow-100 text-yellow-800"
  }`}>
  {row.status}
@@ -224,7 +224,7 @@ const LeaveSummary = () => {
   {
   icon: <div className="flex items-center gap-1"><FaEdit size={12} /> Edit</div>,
   title: "Edit",
-  className: (row) => row.status === 'Pending' && row.isEditable ? "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-200 transition-colors" : "hidden",
+  className: (row) => row.status === 'Pending' && row.isEditable ? "px-3 py-1.5 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-medium hover:bg-amber-200 dark:bg-amber-900/50 transition-colors" : "hidden",
   onClick: (row) => {
   if(row.status === 'Pending' && row.isEditable) handleEditLeave(row);
   }
@@ -291,7 +291,7 @@ const LeaveSummary = () => {
  <div className="bg-surface rounded-[1.2rem] shadow-md border border-white/50 p-4">
  <div className="flex items-center justify-between mb-3">
  <div className="text-main text-sm font-medium uppercase tracking-wide">Total Leaves</div>
- <div className="text-amber-600">
+ <div className="text-amber-600 dark:text-amber-400">
  <MdEventAvailable size={20} />
  </div>
  </div>
@@ -357,7 +357,7 @@ const LeaveSummary = () => {
  <p className="mt-2 text-muted text-xs font-medium uppercase tracking-wide">Loading holidays...</p>
  </div>
  ) : errorMsg ? (
- <div className="text-red-600 bg-red-50 px-4 py-3 rounded-lg text-sm font-medium">{errorMsg}</div>
+ <div className="text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-4 py-3 rounded-lg text-sm font-medium">{errorMsg}</div>
  ) : (
  <HolidayTable holidays={holidays} searchTerm="" />
  )}

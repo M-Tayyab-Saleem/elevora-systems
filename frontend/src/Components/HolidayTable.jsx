@@ -111,8 +111,8 @@ const HolidayTable = ({ holidays: propHolidays, searchTerm = "", refreshKey = 0 
       if (isUpcoming) {
         daysCount = Math.ceil((holidayDate - today) / (1000 * 60 * 60 * 24));
         statusClass = daysCount === 0
-          ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
-          : "bg-amber-500/10 text-amber-600 border border-amber-500/20";
+          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+          : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20";
       } else {
         daysCount = Math.ceil((today - holidayDate) / (1000 * 60 * 60 * 24));
         statusClass = "bg-surface text-muted border border-border-subtle";
@@ -160,7 +160,7 @@ const HolidayTable = ({ holidays: propHolidays, searchTerm = "", refreshKey = 0 
 
  if (errorMsg) {
  return (
- <div className="text-red-600 bg-red-50 px-4 py-3 rounded-lg text-sm font-medium">
+ <div className="text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-4 py-3 rounded-lg text-sm font-medium">
  {errorMsg}
  </div>
  );

@@ -1,12 +1,13 @@
 import { useTheme } from "../context/ThemeContext";
+import { SunIcon, MoonIcon, ComputerDesktopIcon } from "@heroicons/react/20/solid";
 
 const ThemeSelector = () => {
   const { themeMode, setThemeMode } = useTheme();
 
   const themes = [
-    { id: "light", label: "Light Mode", icon: "☀️" },
-    { id: "dark", label: "Dark Mode", icon: "🌙" },
-    { id: "system", label: "System Preference", icon: "💻" }
+    { id: "light", label: "Light Mode", icon: <SunIcon className="w-8 h-8 mx-auto" /> },
+    { id: "dark", label: "Dark Mode", icon: <MoonIcon className="w-8 h-8 mx-auto" /> },
+    { id: "system", label: "System Preference", icon: <ComputerDesktopIcon className="w-8 h-8 mx-auto" /> }
   ];
 
   return (

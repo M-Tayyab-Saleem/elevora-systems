@@ -56,7 +56,7 @@ const NotesCard = ({ onDelete }) => {
  <div className="flex justify-between items-start mb-3">
  <div>
  <div className="flex items-center gap-2 mb-1">
- <FiEdit className="w-4 h-4 text-amber-600" />
+ <FiEdit className="w-4 h-4 text-amber-600 dark:text-amber-400" />
  <h3 className="text-xs font-bold text-main uppercase tracking-tight">Notes</h3>
  </div>
  <p className="text-[10px] font-medium text-muted">
@@ -80,7 +80,7 @@ const NotesCard = ({ onDelete }) => {
  onDelete();
  setMenuOpen(false);
  }}
- className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 font-medium"
+ className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 dark:bg-red-900/30 font-medium"
  >
  <FiTrash2 className="w-3 h-3 mr-2" />
  Delete Card
@@ -143,7 +143,7 @@ const NotesCard = ({ onDelete }) => {
  {editingId !== note.id ? (
  <button
  onClick={() => startEditing(note)}
- className="bg-green-100 text-green-700 p-1.5 rounded-md hover:bg-green-200"
+ className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 p-1.5 rounded-md hover:bg-green-200 dark:bg-green-900/50"
  title="Edit"
  >
  <FiEdit2 className="h-3 w-3" />
@@ -151,7 +151,7 @@ const NotesCard = ({ onDelete }) => {
  ) : (
  <button
  onClick={() => saveEdit(note.id)}
- className="text-amber-600 hover:text-amber-800 p-1.5"
+ className="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:text-amber-400 p-1.5"
  title="Save"
  >
  <FiCheck className="h-3 w-3" />
@@ -159,7 +159,7 @@ const NotesCard = ({ onDelete }) => {
  )}
  <button
  onClick={() => removeNote(note.id)}
- className="bg-red-100 text-red-600 p-1.5 rounded-md hover:bg-red-200"
+ className="bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 p-1.5 rounded-md hover:bg-red-200 dark:bg-red-900/50"
  title="Delete"
  >
  <FiTrash2 className="h-3 w-3" />

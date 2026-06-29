@@ -72,7 +72,7 @@ const SubNavbar = ({ onAddTimeLog, activeTab, onCreateTimesheet }) => {
  {/* Check In/Out Button */}
  <Button
  size="lg"
- className={`my-2 py-2 w-full max-w-[140px] hide-on-mobile-device font-semibold shadow transition ${checkedIn ? "bg-red-400 text-red-800" : "bg-green-400 text-green-800"
+ className={`my-2 py-2 w-full max-w-[140px] hide-on-mobile-device font-semibold shadow transition ${checkedIn ? "bg-red-400 text-red-800 dark:text-red-400" : "bg-green-400 text-green-800 dark:text-green-400"
  } ${loading || !userId ? 'opacity-50 cursor-not-allowed' : ''}`}
  onClick={checkedIn ? handleCheckOut : handleCheckIn}
  disabled={loading || !userId}
@@ -102,8 +102,8 @@ const SubNavbar = ({ onAddTimeLog, activeTab, onCreateTimesheet }) => {
  </Button>
  ) : (
  <>
- <PhoneIcon className="w-5 h-5 text-text hover:text-teal-700 cursor-pointer" />
- <CalendarDaysIcon className="w-5 h-5 text-text hover:text-teal-700 cursor-pointer" />
+ <PhoneIcon className="w-5 h-5 text-text hover:text-teal-700 dark:text-teal-400 cursor-pointer" />
+ <CalendarDaysIcon className="w-5 h-5 text-text hover:text-teal-700 dark:text-teal-400 cursor-pointer" />
  </>
  )}
  </div>
@@ -175,8 +175,8 @@ const SubNavbar = ({ onAddTimeLog, activeTab, onCreateTimesheet }) => {
  </Button>
  ) : (
  <>
- <PhoneIcon className="w-5 h-5 text-text hover:text-teal-700 cursor-pointer" />
- <CalendarDaysIcon className="w-5 h-5 text-text hover:text-teal-700 cursor-pointer" />
+ <PhoneIcon className="w-5 h-5 text-text hover:text-teal-700 dark:text-teal-400 cursor-pointer" />
+ <CalendarDaysIcon className="w-5 h-5 text-text hover:text-teal-700 dark:text-teal-400 cursor-pointer" />
  </>
  )}
  </div>

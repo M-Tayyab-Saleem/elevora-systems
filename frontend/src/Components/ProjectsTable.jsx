@@ -43,7 +43,7 @@ const ProjectsTable = ({
  <span>{val}</span>
  <button
  onClick={() => console.log("View project:", project)}
- className="absolute right-0 top-1/2 -translate-y-1/2 bg-amber-200 text-amber-700 px-3 py-1 rounded hover:bg-amber-300 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+ className="absolute right-0 top-1/2 -translate-y-1/2 bg-amber-200 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 px-3 py-1 rounded hover:bg-amber-300 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
  >
  View Project
  </button>
@@ -67,9 +67,9 @@ const ProjectsTable = ({
  <span
  className={`px-2 py-1 rounded-full text-xs whitespace-nowrap ${
  val === "Active"
- ? "bg-green-100 text-green-800"
+ ? "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400"
  : val === "Completed"
- ? "bg-amber-100 text-amber-800"
+ ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400"
  : "bg-app text-main"
  }`}
  >

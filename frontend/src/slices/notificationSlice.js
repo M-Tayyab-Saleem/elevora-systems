@@ -9,8 +9,11 @@ export const fetchNotifications = createAsyncThunk(
  const params = { page, limit };
  if (isRead !== undefined) params.isRead = isRead;
  if (entityType) params.entityType = entityType;
- const { data } = await api.get('/notifications', { params });
- return data;
+ const response = await api.get('/notifications', { params });
+ return {
+   data: response.data,
+   pagination: response.pagination || {}
+ };
  }
 );
 

@@ -58,7 +58,7 @@ const ViewTicketDetailsModal = ({ ticket: initialTicket, onClose }) => {
  };
 
  const statusStyles = ticket.status?.toLowerCase() === "open"
- ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+ ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-100"
  : ticket.status?.toLowerCase() === "in progress" 
  ? "bg-purple-50 text-purple-600 border-purple-100"
  : "bg-app text-muted border-border-subtle";
@@ -105,15 +105,15 @@ const ViewTicketDetailsModal = ({ ticket: initialTicket, onClose }) => {
               <button 
                 key={idx}
                 onClick={(e) => { e.preventDefault(); downloadFile(file.blobName || file.url, file.name); }}
-                className="w-full flex items-center justify-between p-3 bg-surface rounded-xl border border-border-subtle hover:bg-amber-50 hover:border-amber-200 transition-all group cursor-pointer text-left"
+                className="w-full flex items-center justify-between p-3 bg-surface rounded-xl border border-border-subtle hover:bg-amber-50 dark:bg-amber-900/30 hover:border-amber-200 dark:border-amber-800/50 transition-all group cursor-pointer text-left"
               >
                 <div className="flex items-center gap-2 overflow-hidden">
-                  <div className="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center font-bold text-xs shrink-0">
+                  <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 rounded-lg flex items-center justify-center font-bold text-xs shrink-0">
                     {file.name.split('.').pop().toUpperCase()}
                   </div>
                   <span className="text-xs font-bold text-main truncate">{file.name}</span>
                 </div>
-                <div className="text-muted group-hover:text-amber-600">
+                <div className="text-muted group-hover:text-amber-600 dark:text-amber-400">
                   <Paperclip size={16}/>
                 </div>
               </button>
@@ -133,7 +133,7 @@ const ViewTicketDetailsModal = ({ ticket: initialTicket, onClose }) => {
               <div key={i} className="bg-surface border border-border-subtle p-4 rounded-2xl shadow-sm">
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold">
+                    <div className="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs font-bold">
                       {res.author.charAt(0)}
                     </div>
                     <span className="text-xs font-bold text-heading">{res.author}</span>

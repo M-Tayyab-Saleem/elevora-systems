@@ -63,7 +63,7 @@ const BarCard = ({ onDelete }) => {
  return (
  <div className="relative bg-background rounded-xl shadow-md p-4 pt-10 overflow-visible">
  {/* Icon top left */}
- <div className="absolute -top-4 left-4 bg-indigo-200 text-indigo-800 w-10 h-10 flex items-center justify-center rounded-md shadow z-99">
+ <div className="absolute -top-4 left-4 bg-indigo-200 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-400 w-10 h-10 flex items-center justify-center rounded-md shadow z-99">
  <FiBarChart2 className="text-xl" />
  </div>
  {/* Header */}

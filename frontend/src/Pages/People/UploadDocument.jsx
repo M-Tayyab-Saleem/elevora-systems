@@ -38,6 +38,10 @@ const UploadDocument = () => {
  const handleShareFile = (e) => {
  const file = e.target.files[0]
  if (!file) return
+ if (file.size > 25 * 1024 * 1024) {
+ toast.error("File size must be less than 25MB")
+ return
+ }
  
  setCurrentFile(file)
  setAccessSettings({
@@ -109,6 +113,10 @@ const UploadDocument = () => {
 
  const handleFileChange = async (file) => {
  if (!file) return
+ if (file.size > 25 * 1024 * 1024) {
+ toast.error("File size must be less than 25MB")
+ return
+ }
  try {
  const formData = new FormData()
  formData.append('file', file)
@@ -212,7 +220,7 @@ const UploadDocument = () => {
 
  if (error) return (
  <div className="min-h-screen bg-transparent p-2">
- <Alert message={error.message} type="error" className="bg-red-50 border-red-200" />
+ <Alert message={error.message} type="error" className="bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800/50" />
  </div>
  )
 
@@ -258,7 +266,7 @@ const UploadDocument = () => {
               ...accessSettings,
               isPublic: e.target.checked
             })}
-            className="mr-2 h-4 w-4 text-amber-600"
+            className="mr-2 h-4 w-4 text-amber-600 dark:text-amber-400"
           />
           Make public (anyone with link can view)
         </label>
@@ -283,7 +291,7 @@ const UploadDocument = () => {
                     SharedWithRoles: newRoles
                   });
                 }}
-                className="mr-1.5 h-3.5 w-3.5 text-amber-600"
+                className="mr-1.5 h-3.5 w-3.5 text-amber-600 dark:text-amber-400"
               />
               <span className="text-sm text-main capitalize">{role}</span>
             </label>
@@ -311,14 +319,14 @@ const UploadDocument = () => {
         />
         <div className="mt-2 flex flex-wrap gap-2">
           {accessSettings.userEmails.map(email => (
-            <span key={email} className="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-xs font-medium flex items-center">
+            <span key={email} className="bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-full text-xs font-medium flex items-center">
               {email}
               <button
                 onClick={() => setAccessSettings({
                   ...accessSettings,
                   userEmails: accessSettings.userEmails.filter(e => e !== email)
                 })}
-                className="ml-2 text-amber-500 hover:text-amber-700"
+                className="ml-2 text-amber-500 hover:text-amber-700 dark:text-amber-400"
               >
                 ×
               </button>
@@ -420,7 +428,7 @@ const UploadDocument = () => {
  />
  <label
  htmlFor="file-upload-with-share"
- className="cursor-pointer bg-amber-100 text-amber-800 text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-amber-200 transition shadow-sm hover:shadow-md flex items-center gap-2"
+ className="cursor-pointer bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400 text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-amber-200 dark:bg-amber-900/50 transition shadow-sm hover:shadow-md flex items-center gap-2"
  >
  <FaShare size={14} />
  Upload & Share
@@ -446,7 +454,7 @@ const UploadDocument = () => {
 
  {uploadErr && (
  <div className="mb-4">
- <Alert message={uploadErr.message} type="error" className="bg-red-50 border-red-200" />
+ <Alert message={uploadErr.message} type="error" className="bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800/50" />
  </div>
  )}
 
@@ -480,7 +488,7 @@ const UploadDocument = () => {
  >
  <div className="flex justify-between items-center">
  <div className="flex items-center min-w-0">
- <div className="p-2 rounded-lg bg-amber-100 text-amber-800 mr-3">
+ <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400 mr-3">
  <FaFolder size={18} />
  </div>
  <div className="min-w-0">
@@ -504,7 +512,7 @@ const UploadDocument = () => {
  <div key={file._id} className="bg-surface rounded-xl p-3 shadow-sm border border-border-subtle hover:shadow-md transition-all duration-200 hover:border-border-subtle">
  <div className="flex justify-between items-center">
  <div className="flex items-center min-w-0">
- <div className="p-2 rounded-lg bg-green-100 text-green-800 mr-3">
+ <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 mr-3">
  <FaFile size={18} />
  </div>
  <div className="min-w-0">

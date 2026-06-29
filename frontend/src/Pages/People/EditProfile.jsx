@@ -199,8 +199,8 @@ export default function EditProfile() {
  return;
  }
 
- if (file.size > 5 * 1024 * 1024) {
- toast.error("Image size should be less than 5MB");
+ if (file.size > 25 * 1024 * 1024) {
+ toast.error("Image size should be less than 25MB");
  return;
  }
 
@@ -546,7 +546,7 @@ export default function EditProfile() {
  {idx > 0 && (
  <button
  onClick={() => removeEmergencyContact(idx)}
- className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors p-1"
+ className="absolute top-4 right-4 text-red-500 hover:text-red-700 dark:text-red-400 transition-colors p-1"
  title="Remove"
  >
  <FiX className="text-lg" />
@@ -610,7 +610,7 @@ export default function EditProfile() {
  {idx > 0 && (
  <button
  onClick={() => removeEducation(idx)}
- className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors p-1"
+ className="absolute top-4 right-4 text-red-500 hover:text-red-700 dark:text-red-400 transition-colors p-1"
  title="Remove"
  >
  <FiX className="text-lg" />
@@ -670,7 +670,7 @@ export default function EditProfile() {
  {idx > 0 && (
  <button
  onClick={() => removeExperience(idx)}
- className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors p-1"
+ className="absolute top-4 right-4 text-red-500 hover:text-red-700 dark:text-red-400 transition-colors p-1"
  title="Remove"
  >
  <FiX className="text-lg" />

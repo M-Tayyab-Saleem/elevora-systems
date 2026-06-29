@@ -8,11 +8,11 @@ const TaskCard = ({ task, isDragging }) => {
  const getPriorityColor = (priority) => {
  switch (priority) {
  case 'high':
- return 'bg-red-100 text-red-800 border-red-200';
+ return 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800/50';
  case 'medium':
  return 'bg-yellow-100 text-yellow-800 border-yellow-200';
  case 'low':
- return 'bg-green-100 text-green-800 border-green-200';
+ return 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800/50';
  default:
  return 'bg-app text-main border-border-subtle';
  }
@@ -55,7 +55,7 @@ const TaskCard = ({ task, isDragging }) => {
  
  {/* Due Date Alert */}
  {isOverdue && (
- <div className="flex items-center gap-1 mb-2 px-2 py-1 bg-red-100 text-red-800 rounded text-xs">
+ <div className="flex items-center gap-1 mb-2 px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-400 rounded text-xs">
  <FaClock className="w-3 h-3" />
  <span>Overdue</span>
  </div>

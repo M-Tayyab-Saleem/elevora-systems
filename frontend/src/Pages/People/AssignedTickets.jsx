@@ -158,14 +158,14 @@ export default function AssignedTickets() {
 
  // UI Helpers
  const getPriorityColor = (p) => {
- if (p.includes("High")) return "bg-red-100 text-red-700";
+ if (p.includes("High")) return "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400";
  if (p.includes("Medium")) return "bg-orange-100 text-orange-700";
- return "bg-green-100 text-green-700";
+ return "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400";
  };
 
  const getStatusColor = (s) => {
  const status = s.toLowerCase();
- if (status === "open") return "bg-amber-100 text-amber-700";
+ if (status === "open") return "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400";
  if (status === "in progress") return "bg-purple-100 text-purple-700";
  return "bg-app text-muted";
  };
@@ -176,7 +176,7 @@ export default function AssignedTickets() {
  label: "Ticket ID",
  render: (_, ticket) => (
  <>
- <span className="text-xs font-mono font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-md">
+ <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded-md">
  #{ticket.ticketID}
  </span>
  <div className="text-[10px] text-muted mt-1 pl-1 font-bold">
@@ -226,7 +226,7 @@ export default function AssignedTickets() {
  <button
  key={s}
  onClick={(e) => { e.stopPropagation(); handleStatusChange(ticket._id, s); }}
- className="w-full text-left px-4 py-2 text-[10px] font-bold text-muted hover:bg-surface hover:text-amber-600 uppercase"
+ className="w-full text-left px-4 py-2 text-[10px] font-bold text-muted hover:bg-surface hover:text-amber-600 dark:text-amber-400 uppercase"
  >
  {s}
  </button>
@@ -243,7 +243,7 @@ export default function AssignedTickets() {
  render: (_, ticket) => (
  <button 
  onClick={(e) => { e.stopPropagation(); setSelectedTicket(ticket); }}
- className="p-2 bg-surface border border-border-subtle text-muted rounded-xl hover:border-amber-300 hover:text-amber-600 transition-all shadow-sm"
+ className="p-2 bg-surface border border-border-subtle text-muted rounded-xl hover:border-amber-300 hover:text-amber-600 dark:text-amber-400 transition-all shadow-sm"
  >
  <EyeIcon className="w-4 h-4" />
  </button>
@@ -354,15 +354,15 @@ export default function AssignedTickets() {
                         <button 
                           key={idx}
                           onClick={() => handleDownload(file.blobName, file.name)}
-                          className="w-full flex items-center justify-between p-3 bg-surface rounded-xl border border-border-subtle hover:bg-amber-50 hover:border-amber-200 transition-all group text-left"
+                          className="w-full flex items-center justify-between p-3 bg-surface rounded-xl border border-border-subtle hover:bg-amber-50 dark:bg-amber-900/30 hover:border-amber-200 dark:border-amber-800/50 transition-all group text-left"
                         >
                           <div className="flex items-center gap-2 overflow-hidden">
-                            <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600 font-bold text-xs shrink-0">
+                            <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/40 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold text-xs shrink-0">
                               {file.name.split('.').pop().toUpperCase()}
                             </div>
                             <span className="text-xs font-bold text-main truncate">{file.name}</span>
                           </div>
-                          <div className="text-muted group-hover:text-amber-600">
+                          <div className="text-muted group-hover:text-amber-600 dark:text-amber-400">
                             <Paperclip size={16}/>
                           </div>
                         </button>

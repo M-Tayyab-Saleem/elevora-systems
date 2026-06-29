@@ -52,7 +52,7 @@ export default function GlassModal({
 
       {/* Modal Card */}
       <div
-        className={`relative z-[10000] w-full ${maxWidth} bg-white rounded-xl shadow-xl border border-slate-200 flex flex-col max-h-[90vh] mx-4 animate-in fade-in zoom-in-95 duration-200 overflow-hidden`}
+        className={`relative z-[10000] w-full ${maxWidth} bg-white rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col max-h-[90vh] mx-4 animate-in fade-in zoom-in-95 duration-200 overflow-hidden`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -62,7 +62,7 @@ export default function GlassModal({
               {typeof title === "string" ? (
                 <h2
                   id="modal-title"
-                  className="text-lg font-semibold leading-none tracking-tight text-slate-900"
+                  className="text-lg font-semibold leading-none tracking-tight text-slate-900 dark:text-slate-100"
                 >
                   {title}
                 </h2>
@@ -86,13 +86,13 @@ export default function GlassModal({
         </div>
 
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 custom-scrollbar-visible text-slate-700">
+        <div className="flex-1 overflow-y-auto px-6 py-5 custom-scrollbar-visible text-slate-700 dark:text-slate-300">
           {children}
         </div>
 
         {/* Footer (Optional) */}
         {footer && (
-          <div className="flex-shrink-0 flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 px-6 py-4 border-t border-slate-100 bg-slate-50/50">
+          <div className="flex-shrink-0 flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 px-6 py-4 border-t border-slate-100 bg-slate-50 dark:bg-slate-800/50/50">
             {footer}
           </div>
         )}

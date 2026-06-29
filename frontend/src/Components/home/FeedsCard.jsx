@@ -32,7 +32,7 @@ const FeedsCard = ({ onDelete }) => {
  <div className="flex justify-between items-start mb-2">
  <div>
  <div className="flex items-center gap-2 mb-0.5">
- <FiActivity className="w-3.5 h-3.5 text-green-600" />
+ <FiActivity className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
  <h3 className="text-xs font-bold text-main uppercase tracking-tight">Feeds</h3>
  </div>
  <p className="text-[9px] font-medium text-muted">4+ unread messages</p>
@@ -49,7 +49,7 @@ const FeedsCard = ({ onDelete }) => {
  <div className="absolute right-0 mt-1 w-32 bg-surface shadow-lg border border-subtle rounded-xl z-50">
  <button
  onClick={() => { onDelete(); setMenuOpen(false); }}
- className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 font-medium"
+ className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 dark:bg-red-900/30 font-medium"
  >
  <FiTrash2 className="w-3 h-3 mr-2" />
  Delete Card
@@ -77,7 +77,7 @@ const FeedsCard = ({ onDelete }) => {
 
  {item.actionType && (
  <button
- className={`text-[9px] px-2 py-0.5 rounded-md font-medium shrink-0 ${item.actionType === "status" ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}`}
+ className={`text-[9px] px-2 py-0.5 rounded-md font-medium shrink-0 ${item.actionType === "status" ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400" : "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400"}`}
  >
  {item.actionType === "status" ? "View" : "Check-in"}
  </button>

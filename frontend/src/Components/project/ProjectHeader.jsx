@@ -8,11 +8,11 @@ const ProjectHeader = ({ project }) => {
  const getStatusColor = (status) => {
  switch (status) {
  case 'active':
- return 'bg-green-100 text-green-800 border-green-200';
+ return 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800/50';
  case 'on-hold':
  return 'bg-yellow-100 text-yellow-800 border-yellow-200';
  case 'completed':
- return 'bg-amber-100 text-amber-800 border-amber-200';
+ return 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-800/50';
  default:
  return 'bg-app text-main border-border-subtle';
  }
@@ -21,11 +21,11 @@ const ProjectHeader = ({ project }) => {
  const getPriorityColor = (priority) => {
  switch (priority) {
  case 'high':
- return 'text-red-600';
+ return 'text-red-600 dark:text-red-400';
  case 'medium':
  return 'text-yellow-600';
  case 'low':
- return 'text-green-600';
+ return 'text-green-600 dark:text-green-400';
  default:
  return 'text-muted';
  }

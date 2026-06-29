@@ -12,7 +12,7 @@ export default function NotificationItem({ notif, onClick, isDense = false, chil
  isDense ? 'px-4 py-3' : 'px-6 py-5'
  } ${
  isSelected
- ? 'bg-teal-50/40 border-l-teal-600'
+ ? 'bg-teal-50 dark:bg-teal-900/30/40 border-l-teal-600'
  : !notif.isRead 
  ? 'bg-surface border-l-teal-400/30 hover:bg-app' 
  : 'bg-surface border-l-transparent hover:bg-app'
@@ -59,22 +59,22 @@ export default function NotificationItem({ notif, onClick, isDense = false, chil
 
  <div className="flex items-center gap-2 mt-2.5">
  {notif.type.startsWith('LEAVE') && (
- <span className="px-1.5 py-0.5 bg-amber-50 text-amber-600 text-[8px] font-black rounded uppercase border border-amber-100">Leave</span>
+ <span className="px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[8px] font-black rounded uppercase border border-amber-100">Leave</span>
  )}
  {notif.type.startsWith('EXPENSE') && (
- <span className="px-1.5 py-0.5 bg-amber-50 text-amber-600 text-[8px] font-black rounded uppercase border border-amber-100">Expense</span>
+ <span className="px-1.5 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[8px] font-black rounded uppercase border border-amber-100">Expense</span>
  )}
  {notif.type.startsWith('TICKET') && (
  <span className="px-1.5 py-0.5 bg-purple-50 text-purple-600 text-[8px] font-black rounded uppercase border border-purple-100">Ticket</span>
  )}
  {notif.type.startsWith('TASK') && (
- <span className="px-1.5 py-0.5 bg-rose-50 text-rose-600 text-[8px] font-black rounded uppercase border border-rose-100">Task</span>
+ <span className="px-1.5 py-0.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-[8px] font-black rounded uppercase border border-rose-100">Task</span>
  )}
  {notif.type.startsWith('PROJECT') && (
- <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 text-[8px] font-black rounded uppercase border border-indigo-100">Project</span>
+ <span className="px-1.5 py-0.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[8px] font-black rounded uppercase border border-indigo-100">Project</span>
  )}
  {notif.type.includes('TIMESHEET') && (
- <span className="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 text-[8px] font-black rounded uppercase border border-emerald-100">Timesheet</span>
+ <span className="px-1.5 py-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[8px] font-black rounded uppercase border border-emerald-100">Timesheet</span>
  )}
  {notif.type.startsWith('USER') && (
  <span className="px-1.5 py-0.5 bg-app text-muted text-[8px] font-black rounded uppercase border border-slate-100">System</span>

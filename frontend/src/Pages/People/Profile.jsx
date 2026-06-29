@@ -49,6 +49,10 @@ export default function Profile({ userId: propUserId }) {
  if (targetUserId) return;
  const file = e.target.files[0];
  if (!file) return;
+ if (file.size > 25 * 1024 * 1024) {
+ toast.error("File size must be less than 25MB");
+ return;
+ }
 
  const formData = new FormData();
  formData.append('avatar', file);
@@ -72,6 +76,10 @@ export default function Profile({ userId: propUserId }) {
  if (targetUserId) return;
  const file = e.target.files[0];
  if (!file) return;
+ if (file.size > 25 * 1024 * 1024) {
+ toast.error("File size must be less than 25MB");
+ return;
+ }
 
  const formData = new FormData();
  formData.append('coverImage', file);
@@ -100,12 +108,12 @@ export default function Profile({ userId: propUserId }) {
  if (!user) return <div className="text-red-500 text-center mt-10 text-sm">No user data available.</div>;
 
  const profileCards = [
- { icon: MapPin, label: "Location", value: user.branch || "N/A", bg: "bg-green-100", iconColor: "text-green-600" },
+ { icon: MapPin, label: "Location", value: user.branch || "N/A", bg: "bg-green-100 dark:bg-green-900/40", iconColor: "text-green-600 dark:text-green-400" },
  { icon: Briefcase, label: "Department", value: user?.department?.name || "N/A", bg: "bg-yellow-100", iconColor: "text-yellow-600" },
  { icon: Clock, label: "Time Zone", value: user.timeZone || "N/A", bg: "bg-orange-100", iconColor: "text-orange-600" },
- { icon: Mail, label: "Email ID", value: user.email, bg: "bg-amber-100", iconColor: "text-amber-600" },
- { icon: Briefcase, label: "Shift", value: user.empType || "N/A", bg: "bg-indigo-100", iconColor: "text-indigo-600" },
- { icon: Phone, label: "Work phone", value: user.phoneNumber || "N/A", bg: "bg-green-100", iconColor: "text-green-600" },
+ { icon: Mail, label: "Email ID", value: user.email, bg: "bg-amber-100 dark:bg-amber-900/40", iconColor: "text-amber-600 dark:text-amber-400" },
+ { icon: Briefcase, label: "Shift", value: user.empType || "N/A", bg: "bg-indigo-100 dark:bg-indigo-900/40", iconColor: "text-indigo-600 dark:text-indigo-400" },
+ { icon: Phone, label: "Work phone", value: user.phoneNumber || "N/A", bg: "bg-green-100 dark:bg-green-900/40", iconColor: "text-green-600 dark:text-green-400" },
  ];
 
  return (
@@ -179,7 +187,7 @@ export default function Profile({ userId: propUserId }) {
  <>
  <label
  htmlFor="avatar-upload"
- className="absolute bottom-0 right-0 bg-surface text-main p-2 md:p-2.5 rounded-full shadow-md cursor-pointer border border-border-subtle hover:bg-amber-50 hover:text-amber-600 transition-all"
+ className="absolute bottom-0 right-0 bg-surface text-main p-2 md:p-2.5 rounded-full shadow-md cursor-pointer border border-border-subtle hover:bg-amber-50 dark:bg-amber-900/30 hover:text-amber-600 dark:text-amber-400 transition-all"
  title="Change Profile Picture"
  >
  {uploadingAvatar ? (
@@ -218,7 +226,7 @@ export default function Profile({ userId: propUserId }) {
  {user.reportsTo?.name || "Not Assigned"}
  </p>
  </div>
- <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold">
+ <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs font-bold">
  {user.reportsTo?.name?.charAt(0) || "?"}
  </div>
  </div>
@@ -279,7 +287,7 @@ export default function Profile({ userId: propUserId }) {
  {/* Education */}
  <div className="bg-surface p-6 rounded-[1.5rem] shadow-sm border border-border-subtle/50 hover:shadow-md transition-all">
  <div className="flex items-center gap-3 mb-5 border-b border-border-subtle pb-3">
- <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
+ <div className="p-2 bg-amber-50 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400">
  <GraduationCap size={18} />
  </div>
  <h3 className="text-sm font-black text-heading uppercase tracking-wider">Education</h3>

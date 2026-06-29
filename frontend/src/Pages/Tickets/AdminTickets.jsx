@@ -102,10 +102,10 @@ const AdminTickets = () => {
  </span>
  <span className={`px-2 py-1 rounded-full text-xs font-medium uppercase tracking-wide 
  ${ticket.priority === "High Priority"
- ? "bg-red-100 text-red-800"
+ ? "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-400"
  : ticket.priority === "Medium Priority"
  ? "bg-yellow-100 text-yellow-800"
- : "bg-amber-100 text-amber-800"
+ : "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400"
  }`}>
  {ticket.priority}
  </span>

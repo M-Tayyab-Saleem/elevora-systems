@@ -108,7 +108,7 @@ const ModernSelect = ({
  opt.value === value
  ? dark
  ? "bg-amber-500/20 text-amber-400 font-semibold"
- : "bg-amber-50 text-amber-600 font-semibold"
+ : "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-semibold"
  : dark
  ? "text-slate-300 hover:bg-slate-700 hover:text-white"
  : "text-muted hover:bg-app hover:text-main"

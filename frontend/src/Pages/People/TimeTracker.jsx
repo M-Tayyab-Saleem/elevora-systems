@@ -292,13 +292,13 @@ const TimeTracker = () => {
  {
  icon: <IoEye size={16} />,
  title: "View",
- className: "bg-amber-50 text-amber-600 hover:bg-amber-100",
+ className: "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:bg-amber-900/40",
  onClick: (row) => handleViewLog(row)
  },
  {
  icon: <IoPencil size={16} />,
  title: "Edit",
- className: "bg-green-50 text-green-600 hover:bg-green-100",
+ className: "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:bg-green-900/40",
  onClick: (row) => {
  setEditingLogId(row._id);
  setModalMode("edit");
@@ -308,7 +308,7 @@ const TimeTracker = () => {
  {
  icon: <IoTrash size={16} />,
  title: "Delete",
- className: "bg-red-50 text-red-600 hover:bg-red-100",
+ className: "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:bg-red-900/40",
  onClick: (row) => handleDeleteClick(row._id)
  }
  ];
@@ -426,7 +426,7 @@ const TimeTracker = () => {
  >
  {/* Error State */}
  {error && (
- <div className="bg-red-50 border border-red-200 rounded-[1.2rem] p-4 text-center text-red-700 text-sm mb-4">
+ <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800/50 rounded-[1.2rem] p-4 text-center text-red-700 dark:text-red-400 text-sm mb-4">
  {error}
  </div>
  )}
@@ -513,7 +513,7 @@ const TimeTracker = () => {
  </button>
  <button
  onClick={handleConfirmDelete}
- className="flex-1 /10 text-red-600 font-bold text-xs hover: hover: border border-red-500/20 hover:border-transparent active:scale-95 btn btn-danger"
+ className="flex-1 /10 text-red-600 dark:text-red-400 font-bold text-xs hover: hover: border border-red-500/20 hover:border-transparent active:scale-95 btn btn-danger"
  >
  Delete
  </button>

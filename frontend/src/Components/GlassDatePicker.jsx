@@ -18,7 +18,7 @@ const GlassDatePicker = ({
  <div className={`w-full ${className}`}>
  {/* Label */}
  {label && (
- <label className="block text-[10px] font-black text-amber-700/70 mb-2 uppercase tracking-widest">
+ <label className="block text-[10px] font-black text-amber-700 dark:text-amber-400/70 mb-2 uppercase tracking-widest">
  {label} {required && <span className="text-red-500">*</span>}
  </label>
  )}
@@ -26,7 +26,7 @@ const GlassDatePicker = ({
  {/* Date Picker Container */}
  <div className="relative w-full">
  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
- <FiCalendar className="w-4 h-4 text-amber-600" />
+ <FiCalendar className="w-4 h-4 text-amber-600 dark:text-amber-400" />
  </div>
  
  <DatePicker

@@ -403,7 +403,7 @@ const ToDoCard = ({ onDelete, userId }) => {
  <div className="flex justify-between items-start mb-3 shrink-0">
  <div>
  <div className="flex items-center gap-2 mb-1">
- <FiCheckSquare className="w-4 h-4 text-green-600" />
+ <FiCheckSquare className="w-4 h-4 text-green-600 dark:text-green-400" />
  <h3 className="text-xs font-bold text-main uppercase tracking-tight">To-Do</h3>
  </div>
  <p className="text-[10px] font-medium text-muted">
@@ -426,7 +426,7 @@ const ToDoCard = ({ onDelete, userId }) => {
  onDelete();
  setMenuOpen(false);
  }}
- className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 font-medium"
+ className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 dark:bg-red-900/30 font-medium"
  >
  <FiTrash2 className="w-3 h-3 mr-2" />
  Delete Card
@@ -456,7 +456,7 @@ const ToDoCard = ({ onDelete, userId }) => {
  {sortedTasks.map((task) => (
  <li
  key={task._id}
- className={`rounded-lg p-3 flex justify-between items-start gap-2 transition-all ${task.completed ? "bg-emerald-50 border border-emerald-100" : "bg-[#E0E5EA]/30 border border-transparent"
+ className={`rounded-lg p-3 flex justify-between items-start gap-2 transition-all ${task.completed ? "bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100" : "bg-[#E0E5EA]/30 border border-transparent"
  }`}
  >
  <div className="flex items-start gap-2.5 flex-1 min-w-0">
@@ -496,14 +496,14 @@ const ToDoCard = ({ onDelete, userId }) => {
  <button
  type="button"
  onClick={() => openDetailModal(task)}
- className="bg-green-100 text-green-700 p-1.5 rounded-md hover:bg-green-200"
+ className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 p-1.5 rounded-md hover:bg-green-200 dark:bg-green-900/50"
  title="View / edit"
  >
  <FiEdit2 className="h-3 w-3" />
  </button>
  <button
  onClick={() => confirmDeleteTask(task)}
- className="bg-red-100 text-red-600 p-1.5 rounded-md hover:bg-red-200"
+ className="bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 p-1.5 rounded-md hover:bg-red-200 dark:bg-red-900/50"
  >
  <FiTrash2 className="h-3 w-3" />
  </button>
@@ -730,7 +730,7 @@ const ToDoCard = ({ onDelete, userId }) => {
       }
     >
       <div className="text-center">
-        <div className="w-16 h-16 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
+        <div className="w-16 h-16 mx-auto mb-4 bg-red-50 dark:bg-red-900/30 rounded-full flex items-center justify-center">
           <FiTrash2 className="w-8 h-8 text-red-500" />
         </div>
         <p className="text-xs text-muted font-medium mb-6">

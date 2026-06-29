@@ -17,18 +17,18 @@ const ExpenseStats = ({ stats }) => {
  value: stats.pending,
  subValue: `$${stats.pendingAmount.toFixed(2)}`,
  icon: Clock,
- textColor: "text-amber-600",
- iconColor: "text-amber-600",
- iconBg: "bg-amber-100"
+ textColor: "text-amber-600 dark:text-amber-400",
+ iconColor: "text-amber-600 dark:text-amber-400",
+ iconBg: "bg-amber-100 dark:bg-amber-900/40"
  },
  {
  title: "Approved",
  value: stats.approved,
  subValue: `$${stats.approvedAmount.toFixed(2)}`,
  icon: CheckCircle,
- textColor: "text-emerald-600",
- iconColor: "text-emerald-600",
- iconBg: "bg-emerald-100"
+ textColor: "text-emerald-600 dark:text-emerald-400",
+ iconColor: "text-emerald-600 dark:text-emerald-400",
+ iconBg: "bg-emerald-100 dark:bg-emerald-900/40"
  },
  {
  title: "Rejected",
@@ -39,9 +39,9 @@ const ExpenseStats = ({ stats }) => {
  stats.pendingAmount
  ).toFixed(2)}`,
  icon: XCircle,
- textColor: "text-rose-600",
- iconColor: "text-rose-600",
- iconBg: "bg-rose-100"
+ textColor: "text-rose-600 dark:text-rose-400",
+ iconColor: "text-rose-600 dark:text-rose-400",
+ iconBg: "bg-rose-100 dark:bg-rose-900/40"
  }
  ];
 

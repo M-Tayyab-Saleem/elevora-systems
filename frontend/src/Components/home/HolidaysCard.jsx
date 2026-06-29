@@ -74,7 +74,7 @@ const HolidaysCard = ({ onDelete }) => {
  case 'national':
  return "bg-lime-100 text-lime-700";
  case 'observance':
- return "bg-indigo-100 text-indigo-700";
+ return "bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-400";
  default:
  return "bg-app text-main";
  }
@@ -115,7 +115,7 @@ const HolidaysCard = ({ onDelete }) => {
  <div className="absolute right-0 mt-1 w-32 bg-surface shadow-lg border border-subtle rounded-xl z-50">
  <button
  onClick={() => { onDelete(); setMenuOpen(false); }}
- className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 font-medium"
+ className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 dark:bg-red-900/30 font-medium"
  >
  <FiTrash2 className="w-3 h-3 mr-2" />
  Delete Card

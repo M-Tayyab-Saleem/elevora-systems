@@ -58,15 +58,15 @@ const GreetingTimerCard = () => {
  {/* Timer */}
  <div className="flex items-center gap-2 sm:gap-4">
  <div className="flex items-center gap-1">
- <div className="bg-indigo-100 text-indigo-800 px-3 py-1.5 sm:py-2 rounded font-semibold text-base sm:text-lg">
+ <div className="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-400 px-3 py-1.5 sm:py-2 rounded font-semibold text-base sm:text-lg">
  {h}
  </div>
  <div className="text-base sm:text-lg font-bold">:</div>
- <div className="bg-indigo-100 text-indigo-800 px-3 py-1.5 sm:py-2 rounded font-semibold text-base sm:text-lg">
+ <div className="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-400 px-3 py-1.5 sm:py-2 rounded font-semibold text-base sm:text-lg">
  {m}
  </div>
  <div className="text-base sm:text-lg font-bold">:</div>
- <div className="bg-indigo-100 text-indigo-800 px-3 py-1.5 sm:py-2 rounded font-semibold text-base sm:text-lg">
+ <div className="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-400 px-3 py-1.5 sm:py-2 rounded font-semibold text-base sm:text-lg">
  {s}
  </div>
  </div>

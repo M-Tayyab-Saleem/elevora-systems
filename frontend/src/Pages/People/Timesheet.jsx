@@ -303,7 +303,7 @@ const Timesheet = ({ refreshTrigger }) => {
  return <span className="text-muted text-xs">No comments</span>;
  }
  return (
- <div className="flex items-center justify-center text gap-1 text-amber-600">
+ <div className="flex items-center justify-center text gap-1 text-amber-600 dark:text-amber-400">
  <FaCommentDots size={14} />
  <span className="text-xs font-medium">{commentCount} {commentCount !== 1 ? 's' : ''}</span>
  </div>
@@ -316,19 +316,19 @@ const Timesheet = ({ refreshTrigger }) => {
  {
  icon: <FaEye size={14} />,
  title: "View Details",
- className: "bg-amber-50 text-amber-600 hover:bg-amber-100",
+ className: "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:bg-amber-900/40",
  onClick: (row) => handleViewDetails(row)
  },
  {
  icon: <IoPencil size={14} />,
  title: "Edit",
- className: (row) => `hover:bg-green-100 ${row.status === 'Pending' ? 'bg-green-50 text-green-600' : 'bg-surface text-muted cursor-not-allowed'}`,
+ className: (row) => `hover:bg-green-100 dark:bg-green-900/40 ${row.status === 'Pending' ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-surface text-muted cursor-not-allowed'}`,
  onClick: (row) => handleEditClick(row)
  },
  {
  icon: <IoTrash size={14} />,
  title: "Delete",
- className: (row) => `hover:bg-red-100 ${row.status === 'Pending' ? 'bg-red-50 text-red-600' : 'bg-surface text-muted cursor-not-allowed'}`,
+ className: (row) => `hover:bg-red-100 dark:bg-red-900/40 ${row.status === 'Pending' ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-surface text-muted cursor-not-allowed'}`,
  onClick: (row) => handleDeleteClick(row)
  }
  ];
@@ -394,14 +394,14 @@ const Timesheet = ({ refreshTrigger }) => {
  </div>
 
  <div className="flex flex-col sm:flex-row gap-2 items-center">
- <div className="bg-amber-50/80 border border-amber-200 px-3 py-2 rounded-lg shadow-sm">
+ <div className="bg-amber-50 dark:bg-amber-900/30/80 border border-amber-200 dark:border-amber-800/50 px-3 py-2 rounded-lg shadow-sm">
  <span className="text-xs font-medium text-amber-900">
  Total: <span className="font-bold">{weeklyData.weeklyTotal?.toFixed(1) || 0}h</span>
  </span>
  </div>
  <div className={`px-3 py-2 rounded-lg shadow-sm border ${
- (weeklyData.remainingHours || 0) > 10 ? 'bg-green-50/80 border-green-200 text-green-900' :
- (weeklyData.remainingHours || 0) > 0 ? 'bg-yellow-50/80 border-yellow-200 text-yellow-900' : 'bg-red-50/80 border-red-200 text-red-900'
+ (weeklyData.remainingHours || 0) > 10 ? 'bg-green-50 dark:bg-green-900/30/80 border-green-200 dark:border-green-800/50 text-green-900' :
+ (weeklyData.remainingHours || 0) > 0 ? 'bg-yellow-50/80 border-yellow-200 text-yellow-900' : 'bg-red-50 dark:bg-red-900/30/80 border-red-200 dark:border-red-800/50 text-red-900'
  }`}>
  <span className="text-xs font-medium">
  Remaining: <span className="font-bold">{(weeklyData.remainingHours || 0).toFixed(1)}h</span>
@@ -430,7 +430,7 @@ const Timesheet = ({ refreshTrigger }) => {
  )}
 
  {error && (
- <div className="text-red-500 p-4 text-center text-sm bg-red-50 rounded-lg">
+ <div className="text-red-500 p-4 text-center text-sm bg-red-50 dark:bg-red-900/30 rounded-lg">
  {error}
  </div>
  )}
@@ -493,7 +493,7 @@ const Timesheet = ({ refreshTrigger }) => {
  </button>
  <button
  onClick={handleConfirmDelete}
- className="flex-1 /10 text-red-600 font-bold text-xs hover: hover: border border-red-500/20 hover:border-transparent active:scale-95 btn btn-danger"
+ className="flex-1 /10 text-red-600 dark:text-red-400 font-bold text-xs hover: hover: border border-red-500/20 hover:border-transparent active:scale-95 btn btn-danger"
  >
  Delete
  </button>

@@ -105,7 +105,7 @@ const Ticket = () => {
  label: "Ticket ID",
  sortable: true,
  render: (row) => (
- <span className="font-bold text-amber-600" title={row.ticketID || row._id}>
+ <span className="font-bold text-amber-600 dark:text-amber-400" title={row.ticketID || row._id}>
  #{row.ticketID || row._id.slice(0, 8).toUpperCase()}
  </span>
  )
@@ -166,13 +166,13 @@ const Ticket = () => {
  {
  icon: <FaEye size={16} />,
  title: "View Details",
- className: "bg-amber-50 text-amber-600 hover:bg-amber-100",
+ className: "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:bg-amber-900/40",
  onClick: (row) => setSelectedTicket(row)
  },
  {
  icon: <FiTrash2 size={16} />,
  title: "Delete",
- className: "bg-red-50 text-red-600 hover:bg-red-100",
+ className: "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:bg-red-900/40",
  onClick: (row) => handleDelete(row._id)
  }
  ];

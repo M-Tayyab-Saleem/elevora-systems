@@ -57,7 +57,7 @@ const TimeoffBalanceCard = ({ onDelete, userId }) => {
  return (
  <div className="relative bg-surface rounded-[1.2rem] shadow-md border border-amber-100 p-4">
  <div className="flex items-center gap-2 mb-3">
- <FiCalendar className="w-4 h-4 text-amber-600" />
+ <FiCalendar className="w-4 h-4 text-amber-600 dark:text-amber-400" />
  <h3 className="text-xs font-bold text-main uppercase tracking-tight">Available Leaves</h3>
  </div>
  <p className="text-[10px] font-medium text-muted">Loading...</p>
@@ -71,7 +71,7 @@ const TimeoffBalanceCard = ({ onDelete, userId }) => {
  <div className="flex justify-between items-start mb-3">
  <div>
  <div className="flex items-center gap-2 mb-1">
- <FiCalendar className="w-4 h-4 text-amber-600" />
+ <FiCalendar className="w-4 h-4 text-amber-600 dark:text-amber-400" />
  <h3 className="text-xs font-bold text-main uppercase tracking-tight">Available Leaves</h3>
  </div>
  <p className="text-[10px] font-medium text-muted">
@@ -95,7 +95,7 @@ const TimeoffBalanceCard = ({ onDelete, userId }) => {
  onDelete();
  setMenuOpen(false);
  }}
- className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 font-medium"
+ className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 dark:bg-red-900/30 font-medium"
  >
  <FiTrash2 className="w-3 h-3 mr-2" />
  Delete Card

@@ -64,7 +64,7 @@ export default function NotificationsPage() {
  unreadCount > 0 && (
  <button
  onClick={() => dispatch(markAllAsRead())}
- className="text-[10px] sm:text-xs text-amber-600 hover:text-amber-800 font-bold uppercase tracking-widest px-3 py-1.5 bg-amber-50 rounded-lg transition-colors"
+ className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:text-amber-400 font-bold uppercase tracking-widest px-3 py-1.5 bg-amber-50 dark:bg-amber-900/30 rounded-lg transition-colors"
  >
  Mark all read
  </button>
@@ -114,7 +114,7 @@ export default function NotificationsPage() {
  onClick={() => handleClick(notif)}
  className={`relative p-4 border-b border-gray-50 cursor-pointer transition-all hover:bg-app group border-l-4 ${
  selectedNotif?._id === notif._id 
- ? 'bg-teal-50/50 border-l-teal-600' 
+ ? 'bg-teal-50 dark:bg-teal-900/30/50 border-l-teal-600' 
  : 'bg-surface border-l-transparent'
  }`}
  >
@@ -158,7 +158,7 @@ export default function NotificationsPage() {
  <button
  onClick={() => setPage((p) => Math.max(1, p - 1))}
  disabled={page === 1}
- className="text-[10px] font-bold text-muted disabled:opacity-30 hover:text-teal-600 uppercase tracking-tighter"
+ className="text-[10px] font-bold text-muted disabled:opacity-30 hover:text-teal-600 dark:text-teal-400 uppercase tracking-tighter"
  >
  ← Prev
  </button>
@@ -168,7 +168,7 @@ export default function NotificationsPage() {
  <button
  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
  disabled={page === totalPages}
- className="text-[10px] font-bold text-muted disabled:opacity-30 hover:text-teal-600 uppercase tracking-tighter"
+ className="text-[10px] font-bold text-muted disabled:opacity-30 hover:text-teal-600 dark:text-teal-400 uppercase tracking-tighter"
  >
  Next →
  </button>
@@ -219,9 +219,9 @@ export default function NotificationsPage() {
  <div className="flex-1 p-6 md:p-12 overflow-y-auto bg-app/50">
  <div className="max-w-3xl mx-auto bg-surface p-10 md:p-14 rounded-[32px] shadow-sm border border-border-subtle relative overflow-hidden">
  {/* Subtle background decoration */}
- <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-full -mr-16 -mt-16 opacity-50" />
+ <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 dark:bg-teal-900/30 rounded-full -mr-16 -mt-16 opacity-50" />
  
- <h3 className="text-xs font-bold text-teal-600 uppercase tracking-[0.2em] mb-6">Notification Details</h3>
+ <h3 className="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-[0.2em] mb-6">Notification Details</h3>
  <p className="text-main leading-relaxed text-lg whitespace-pre-wrap font-medium">
  {selectedNotif.message}
  </p>

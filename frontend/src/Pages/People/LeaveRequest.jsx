@@ -263,8 +263,8 @@ const ApplyLeaveModal = ({ isOpen, setIsOpen, onLeaveAdded }) => {
 
         {/* API ERROR DISPLAY */}
         {error && (
-          <div className="bg-red-50 p-4 rounded-xl border border-red-200">
-            <p className="text-[10px] font-black text-red-600 tracking-tighter uppercase text-center">
+          <div className="bg-red-50 dark:bg-red-900/30 p-4 rounded-xl border border-red-200 dark:border-red-800/50">
+            <p className="text-[10px] font-black text-red-600 dark:text-red-400 tracking-tighter uppercase text-center">
               {error}
             </p>
           </div>

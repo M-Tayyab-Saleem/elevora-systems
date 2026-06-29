@@ -9,10 +9,10 @@ const KanbanBoard = ({ tasks, onDragEnd, loading }) => {
 
  const kanbanColumns = [
  { id: 'backlog', title: 'Backlog', bgColor: 'bg-app', borderColor: 'border-border-subtle' },
- { id: 'todo', title: 'To Do', bgColor: 'bg-amber-50', borderColor: 'border-amber-200' },
+ { id: 'todo', title: 'To Do', bgColor: 'bg-amber-50 dark:bg-amber-900/30', borderColor: 'border-amber-200 dark:border-amber-800/50' },
  { id: 'in-progress', title: 'In Progress', bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200' },
  { id: 'under-review', title: 'Under Review', bgColor: 'bg-purple-50', borderColor: 'border-purple-200' },
- { id: 'done', title: 'Done', bgColor: 'bg-green-50', borderColor: 'border-green-200' }
+ { id: 'done', title: 'Done', bgColor: 'bg-green-50 dark:bg-green-900/30', borderColor: 'border-green-200 dark:border-green-800/50' }
  ];
 
  const getTasksByStatus = (status) => {

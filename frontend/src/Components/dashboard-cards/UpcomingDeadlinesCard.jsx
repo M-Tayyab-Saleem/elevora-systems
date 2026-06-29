@@ -69,9 +69,9 @@ export default function UpcomingDeadlinesCard() {
 
  const statusClass =
  d.status === "High Priority"
- ? "bg-red-100 text-red-600"
+ ? "bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400"
  : d.status === "Scheduled"
- ? "bg-amber-100 text-amber-600"
+ ? "bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400"
  : d.status === "In Progress"
  ? "bg-yellow-100 text-yellow-700"
  : "bg-app text-muted";

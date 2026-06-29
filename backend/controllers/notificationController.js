@@ -16,7 +16,7 @@ exports.getNotifications = catchAsync(async (req, res) => {
 exports.getUnreadCount = catchAsync(async (req, res) => {
   const userId = req.user._id || req.user.id;
   const count = await notificationService.getUnreadCount(userId);
-  res.json(ApiResponse.success(null, "Unread count retrieved", { count }));
+  res.json(ApiResponse.success({ count }, "Unread count retrieved"));
 });
 
 exports.markAsRead = catchAsync(async (req, res) => {

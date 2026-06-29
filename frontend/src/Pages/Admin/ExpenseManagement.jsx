@@ -279,9 +279,9 @@ const ExpenseManagement = () => {
 
  const getStatusBadge = (status) => {
  switch (status) {
- case "approved": return <span className="px-2.5 py-1 rounded-full text-[10px] font-bold border bg-emerald-50 text-emerald-600 border-emerald-100 uppercase tracking-wide">Approved</span>;
- case "rejected": return <span className="px-2.5 py-1 rounded-full text-[10px] font-bold border bg-rose-50 text-rose-600 border-rose-100 uppercase tracking-wide">Rejected</span>;
- default: return <span className="px-2.5 py-1 rounded-full text-[10px] font-bold border bg-amber-50 text-amber-600 border-amber-100 uppercase tracking-wide">Pending</span>;
+ case "approved": return <span className="px-2.5 py-1 rounded-full text-[10px] font-bold border bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-100 uppercase tracking-wide">Approved</span>;
+ case "rejected": return <span className="px-2.5 py-1 rounded-full text-[10px] font-bold border bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border-rose-100 uppercase tracking-wide">Rejected</span>;
+ default: return <span className="px-2.5 py-1 rounded-full text-[10px] font-bold border bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-100 uppercase tracking-wide">Pending</span>;
  }
  };
 
@@ -324,7 +324,7 @@ const ExpenseManagement = () => {
  label: "Submitted By",
  render: (_, expense) => (
  <div className="flex items-center gap-2">
- <div className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] font-bold border border-indigo-100">
+ <div className="w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-[10px] font-bold border border-indigo-100">
  {(expense.submittedByName || expense.submittedBy?.name || "?").charAt(0).toUpperCase()}
  </div>
  <span className="text-xs font-semibold text-muted">
@@ -351,7 +351,7 @@ const ExpenseManagement = () => {
  <div className="flex items-center justify-end gap-1">
  <button
  onClick={(e) => { e.stopPropagation(); setSelectedExpense(expense); setIsDetailModalOpen(true); }}
- className="p-1.5 text-muted hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+ className="p-1.5 text-muted hover:text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:bg-indigo-900/30 rounded-lg transition-colors"
  title="View Details"
  >
  <Eye size={14} />
@@ -359,7 +359,7 @@ const ExpenseManagement = () => {
  {expense.receiptUrl && (
  <button
  onClick={(e) => { e.stopPropagation(); downloadFile(expense.receiptUrl, `receipt-${expense.title}`); }}
- className="p-1.5 text-muted hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+ className="p-1.5 text-muted hover:text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:bg-emerald-900/30 rounded-lg transition-colors"
  title="Download Receipt"
  >
  <Download size={14} />
@@ -368,7 +368,7 @@ const ExpenseManagement = () => {
  {canEdit && expense.status === 'pending' && (
  <button
  onClick={(e) => { e.stopPropagation(); handleEditClick(expense); }}
- className="p-1.5 text-muted hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+ className="p-1.5 text-muted hover:text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:bg-amber-900/30 rounded-lg transition-colors"
  title="Edit Expense"
  >
  <Edit2 size={14} />
@@ -627,7 +627,7 @@ const ExpenseManagement = () => {
  <button 
  type="button"
  onClick={() => downloadFile(editFormData.receiptPublicId || editFormData.receiptUrl, `receipt-${editFormData.title}`)}
- className="flex items-center gap-2 text-amber-600 hover:underline text-sm font-medium transition-all"
+ className="flex items-center gap-2 text-amber-600 dark:text-amber-400 hover:underline text-sm font-medium transition-all"
  >
  <FileText size={16} />
  View Receipt

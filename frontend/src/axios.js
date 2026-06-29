@@ -35,7 +35,7 @@ let msalInitialized = false;
 
 const api = axios.create({
  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api/v1",
- timeout: 30000,
+ timeout: 15000,
  withCredentials: true
 });
 
@@ -73,11 +73,19 @@ api.interceptors.response.use(
  (response) => {
  // Automatically unwrap the backend's ApiResponse wrapper on success
  if (response.data && response.data.success === true && 'data' in response.data) {
- response.data = response.data.data;
+   if (response.data.pagination) {
+     response.pagination = response.data.pagination;
+   }
+   response.data = response.data.data;
  }
  return response;
  },
  async (error) => {
+ if (error.code === 'ECONNABORTED' || error.message?.includes('timeout') || error.message?.includes('Network Error')) {
+   toast.error("Network issue. Request timed out, try again");
+   return Promise.reject(error);
+ }
+
  const status = error.response?.status;
  const ignoreAuthRedirect = error.config?.ignoreAuthRedirect;
 

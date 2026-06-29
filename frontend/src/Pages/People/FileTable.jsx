@@ -73,8 +73,8 @@ const FileTable = ({ files, onDownload, loading, searchTerm = "" }) => {
  className="w-6 h-6 object-cover rounded"
  />
  ) : (
- <div className="w-6 h-6 bg-amber-100 rounded flex items-center justify-center">
- <span className="text-xs text-amber-600 font-bold">
+ <div className="w-6 h-6 bg-amber-100 dark:bg-amber-900/40 rounded flex items-center justify-center">
+ <span className="text-xs text-amber-600 dark:text-amber-400 font-bold">
  {file.name?.split('.').pop()?.charAt(0).toUpperCase() || 'F'}
  </span>
  </div>
@@ -127,7 +127,7 @@ const FileTable = ({ files, onDownload, loading, searchTerm = "" }) => {
  className="hover:brightness-110 disabled:opacity-50"
  disabled={loading}
  >
- <FiDownload className="text-lg text-green-600" />
+ <FiDownload className="text-lg text-green-600 dark:text-green-400" />
  </button>
  </div>
  )

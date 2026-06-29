@@ -23,7 +23,8 @@ class AdminDashboardService {
     let ticketQuery = { status: { $ne: "Closed" }, company: companyId };
     let leaveQuery = { status: "Pending", company: companyId };
     let timesheetQuery = { status: "Pending", company: companyId };
-    let attendanceQuery = { date: { $gte: todayStart, $lte: todayEnd }, company: companyId };
+    let companyUsers = await User.find({ company: companyId }).distinct('_id');
+    let attendanceQuery = { date: { $gte: todayStart, $lte: todayEnd }, user: { $in: companyUsers } };
     let projectQuery = { status: { $ne: "Cancelled" }, company: companyId };
     let projectAggregateMatch = { company: companyId };
     let fullTeam = null;
@@ -40,7 +41,7 @@ class AdminDashboardService {
       userQuery = { _id: { $in: fullTeam }, empStatus: "Active", company: companyId };
       leaveQuery = { employee: { $in: fullTeam }, status: "Pending", company: companyId };
       timesheetQuery = { user: { $in: fullTeam }, status: "Pending", company: companyId };
-      attendanceQuery = { user: { $in: fullTeam }, date: { $gte: todayStart, $lte: todayEnd }, company: companyId };
+      attendanceQuery = { user: { $in: fullTeam }, date: { $gte: todayStart, $lte: todayEnd } };
       ticketQuery = { closedBy: { $in: fullTeam }, status: { $ne: "Closed" }, company: companyId };
       projectQuery = { status: { $ne: "Cancelled" }, $or: [{ owner: { $in: fullTeam } }, { team: { $in: fullTeam } }], company: companyId };
       projectAggregateMatch = { $or: [{ owner: { $in: fullTeam } }, { team: { $in: fullTeam } }], company: companyId };

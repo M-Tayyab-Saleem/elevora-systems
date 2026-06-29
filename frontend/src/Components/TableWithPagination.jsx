@@ -98,7 +98,7 @@ const TableWithPagination = ({
 
  if (error) {
  return (
- <div className="bg-red-50/80 border border-red-200 rounded-2xl p-4 text-center text-red-700 text-sm font-semibold">
+ <div className="bg-red-50 dark:bg-red-900/30/80 border border-red-200 dark:border-red-800/50 rounded-2xl p-4 text-center text-red-700 dark:text-red-400 text-sm font-semibold">
  {error}
  </div>
  );

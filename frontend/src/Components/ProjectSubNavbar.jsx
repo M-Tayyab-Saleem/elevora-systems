@@ -72,8 +72,8 @@ const SubNavbar = () => {
  <Button
  size="lg"
  className={`my-2 py-2 w-full max-w-[140px] hide-on-mobile-device font-semibold shadow transition ${checkedIn
- ? "bg-red-400 text-red-800"
- : "bg-green-400 text-green-800"
+ ? "bg-red-400 text-red-800 dark:text-red-400"
+ : "bg-green-400 text-green-800 dark:text-green-400"
  }`}
  onClick={checkedIn ? handleCheckOut : handleCheckIn}
  disabled={loading || !userId}
@@ -95,8 +95,8 @@ const SubNavbar = () => {
  <Button
  size="lg"
  className={`w-full max-w-[140px] hide-on-mobile-device font-semibold shadow transition ${checkedIn
- ? "bg-red-400 text-red-800"
- : "bg-green-400 text-green-800"
+ ? "bg-red-400 text-red-800 dark:text-red-400"
+ : "bg-green-400 text-green-800 dark:text-green-400"
  }`}
  onClick={checkedIn ? handleCheckOut : handleCheckIn}
  disabled={loading || !userId}

@@ -134,7 +134,7 @@ const HistoryViewLeaveModal = ({
  </div>
 
  {/* Read Only Notice */}
- <div className="bg-amber-50/50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4">
+ <div className="bg-amber-50 dark:bg-amber-900/30/50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4">
  <p className="text-xs text-amber-700 dark:text-amber-400 font-medium text-center">
  This is a read-only view of the leave request from employee history.
  </p>

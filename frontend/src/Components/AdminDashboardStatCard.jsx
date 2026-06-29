@@ -21,7 +21,7 @@ const AdminDashboardStatCard = ({ title, value, icon, gradient, trend, subtext, 
  {trend && (
  <div 
  className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
- trend.isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+ trend.isPositive ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400'
  }`}
  aria-label={`Trend: ${trend.isPositive ? 'Up' : 'Down'} ${trend.value}%`}
  >

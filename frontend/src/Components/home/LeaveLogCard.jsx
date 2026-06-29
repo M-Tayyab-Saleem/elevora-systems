@@ -56,7 +56,7 @@ const LeaveLogCard = ({ onDelete }) => {
  return (
  <div className="relative bg-surface rounded-[1.2rem] shadow-md border border-amber-100 p-3 h-full w-full">
  <div className="flex items-center gap-2 mb-2">
- <BeachIcon className="w-3.5 h-3.5 text-amber-600" />
+ <BeachIcon className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
  <h3 className="text-xs font-bold text-main uppercase tracking-tight">Leave Logs</h3>
  </div>
  <p className="text-[10px] text-muted">Loading...</p>
@@ -70,7 +70,7 @@ const LeaveLogCard = ({ onDelete }) => {
  <div className="flex justify-between items-start mb-2">
  <div>
  <div className="flex items-center gap-2 mb-0.5">
- <BeachIcon className="w-3.5 h-3.5 text-amber-600" />
+ <BeachIcon className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
  <h3 className="text-xs font-bold text-main uppercase tracking-tight">Leave Logs</h3>
  </div>
  <p className="text-[9px] font-medium text-muted">Track your leave history</p>
@@ -87,7 +87,7 @@ const LeaveLogCard = ({ onDelete }) => {
  <div className="absolute right-0 mt-1 w-32 bg-surface shadow-lg border border-subtle rounded-xl z-50">
  <button
  onClick={() => { onDelete(); setMenuOpen(false); }}
- className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 font-medium"
+ className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 dark:bg-red-900/30 font-medium"
  >
  <FiTrash2 className="w-3 h-3 mr-2" />
  Delete Card
@@ -112,8 +112,8 @@ const LeaveLogCard = ({ onDelete }) => {
  <div className="flex flex-col text-right text-[9px]">
  <span className="font-medium text-main">{log.type}</span>
  <span className={`font-medium ${
- log.status === "Approved" ? "text-green-600" : 
- log.status === "Rejected" ? "text-red-600" : "text-amber-600"
+ log.status === "Approved" ? "text-green-600 dark:text-green-400" : 
+ log.status === "Rejected" ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"
  }`}
  >
  {log.status}

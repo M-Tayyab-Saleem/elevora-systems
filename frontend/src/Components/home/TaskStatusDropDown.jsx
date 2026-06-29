@@ -12,10 +12,10 @@ const TaskStatusDropDown = ({ status, onChange }) => {
  };
 
  const statusColor = {
- Completed: 'bg-green-100 text-green-800',
+ Completed: 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400',
  InProgress: 'bg-slate-200 text-main',
- Hold: 'bg-red-100 text-red-800',
- UnderReview: 'bg-amber-100 text-amber-800',
+ Hold: 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-400',
+ UnderReview: 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400',
  };
 
  return (

@@ -58,7 +58,7 @@ const OrgNode = ({ node, onNodeClick }) => {
 
  {/* Text Info */}
  <h3 className="text-sm font-bold text-main text-center leading-tight mb-1">{node.name}</h3>
- <p className="text-xs text-amber-600 font-semibold text-center mb-2 px-2 truncate w-full">{node.designation || node.role}</p>
+ <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold text-center mb-2 px-2 truncate w-full">{node.designation || node.role}</p>
 
  {node.department && (
  <span className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-app text-muted">
@@ -68,8 +68,8 @@ const OrgNode = ({ node, onNodeClick }) => {
  </div>
 
  {/* Bottom Action Strip */}
- <div className="w-full bg-amber-50 h-0 group-hover:h-8 transition-all duration-300 flex items-center justify-center overflow-hidden">
- <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">View Profile</span>
+ <div className="w-full bg-amber-50 dark:bg-amber-900/30 h-0 group-hover:h-8 transition-all duration-300 flex items-center justify-center overflow-hidden">
+ <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">View Profile</span>
  </div>
  </div>
 

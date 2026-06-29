@@ -417,7 +417,7 @@ class UserService {
 
     const role = actor.role;
 
-    if (role === 'Super Admin' || role === 'HR') {
+    if (role === 'SuperAdmin' || role === 'Super Admin' || role === 'HR') {
       // Allowed
     } 
     else if (role === 'Admin' || role === 'Manager') {

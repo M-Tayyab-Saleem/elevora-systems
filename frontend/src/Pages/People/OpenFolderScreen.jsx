@@ -9,6 +9,10 @@ const OpenFolderScreen = ({ folder, onClose }) => {
  const handleFileChange = (e) => {
  const file = e.target.files[0];
  if (file) {
+ if (file.size > 25 * 1024 * 1024) {
+ toast.error("File size must be less than 25MB");
+ return;
+ }
  setUploadedFiles((prev) => [...prev, file]);
  }
  };

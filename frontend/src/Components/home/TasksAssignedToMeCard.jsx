@@ -49,7 +49,7 @@ const TasksAssignedToMeCard = ({ onDelete }) => {
  onDelete();
  setMenuOpen(false);
  }}
- className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 font-medium"
+ className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 dark:bg-red-900/30 font-medium"
  >
  <FiTrash2 className="w-3 h-3 mr-2" />
  Delete Card

@@ -9,21 +9,21 @@ const recentActivities = [
  user: "Paul",
  action: "added a new task",
  time: "2 mins ago",
- color: "bg-green-100 text-green-800",
+ color: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400",
  },
  {
  id: 2,
  user: "Sarah",
  action: "updated project status",
  time: "10 mins ago",
- color: "bg-amber-100 text-amber-800",
+ color: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400",
  },
  {
  id: 3,
  user: "Admin",
  action: "deleted a holiday",
  time: "1 hour ago",
- color: "bg-red-100 text-red-700",
+ color: "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400",
  },
 ];
 
@@ -69,7 +69,7 @@ const RecentActivitiesCard = ({ onDelete }) => {
  onDelete();
  setMenuOpen(false);
  }}
- className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 font-medium"
+ className="flex items-center w-full px-3 py-2 text-[10px] text-red-500 hover:bg-red-50 dark:bg-red-900/30 font-medium"
  >
  <FiTrash2 className="w-3 h-3 mr-2" />
  Delete Card

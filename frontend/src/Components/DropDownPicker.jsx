@@ -43,7 +43,7 @@ const DropDownPicker = ({
  <div className={`w-full ${className}`} ref={containerRef}>
  {/* Label */}
  {label && (
- <label className="block text-[10px] font-black text-amber-700/70 mb-2 uppercase tracking-widest">
+ <label className="block text-[10px] font-black text-amber-700 dark:text-amber-400/70 mb-2 uppercase tracking-widest">
  {label} {required && <span className="text-red-500">*</span>}
  </label>
  )}
@@ -63,7 +63,7 @@ const DropDownPicker = ({
  </span>
  <FiChevronDown
  className={`w-4 h-4 transition-transform duration-200 ${
- isOpen ? "rotate-180 text-amber-600" : "text-amber-700/50"
+ isOpen ? "rotate-180 text-amber-600 dark:text-amber-400" : "text-amber-700 dark:text-amber-400/50"
  }`}
  />
  </button>
@@ -79,8 +79,8 @@ const DropDownPicker = ({
  className={`px-4 py-3 text-sm cursor-pointer transition-all duration-200
  ${
  opt.value === value
- ? "bg-amber-500/10 text-amber-700 font-black border-l-4 border-amber-500"
- : "text-amber-900/80 font-medium hover:bg-surface hover:text-amber-700 border-l-4 border-transparent"
+ ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 font-black border-l-4 border-amber-500"
+ : "text-amber-900/80 font-medium hover:bg-surface hover:text-amber-700 dark:text-amber-400 border-l-4 border-transparent"
  }
  `}
  >
@@ -88,7 +88,7 @@ const DropDownPicker = ({
  </div>
  ))
  ) : (
- <div className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-amber-700/50 text-center">
+ <div className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-amber-700 dark:text-amber-400/50 text-center">
  No options available
  </div>
  )}

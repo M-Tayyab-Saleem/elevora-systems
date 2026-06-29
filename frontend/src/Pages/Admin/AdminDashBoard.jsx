@@ -130,8 +130,8 @@ const AdminDashBoard = () => {
  subtitle="Welcome back, here's what's happening today"
  isCard={false}
  headerActions={
- <div className="flex items-center gap-2 bg-amber-50/80 border border-amber-100 px-4 py-2 rounded-xl shadow-sm">
- <FaUserClock className="text-amber-600" />
+ <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30/80 border border-amber-100 px-4 py-2 rounded-xl shadow-sm">
+ <FaUserClock className="text-amber-600 dark:text-amber-400" />
  <span className="text-sm font-medium text-heading">
  Updated: <span className="font-bold">{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
  </span>
@@ -177,7 +177,7 @@ const AdminDashBoard = () => {
  <div className="glass-card p-4 lg:col-span-2">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-sm font-bold text-heading uppercase tracking-wide flex items-center gap-2">
- <FaClock className="text-amber-600" />
+ <FaClock className="text-amber-600 dark:text-amber-400" />
  Today's Attendance
  </h3>
  <div className="flex items-center gap-2">
@@ -217,7 +217,7 @@ const AdminDashBoard = () => {
  {/* Action Center Card */}
  <div className="glass-card p-4">
  <h3 className="text-sm font-bold text-heading uppercase tracking-wide mb-4 flex items-center gap-2">
- <FaExclamationCircle className="text-amber-600" />
+ <FaExclamationCircle className="text-amber-600 dark:text-amber-400" />
  Action Center
  </h3>
  
@@ -225,7 +225,7 @@ const AdminDashBoard = () => {
  <ActionItem 
  label="Leave Requests" 
  count={data.actionItems.leaves} 
- colorClass="bg-amber-100 text-amber-700" 
+ colorClass="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400" 
  icon={<FaCalendarDay size={16} />}
  onClick={() => navigate('/admin/leaveTrackerAdmin')}
  />
@@ -234,7 +234,7 @@ const AdminDashBoard = () => {
  <ActionItem 
  label="Timesheet Approvals" 
  count={data.actionItems.timesheets} 
- colorClass="bg-amber-100 text-amber-700" 
+ colorClass="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400" 
  icon={<FaClipboardList size={16} />}
  onClick={() => navigate('/admin/approve')}
  />
@@ -244,7 +244,7 @@ const AdminDashBoard = () => {
  <ActionItem 
  label="Open Tickets" 
  count={data.actionItems.tickets} 
- colorClass="bg-rose-100 text-rose-700" 
+ colorClass="bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400" 
  icon={<FaTicketAlt size={16} />}
  onClick={() => navigate('/admin/assign-ticket')}
  />
@@ -252,9 +252,9 @@ const AdminDashBoard = () => {
  </div>
  
  {data.holiday && (
- <div className="mt-6 p-4 bg-indigo-50/80 rounded-xl border border-indigo-100">
+ <div className="mt-6 p-4 bg-indigo-50 dark:bg-indigo-900/30/80 rounded-xl border border-indigo-100">
  <div className="flex items-center gap-3">
- <div className="p-3 bg-indigo-100 rounded-xl text-indigo-600">
+ <div className="p-3 bg-indigo-100 dark:bg-indigo-900/40 rounded-xl text-indigo-600 dark:text-indigo-400">
  <FaCalendarCheck size={20} />
  </div>
  <div>
@@ -274,7 +274,7 @@ const AdminDashBoard = () => {
  <div className="glass-card p-4 mb-4">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-sm font-bold text-heading uppercase tracking-wide flex items-center gap-2">
- <FaChartBar className="text-indigo-600" />
+ <FaChartBar className="text-indigo-600 dark:text-indigo-400" />
  Workforce Distribution
  </h3>
  <span className="text-xs font-medium text-muted">
@@ -323,8 +323,8 @@ const AdminDashBoard = () => {
  <div className="flex items-center justify-between mt-1">
  <span className="text-xs text-muted font-medium">{log.time}</span>
  <span className={`text-xs font-medium px-2 py-1 rounded ${
- log.level === 'error' ? 'bg-red-50 text-red-600' : 
- log.level === 'warning' ? 'bg-yellow-50 text-yellow-600' : 'bg-green-50 text-green-600'
+ log.level === 'error' ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 
+ log.level === 'warning' ? 'bg-yellow-50 text-yellow-600' : 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400'
  }`}>
  {log.level.toUpperCase()}
  </span>

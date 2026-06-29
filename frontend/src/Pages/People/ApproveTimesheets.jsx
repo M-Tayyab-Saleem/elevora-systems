@@ -432,7 +432,7 @@ const ApproveTimesheets = () => {
  return [{
  icon: <FaEye size={14} />,
  title: "View & Approve/Reject",
- className: "bg-amber-50 text-amber-600 hover:bg-amber-100",
+ className: "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:bg-amber-900/40",
  onClick: (row) => handleViewDetails(row)
  }];
  } else {
@@ -459,7 +459,7 @@ const ApproveTimesheets = () => {
  label: (
  <input 
  type="checkbox" 
- className="w-4 h-4 rounded border-border-primary text-amber-600 focus:ring-amber-500"
+ className="w-4 h-4 rounded border-border-primary text-amber-600 dark:text-amber-400 focus:ring-amber-500"
  onChange={handleSelectAll}
  checked={selectedIds.length > 0 && selectedIds.length === getFilteredData().length}
  />
@@ -468,7 +468,7 @@ const ApproveTimesheets = () => {
  render: (row) => (
  <input 
  type="checkbox" 
- className="w-4 h-4 rounded border-border-primary text-amber-600 focus:ring-amber-500"
+ className="w-4 h-4 rounded border-border-primary text-amber-600 dark:text-amber-400 focus:ring-amber-500"
  checked={selectedIds.includes(row._id)}
  onChange={() => handleSelectRow(row._id)}
  onClick={(e) => e.stopPropagation()}
@@ -484,7 +484,7 @@ const ApproveTimesheets = () => {
  {row.employee?.avatar ? (
  <img src={row.employee.avatar} alt="" className="w-6 h-6 rounded-full object-cover" />
  ) : (
- <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold">
+ <div className="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs font-bold">
  {row.employee?.name?.charAt(0) || "U"}
  </div>
  )}
@@ -551,7 +551,7 @@ const ApproveTimesheets = () => {
  return <span className="text-muted text-xs">No comments</span>;
  }
  return (
- <div className="flex items-center gap-1 text-amber-600">
+ <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
  <FaCommentDots size={14} />
  <span className="text-xs font-medium">{commentCount} comment{commentCount !== 1 ? 's' : ''}</span>
  </div>
@@ -664,7 +664,7 @@ const ApproveTimesheets = () => {
  <button
  onClick={() => setShowCalendar(!showCalendar)}
  disabled={loading}
- className="h-[42px] px-4 flex items-center gap-2 bg-surface border border-border-subtle text-main rounded-xl font-semibold text-xs hover:border-amber-200 hover:bg-amber-50/30 transition-all min-w-[190px] justify-center shadow-sm"
+ className="h-[42px] px-4 flex items-center gap-2 bg-surface border border-border-subtle text-main rounded-xl font-semibold text-xs hover:border-amber-200 dark:border-amber-800/50 hover:bg-amber-50 dark:bg-amber-900/30/30 transition-all min-w-[190px] justify-center shadow-sm"
  >
  <IoCalendarNumberOutline size={15} className="text-amber-500 flex-shrink-0" />
  <span>{formatWeekRange(weeklyData.weekStart, weeklyData.weekEnd)}</span>

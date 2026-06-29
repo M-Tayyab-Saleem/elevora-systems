@@ -236,7 +236,7 @@ const userName =
  className="h-11 w-11 rounded-full object-cover border-2 border-white shadow-md"
  />
  ) : (
- <div className="h-11 w-11 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-sm font-bold border-2 border-white shadow-md">
+ <div className="h-11 w-11 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-sm font-bold border-2 border-white shadow-md">
  {userName.charAt(0).toUpperCase()}
  </div>
  )}

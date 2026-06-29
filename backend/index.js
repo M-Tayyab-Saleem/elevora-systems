@@ -16,7 +16,18 @@ const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "img-src": ["'self'", "data:", "https://cdn-icons-png.flaticon.com", "https://learn.microsoft.com"],
+        "connect-src": ["'self'", "https://login.microsoftonline.com", "https://abidipro.abidisolutions.com"],
+        "frame-src": ["'self'", "https://login.microsoftonline.com"],
+      },
+    },
+  })
+);
 app.use(mongoSanitize());
 
 const corsOptions = {

@@ -25,7 +25,7 @@ export default function ChangelogModal() {
     <GlassModal
       isOpen={isOpen}
       onClose={handleClose}
-      title="Karbexa: What's New"
+      title="Sowaye: What's New"
       description="A quick, easy summary for the whole team — June 30, 2026"
       maxWidth="max-w-3xl"
       footer={
@@ -39,7 +39,7 @@ export default function ChangelogModal() {
     >
       <div className="space-y-8 text-sm text-slate-700 dark:text-slate-300">
         <p className="leading-relaxed text-base text-slate-900 dark:text-slate-100 font-medium">
-          We've spent the last few weeks giving Karbexa a major upgrade. Here's the short version of what changed and why it matters to you.
+          We've spent the last few weeks giving Sowaye a major upgrade. Here's the short version of what changed and why it matters to you.
         </p>
 
         <div className="space-y-6">
@@ -94,7 +94,7 @@ export default function ChangelogModal() {
             </svg>
           </div>
           <p>
-            <strong className="font-semibold">Heads up:</strong> Karbexa will soon be becoming Sowaye — same great platform, new name. More details to come!
+            <strong className="font-semibold">Heads up:</strong> Abidi Pro is going to become Sowaye — same great platform, new name. More details to come!
           </p>
         </div>
       </div>

@@ -9,7 +9,7 @@ Follow these steps to run the Elevora Systems application locally on your machin
 
 ## 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/elevora-systems.git
+git clone https://github.com/M-Tayyab-Saleem/elevora-systems.git 
 cd elevora-systems
 ```
 

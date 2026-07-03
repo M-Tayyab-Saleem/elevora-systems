@@ -50,7 +50,7 @@ The system is built on a modern MERN stack with a decoupled frontend and backend
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/elevora-systems.git
+git clone https://github.com/M-Tayyab-Saleem/elevora-systems.git 
 cd elevora-systems
 ```
 

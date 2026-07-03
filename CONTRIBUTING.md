@@ -26,7 +26,7 @@ At this point, you're ready to make your changes! Feel free to ask for help; eve
 At this point, you should switch back to your master branch and make sure it's up to date with Elevora Systems's master branch:
 
 ```bash
-git remote add upstream https://github.com/yourusername/elevora-systems.git
+git remote add upstream https://github.com/M-Tayyab-Saleem/elevora-systems.git 
 git fetch upstream
 git merge upstream/master
 ```

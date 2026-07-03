@@ -37,7 +37,16 @@ app.use(
 app.use(mongoSanitize());
 
 const corsOptions = {
-  origin: ['https://elevora-systems-demo.com', 'http://localhost:5173', 'http://localhost:3001', 'http://localhost:3000', "http://localhost:5174","http://localhost:5175" , "http://192.168.100.91:5173"],
+  origin: [
+    process.env.FRONTEND_URL,
+    'https://elevora-systems-demo.com',
+    'http://localhost:5173',
+    'http://localhost:3001',
+    'http://localhost:3000',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://192.168.100.91:5173'
+  ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization'],

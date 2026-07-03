@@ -7,6 +7,7 @@ import AppLayout from "./layout/AppLayout";
 import AuthLayout from "./layout/AuthLayout";
 
 // Pages
+import Landing from "./pages/Landing";
 import ThemeSelector from "./pages/ThemeSelector";
 import Login from "./pages/auth/Login";
 import Home from "./pages/people/Home";
@@ -84,7 +85,7 @@ function App() {
  if (authStateUser && (authStateUser.data?.user || authStateUser.user)) {
  const normalizedUser = authStateUser.data?.user || authStateUser.user;
  dispatch({ type: 'auth/setAuthUser', payload: normalizedUser });
- console.log("Auto-normalized Redux Persist user object structure");
+
  }
  }, [authStateUser, dispatch]);
 
@@ -111,7 +112,7 @@ function App() {
  style={{ zIndex: 99999999 }}
  />
  <Routes>
- <Route path="/" element={<Navigate to="/auth/login" />} />
+ <Route path="/" element={<Landing />} />
 
  <Route
  path="/auth"

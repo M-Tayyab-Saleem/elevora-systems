@@ -23,7 +23,7 @@ const globalErrorHandler = (err, req, res, next) => {
   const message = err.message || "Something went wrong";
 
   // LOG FOR DEBUGGING
-  console.log(`[API ERROR] Status: ${statusCode}, Message: ${message}`);
+
 
   res.status(statusCode).json({
     success: false,

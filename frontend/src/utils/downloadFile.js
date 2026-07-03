@@ -26,10 +26,10 @@ export const triggerDownload = async (url, fileName) => {
 };
 
 /**
- * Universal file downloader for Azure Blob Storage.
- * Generates a SAS URL via the backend and triggers a programmatic download.
+ * Universal file downloader for Cloud Storage.
+ * Generates a URL via the backend and triggers a programmatic download.
  * 
- * @param {string} source - Either a blob name, a full Azure Blob URL, OR a specialized backend API route (starting with /)
+ * @param {string} source - Either a blob name, a full Cloud URL, OR a specialized backend API route (starting with /)
  * @param {string} [fileName] - Optional display filename for the download
  */
 export const downloadFile = async (source, fileName) => {

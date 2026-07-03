@@ -1,8 +1,8 @@
-# 🚀 ABIDI Pro - Frontend
+# 🚀 Elevora Systems - Frontend
 
 ## Overview
 
-**ABIDI Pro Frontend** is a modern React application built with Vite, Redux, and Tailwind CSS. It provides a comprehensive user interface for the ABIDI Pro HRM and Project Management system.
+**Elevora Systems Frontend** is a modern React application built with Vite, Redux, and Tailwind CSS. It provides a comprehensive user interface for the Elevora Systems HRM and Project Management system.
 
 ## Tech Stack
 
@@ -13,7 +13,6 @@
 - **Material-UI** v7.1.0 - Component library
 - **Axios** v1.9.0 - HTTP client
 - **React Router** v7.5.3 - Client-side routing
-- **Azure MSAL** v3.0.24 - Azure AD authentication
 
 ## Quick Start
 
@@ -62,7 +61,6 @@ src/
 ├── styles/             # Global styles
 ├── assets/             # Static assets
 ├── axios.js            # Centralized API client
-├── authConfig.js       # Azure AD configuration
 └── routeConfig.jsx     # Route definitions
 ```
 
@@ -76,18 +74,14 @@ src/
 - ✅ **Expense Management** - Track and manage expenses
 - ✅ **Ticket System** - Support ticket management
 - ✅ **Dashboard & Analytics** - Real-time data visualization
-- ✅ **Azure AD Integration** - Enterprise SSO
 
 ## Environment Variables
 
 Create a `.env` file in the `frontend/` directory:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000/api
-VITE_AZURE_TENANT_ID=your_tenant_id
-VITE_AZURE_CLIENT_ID=your_client_id
-VITE_AZURE_REDIRECT_URI=http://localhost:5173
-VITE_APP_NAME=ABIDI Pro
+VITE_API_BASE_URL=http://localhost:4000/api/v1
+VITE_APP_NAME=Elevora Systems
 ```
 
 ## Component Guidelines
@@ -125,12 +119,9 @@ const response = await api.get("/endpoint");
 const response = await api.post("/endpoint", data);
 ```
 
-## Authentication
-
-The application supports both JWT and Azure AD authentication:
+The application uses standard JWT authentication:
 
 - JWT tokens are stored in Redux
-- Azure AD integration via MSAL
 - Automatic token refresh on expiry
 - Protected routes via `PrivateRoute.jsx`
 

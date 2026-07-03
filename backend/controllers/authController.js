@@ -22,6 +22,35 @@ exports.login = catchAsync(async (req, res) => {
   ));
 });
 
+exports.demoLogin = catchAsync(async (req, res) => {
+  const { role } = req.body;
+  const User = require('../models/userSchema');
+  const user = await User.findOne({ role: role || 'Super Admin' });
+  
+  if (!user) {
+    return res.status(404).json(ApiResponse.error("Demo user not found"));
+  }
+
+  const jwt = require('jsonwebtoken');
+  const token = jwt.sign(
+    { id: user._id, _id: user._id, role: user.role, email: user.email }, 
+    'demo_secret', 
+    { expiresIn: '1d' }
+  );
+
+  res.cookie("refreshToken", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
+  res.status(200).json(ApiResponse.success(
+    { token, user: { id: user._id, _id: user._id, email: user.email, name: user.name, role: user.role, company: user.company } },
+    "Demo login successful"
+  ));
+});
+
 exports.verifyOtp = catchAsync(async (req, res) => {
   const { email, otp } = req.body;
   const { user, accessToken, refreshToken } = await authService.verifyOtp(email, otp);

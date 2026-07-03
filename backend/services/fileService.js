@@ -1,8 +1,7 @@
 const File = require('../models/file');
 const Folder = require('../models/folder');
 const { BadRequestError, NotFoundError, UnauthorizedError } = require("../utils/ExpressError");
-const { generateBlobSasUrlHelper } = require('../utils/azureDownload');
-
+const { cloudinary } = require('../config/cloudinaryConfig');
 class FileService {
   async ensureRootFolder(userId) {
     let rootFolder = await Folder.findOne({
@@ -56,10 +55,10 @@ class FileService {
   }
 
   async register(user, fileData, bodyData) {
-    const { originalname: name, public_id: cloudinaryId, path: url, size, mimetype: mimeType } = fileData;
+    const { originalname: name, filename: cloudinaryId, path: url, size, mimetype: mimeType } = fileData;
     let { folderId, isPublic, sharedWithRoles } = bodyData;
 
-    if (!name || !cloudinaryId || !url || !size || !mimeType) {
+    if (!name || !url || !size || !mimeType) {
       throw new BadRequestError('Missing required file fields');
     }
 
@@ -95,13 +94,8 @@ class FileService {
     const hasAccess = await this.checkPermission(file, user, 'viewer');
     if (!hasAccess) throw new UnauthorizedError('Access denied');
 
-    const blobName = file.cloudinaryId || file.blobName;
-    if (!blobName) throw new BadRequestError('Blob identifier not found for this file');
-
-    const sasUrl = await generateBlobSasUrlHelper(blobName);
-
     return {
-      downloadUrl: sasUrl,
+      downloadUrl: file.url,
       filename: file.name,
       expiresAt: Date.now() + 300000
     };
@@ -142,7 +136,7 @@ class FileService {
       return await File.create({
         name: fileData.originalname,
         folderId,
-        cloudinaryId: fileData.public_id,
+        cloudinaryId: fileData.filename || fileData.public_id,
         url: fileData.path,
         size: fileData.size,
         mimeType: fileData.mimetype,
@@ -156,13 +150,11 @@ class FileService {
       });
     } catch (error) {
       try {
-        if (fileData && (fileData.blobName || fileData.filename)) {
-          const { containerClient } = require('../config/azureConfig');
-          const blockBlobClient = containerClient.getBlockBlobClient(fileData.blobName || fileData.filename);
-          await blockBlobClient.delete();
+        if (fileData && (fileData.filename || fileData.public_id)) {
+          await cloudinary.uploader.destroy(fileData.filename || fileData.public_id);
         }
       } catch (err) {
-        console.error('Failed to cleanup uploaded file:', err);
+        console.error('Failed to cleanup uploaded file from Cloudinary:', err);
       }
       throw error;
     }

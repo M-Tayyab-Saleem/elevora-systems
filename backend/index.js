@@ -28,7 +28,7 @@ app.use(
           "https://learn.microsoft.com",
           "https://data3262.blob.core.windows.net"
         ],
-        "connect-src": ["'self'", "https://login.microsoftonline.com", "https://abidipro.abidisolutions.com"],
+        "connect-src": ["'self'", "https://login.microsoftonline.com", "https://elevora-systems-demo.com"],
         "frame-src": ["'self'", "https://login.microsoftonline.com"],
       },
     },
@@ -37,7 +37,7 @@ app.use(
 app.use(mongoSanitize());
 
 const corsOptions = {
-  origin: ['https://abidipro.abidisolutions.com', 'http://localhost:5173', 'http://localhost:3001', 'http://localhost:3000', "http://localhost:5174","http://localhost:5175" , "http://192.168.100.91:5173"],
+  origin: ['https://elevora-systems-demo.com', 'http://localhost:5173', 'http://localhost:3001', 'http://localhost:3000', "http://localhost:5174","http://localhost:5175" , "http://192.168.100.91:5173"],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -53,6 +53,10 @@ app.use("/uploads/receipts", express.static(path.join(__dirname, "uploads/receip
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Demo Mode Interceptor
+const demoModeInterceptor = require('./middlewares/demoModeInterceptor');
+app.use(demoModeInterceptor);
 
 // Routes
 app.use('/api/v1', require('./routes/webRoutesMount'));
@@ -84,12 +88,7 @@ app.get('/api/v1/test-auth', async (req, res) => {
         expiresIn: decoded?.payload?.exp ? new Date(decoded.payload.exp * 1000).toISOString() : null
       },
       envVars: {
-        hasTenantId: !!process.env.AZURE_TENANT_ID,
-        hasClientId: !!process.env.AZURE_CLIENT_ID,
-        expectedAudience: [
-          process.env.AZURE_CLIENT_ID,
-          `api://${process.env.AZURE_CLIENT_ID}`
-        ]
+        hasCloudConfig: true
       }
     });
   } catch (error) {

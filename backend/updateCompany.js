@@ -8,21 +8,21 @@ async function createCompanyAndAssign() {
     await mongoose.connect(process.env.MONGODB_URI);
     
     // Create the company if it doesn't exist
-    let company = await Company.findOne({ companyName: /Abidi solution/i });
+    let company = await Company.findOne({ companyName: /Elevora/i });
     if (!company) {
       company = await Company.create({
-        companyName: "Abidi Solutions",
+        companyName: "Elevora Systems",
         companyOwner: "Admin",
         contactNo: "1234567890",
-        companyEmail: "info@abidisolutions.com",
-        website: "https://abidisolutions.com",
-        address: "Karachi, Pakistan",
+        companyEmail: "contact@elevora-systems-demo.com",
+        website: "https://elevora-systems-demo.com",
+        address: "New York, USA",
         noOfEmployees: 50,
         companyType: "Tech"
       });
-      console.log(`Created company: ${company.companyName} (${company._id})`);
+
     } else {
-      console.log(`Found existing company: ${company.companyName} (${company._id})`);
+
     }
 
     // Assign to all users
@@ -31,7 +31,7 @@ async function createCompanyAndAssign() {
       { $set: { company: company._id } }
     );
 
-    console.log(`Updated ${result.modifiedCount} users to have company ${company.companyName}`);
+
     process.exit(0);
   } catch (error) {
     console.error(error);

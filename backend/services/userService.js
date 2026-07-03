@@ -53,8 +53,8 @@ class UserService {
   }
 
   async sendInviteEmail(user) {
-    const frontendLoginUrl = "https://abidipro.abidisolutions.com/auth/login";
-    const emailSubject = "You're Invited! Join the Abidi Solutions Portal";
+    const frontendLoginUrl = "https://elevora-systems-demo.com/auth/login";
+    const emailSubject = "You're Invited! Join the Elevora Systems Portal";
     const emailBody = `
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px;">
         <div style="background-color: #497a71; padding: 25px; text-align: center;">
@@ -62,7 +62,7 @@ class UserService {
         </div>
         <div style="padding: 30px;">
           <p>Hello <strong>${user.name}</strong>,</p>
-          <p>You have been invited to join the <strong>Abidi Solutions Employee Portal</strong>.</p>
+          <p>You have been invited to join the <strong>Elevora Systems Employee Portal</strong>.</p>
           <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid #497a71; margin: 20px 0;">
             <p style="margin: 5px 0;"><strong>Role:</strong> ${user.role}</p>
             <p style="margin: 5px 0;"><strong>Username:</strong> ${user.email}</p>
@@ -137,10 +137,10 @@ class UserService {
       { type: 'leavelog', id: Date.now().toString() + '-3' }
     ];
 
-    // --- TEMPORARY: Hardcode company to Abidi Solutions until SaaS shift ---
+    // --- TEMPORARY: Hardcode company to Elevora Systems until SaaS shift ---
     const Company = require("../models/companySchema");
-    const abidiCompany = await Company.findOne({ name: "Abidi Solutions" });
-    const companyIdToUse = abidiCompany ? abidiCompany._id : actor.company;
+    const elevoraCompany = await Company.findOne({ companyName: "Elevora Systems" });
+    const companyIdToUse = elevoraCompany ? elevoraCompany._id : actor.company;
     
     const newUser = new User({
       email,

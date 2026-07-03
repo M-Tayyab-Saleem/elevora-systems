@@ -16,7 +16,7 @@ export const checkInNow = createAsyncThunk(
  return response.data;
  } catch (err) {
  const errorData = err.response?.data;
- console.log("Check-in error:", errorData);
+
 
  return rejectWithValue({
  message: errorData?.message || "Check-in failed",
@@ -35,11 +35,11 @@ export const checkOutNow = createAsyncThunk(
  withCredentials: true
  });
 
- console.log("Check-out response:", response.data);
+
  return response.data;
  } catch (err) {
  const errorData = err.response?.data;
- console.log("Check-out error:", errorData);
+
 
  return rejectWithValue({
  message: errorData?.message || "Check-out failed",
@@ -125,7 +125,7 @@ const attendanceTimerSlice = createSlice({
  state.checkOut = null;
  
  if (action.payload.autoClosed) {
- console.log("Previous session was auto-closed");
+
  }
  })
  .addCase(checkInNow.rejected, (state, action) => {

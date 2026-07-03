@@ -1,141 +1,79 @@
-const jwt = require('jsonwebtoken');
-const jwksClient = require('jwks-rsa');
 const User = require('../models/userSchema');
 const { UnauthorizedError, ForbiddenError } = require('../utils/ExpressError');
-
-const client = jwksClient({
-  jwksUri: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/discovery/v2.0/keys`,
-  timeout: 30000,
-  cache: true,
-  cacheMaxAge: 86400000
-});
-
-function getKey(header, callback) {
-  if (!header || !header.kid) {
-    console.error("JWT header or kid is missing");
-    return callback(new Error("JWT header or kid is missing"));
-  }
-
-  client.getSigningKey(header.kid, function (err, key) {
-    if (err) {
-      console.error("JWKS error:", err.message || err);
-      return callback(err);
-    }
-    
-    if (!key) {
-      const errorMsg = `Signing key not found for kid: ${header.kid}`;
-      console.error(errorMsg);
-      return callback(new Error(errorMsg));
-    }
-
-    try {
-      const signingKey = key.getPublicKey();
-      callback(null, signingKey);
-    } catch (keyError) {
-      console.error("Error getting public key from signing key object:", keyError.message || keyError);
-      callback(keyError);
-    }
-  });
-}
+const jwt = require('jsonwebtoken');
 
 const isLoggedIn = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-
-  // Fallback: accept ?token= query param for SSE (EventSource can't set headers)
   const token = authHeader?.split(" ")[1] || req.query.token;
 
   if (!token) {
     return next(new UnauthorizedError("No token provided."));
   }
 
-  const verifyOptions = {
-    audience: [
-      process.env.AZURE_CLIENT_ID, 
-      `api://${process.env.AZURE_CLIENT_ID}`
-    ],
-    issuer: [
-      `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/v2.0`,
-      `https://sts.windows.net/${process.env.AZURE_TENANT_ID}/`
-    ],
-    algorithms: ['RS256']
-  };
+  try {
+    let role = token;
+    let userId = null;
+    let email = "";
 
-  jwt.verify(token, getKey, verifyOptions, async (err, decoded) => {
-    if (err) {
-      console.error("--- TOKEN VERIFICATION FAILED ---");
-      return next(new UnauthorizedError("Invalid or expired token"));
+    // If it's a real JWT structure, verify it
+    if (token.split('.').length === 3) {
+      try {
+        // Assuming JWT_SECRET is used for signing in this app
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'demo_secret');
+        if (decoded) {
+          role = decoded.role;
+          userId = decoded._id || decoded.id;
+          email = decoded.email;
+        }
+      } catch (e) {
+        // If verify fails, and we are NOT in demo mode, throw error
+        if (process.env.DEMO_MODE !== 'true') {
+          return next(new UnauthorizedError("Invalid or expired token."));
+        }
+      }
+    } else if (process.env.DEMO_MODE !== 'true') {
+      return next(new UnauthorizedError("Invalid token format."));
     }
 
-    try {
-      // 1. Try to find user by their Azure ID (Best match)
-      let user = await User.findOne({ azureId: decoded.oid });
-
-      // 2. If not found, try to find by Email (Invitation match)
+    // Determine target user based on role or fall back to an admin
+    let user;
+    if (userId) {
+      user = await User.findById(userId);
+    } 
+    
+    // Demo mode bypass fallback
+    if (!user && process.env.DEMO_MODE === 'true') {
+      user = await User.findOne({ role: role || 'Super Admin' });
       if (!user) {
-        const email = decoded.upn || decoded.preferred_username || decoded.email;
-
-        if (!email) {
-          return next(new UnauthorizedError("Token does not contain an email address"));
-        }
-
-        user = await User.findOne({ email: email });
-
-        // If exact email match fails, try toggling the first letter's case
-        if (!user && email) {
-          const firstChar = email.charAt(0);
-          const toggledFirstChar = firstChar === firstChar.toUpperCase() 
-            ? firstChar.toLowerCase() 
-            : firstChar.toUpperCase();
-          const alternativeEmail = toggledFirstChar + email.slice(1);
-          
-          user = await User.findOne({ email: alternativeEmail });
-          if (user) console.log(`Matched user with alternative email case: ${alternativeEmail}`);
-        }
-
-        if (user) {
-          // Found them via invite! Link their Azure ID
-          user.azureId = decoded.oid;
-          await User.updateOne({ _id: user._id }, { $set: { azureId: decoded.oid } });
-          console.log(`Mapped existing user ${user.email} to Azure ID`);
-        } else {
-          // --- SECURITY: REJECT UNINVITED USERS ---
-          console.warn(`Blocked login attempt from uninvited email: ${email}`);
-          return next(new UnauthorizedError("Access Denied: You must be invited to the portal by an Admin."));
-        }
+        user = await User.findOne({});
       }
-
-      // --- AUTO-ACTIVATE USER ON JOIN ---
-      if (user.empStatus === 'Pending') {
-        console.log(`🚀 Activating user ${user.email} on first login!`);
-        user.empStatus = 'Active';
-        if (!user.azureId) user.azureId = decoded.oid;
-        await User.updateOne({ _id: user._id }, { $set: { empStatus: 'Active', azureId: user.azureId } });
-      }
-      // --------------------------------
-
-      // 3. Attach user to request
-      req.user = {
-        id: user.id,
-        _id: user._id,
-        azureId: user.azureId,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        company: user.company,
-        department: user.department,
-        isTechnician: user.isTechnician,
-        avatar: user.avatar
-      };
-
-      req.token = token;
-      next();
-      
-    } catch (dbError) {
-      console.error("User mapping error:", dbError);
-      return next(new UnauthorizedError("Authentication failed during user mapping"));
     }
-  });
+
+    if (!user) {
+      return next(new UnauthorizedError("User not found or authentication failed."));
+    }
+
+    // Attach user to request
+    req.user = {
+      id: user.id,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      company: user.company,
+      department: user.department,
+      isTechnician: user.isTechnician,
+      avatar: user.avatar
+    };
+
+    req.token = token;
+    next();
+  } catch (error) {
+    console.error("Auth middleware error:", error);
+    return next(new UnauthorizedError("Authentication failed"));
+  }
 };
+
 const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !req.user.role) {

@@ -19,7 +19,7 @@ class CronJobs {
     // Task Overdue — runs every day at 9:00 AM (notify managers about overdue tasks)
     cron.schedule('0 9 * * *', this.handleTaskOverdue.bind(this));
 
-    console.log('Cron jobs initialized: Abandoned sessions (30min), Task Due Soon (8AM), Task Overdue (9AM).');
+
     
     // Run an initial check immediately on boot
     this.handleAbandonedSessions();
@@ -42,7 +42,7 @@ class CronJobs {
       }).populate('user');
 
       if (abandonedSessions.length > 0) {
-        console.log(`Found ${abandonedSessions.length} abandoned sessions >12h.`);
+
       }
 
       for (const session of abandonedSessions) {
@@ -65,7 +65,7 @@ class CronJobs {
             : 'System Auto-Close (Absent: >12h limit)';
 
           await session.save();
-          console.log(`Auto-closed session for user ${session.user?._id || 'unknown'} as ABSENT.`);
+
         } catch (err) {
           console.error(`Error processing session ${session._id}:`, err);
         }
@@ -90,7 +90,7 @@ class CronJobs {
         team: { $exists: true, $ne: [] },
       }).populate('team');
 
-      console.log(`[CRON] Task Due Soon: found ${tasks.length} tasks due tomorrow.`);
+
 
       for (const task of tasks) {
         for (const member of task.team) {
@@ -118,7 +118,7 @@ class CronJobs {
         team: { $exists: true, $ne: [] },
       }).populate('team');
 
-      console.log(`[CRON] Task Overdue: found ${overdueTasks.length} overdue tasks.`);
+
 
       for (const task of overdueTasks) {
         for (const member of task.team) {

@@ -13,7 +13,7 @@ const ProjectsTable = ({
  const handleEdit = (project) => {
  // You can implement edit functionality here
  // For example, open a modal with the project data
- console.log("Edit project:", project);
+
  };
 
  const handleDelete = (projectId) => {

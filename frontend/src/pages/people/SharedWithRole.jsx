@@ -18,7 +18,7 @@ export default function Role() {
 
  const folderId = openedFolder?.id || 'root';
 async function downloadFile(url, filename = 'file.docx') {
- console.log(filename,url)
+
  try {
  const response = await fetch(url, {
  mode: 'cors' // Cloudinary supports CORS on raw files
@@ -51,7 +51,7 @@ async function downloadFile(url, filename = 'file.docx') {
 // }
  const handleResumeDownload = async (resume) => {
  try {
- console.log("Downloading resume:", resume);
+
  if (!resume.filePath) {
  toast.error("Resume URL not available");
  return;
@@ -138,9 +138,9 @@ async function downloadFile(url, filename = 'file.docx') {
  };
  
  const handleFileDownload = async (fileId) => {
- console.log("downloading file", fileId)
+
  const file=files.filter(item=> item._id===fileId)
- console.log(file)
+
  try {
  // await download(fileId)
  // downloadFile(file[0].url,file[0].name)
@@ -152,7 +152,7 @@ async function downloadFile(url, filename = 'file.docx') {
  });
  // reload()
  } catch (err) {
- console.log(err)
+
  toast.error("File upload failed")
  }
  }
@@ -180,7 +180,7 @@ async function downloadFileFromServer(fileId) {
  setError(null);
  try {
  const { data } = await api.get(`files/files`);
- console.log(data,"getting my role")
+
  // setFolders(data.folders);
  setFiles(data);
  } catch (e) {
@@ -261,7 +261,7 @@ async function downloadFileFromServer(fileId) {
  )}
  onDownload={(id) => {
  downloadFileFromServer(id)
- console.log("Download requested for role-shared file id:", id);
+
  }}
  loading={false}
  />

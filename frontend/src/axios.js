@@ -1,6 +1,4 @@
 import axios from "axios";
-import { PublicClientApplication } from "@azure/msal-browser";
-import { msalConfig, loginRequest, msalInstance } from "./authConfig";
 import { toast } from "react-toastify"; // Import toast
 
 let store;
@@ -34,34 +32,24 @@ export const injectStore = (_store) => {
 
 
 const api = axios.create({
- baseURL: "/api/v1",
+ baseURL: "http://localhost:4000/api/v1",
  timeout: 15000,
  withCredentials: true
 });
 
 api.interceptors.request.use(
- async (config) => {
- try {
- const accounts = msalInstance.getAllAccounts();
- const activeAccount = msalInstance.getActiveAccount() || accounts[0];
-
- if (activeAccount) {
- try {
- const response = await msalInstance.acquireTokenSilent({
- ...loginRequest,
- account: activeAccount
- });
- config.headers.Authorization = `Bearer ${response.idToken}`;
- } catch (error) {
- console.error("Silent token acquisition failed:", error);
- }
- }
- } catch (error) {
- console.error("MSAL initialization error:", error);
- }
- return config;
- },
- (error) => Promise.reject(error)
+  (config) => {
+    // If you need to attach token from Redux:
+    if (store) {
+      const state = store.getState();
+      const token = state.auth?.token;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
 );
 
 // --- UPDATED RESPONSE INTERCEPTOR ---

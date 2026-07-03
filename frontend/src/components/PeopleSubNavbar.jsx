@@ -150,7 +150,7 @@ const SubNavbar = ({ onAddTimeLog, activeTab, onCreateTimesheet }) => {
  isOpen={isAddTimeLogModalOpen}
  onClose={() => setIsAddTimeLogModalOpen(false)}
  onSave={(data) => {
- console.log("Saving time log:", data);
+
  setIsAddTimeLogModalOpen(false);
  }}
  />

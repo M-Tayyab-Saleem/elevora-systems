@@ -11,6 +11,7 @@ router.post("/register-company", authController.registerCompany);
 
 // Auth Routes
 router.post("/login", authController.login);
+router.post("/demo-login", authController.demoLogin);
 router.post("/verify-otp", authController.verifyOtp);
 router.post("/resend-otp", authController.resendOtp);
 router.post("/logout", authController.logout);

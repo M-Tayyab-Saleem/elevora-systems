@@ -59,7 +59,7 @@ router
 router.put("/:id/approve", restrictTo("admin", "manager", "superadmin"), expenseController.approveExpense);
 router.put("/:id/reject", restrictTo("admin", "manager", "superadmin"), validate(rejectExpenseSchema), expenseController.rejectExpense);
 
-// Receipt processing route (for Azure Document Intelligence)
+// Receipt processing route (for Document Processing)
 router.post("/process-receipt", handleUpload(uploadForProcessing), expenseController.processReceipt);
 
 module.exports = router;

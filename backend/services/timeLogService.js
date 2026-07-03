@@ -2,6 +2,7 @@ const TimeLog = require("../models/timeLogsSchema");
 const { BadRequestError, NotFoundError } = require("../utils/ExpressError");
 const { moment, TIMEZONE } = require("../utils/dateUtils");
 const { normalizeRole } = require("../utils/rbacUtils");
+const { cloudinary } = require("../config/cloudinaryConfig");
 
 class TimeLogService {
   async createTimeLog(user, companyId, data, files) {
@@ -62,6 +63,16 @@ class TimeLogService {
     }
 
     if (files && files.length > 0) {
+      for (const att of timeLog.attachments) {
+        if (att.blobName) {
+          try {
+            await cloudinary.uploader.destroy(att.blobName);
+          } catch (err) {
+            console.error(`Failed to delete old attachment from Cloudinary: ${att.blobName}`, err);
+          }
+        }
+      }
+      
       timeLog.attachments = files.map(file => ({
         blobName: file.blobName,
         url: file.url || file.path,
@@ -83,6 +94,17 @@ class TimeLogService {
     const timeLog = await TimeLog.findById(timeLogId);
     if (!timeLog) throw new NotFoundError("TimeLog");
     if (timeLog.isAddedToTimesheet) throw new BadRequestError("Cannot delete log already in timesheet");
+    
+    for (const att of timeLog.attachments) {
+      if (att.blobName) {
+        try {
+          await cloudinary.uploader.destroy(att.blobName);
+        } catch (err) {
+          console.error(`Failed to delete attachment from Cloudinary: ${att.blobName}`, err);
+        }
+      }
+    }
+    
     await timeLog.deleteOne();
   }
 
@@ -93,15 +115,7 @@ class TimeLogService {
     if (!attachment) throw new NotFoundError("Attachment");
 
     try {
-      if (attachment.blobName) {
-        const blockBlobClient = require("../config/azureConfig").containerClient.getBlockBlobClient(attachment.blobName);
-        const sasUrl = await blockBlobClient.generateSasUrl({
-          permissions: "r",
-          expiresOn: new Date(new Date().valueOf() + 300 * 1000),
-          contentDisposition: `attachment; filename="${attachment.originalname}"`
-        });
-        return sasUrl;
-      } else if (attachment.url) {
+      if (attachment.url) {
         return attachment.url;
       } else {
         throw new BadRequestError("No valid attachment URL found");

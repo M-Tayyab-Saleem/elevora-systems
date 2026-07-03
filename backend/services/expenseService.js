@@ -1,8 +1,7 @@
 const Expense = require("../models/Expense");
 const User = require("../models/userSchema");
 const { BadRequestError, NotFoundError, ForbiddenError } = require("../utils/ExpressError");
-const { processReceipt, processInvoice } = require("../utils/azureDocumentIntelligence");
-const { containerClient } = require("../config/azureConfig");
+const { cloudinary } = require('../config/cloudinaryConfig');
 const { getSearchScope } = require("../utils/rbac");
 const { getTeamIds } = require("../utils/hierarchy");
 const { createNotification } = require('../utils/notificationService');
@@ -15,13 +14,11 @@ class ExpenseService {
     const { title, description, amount, category } = data;
 
     if (!title || !amount || !category) {
-      if (file && (file.blobName || file.filename)) {
+      if (file && (file.filename || file.public_id)) {
         try {
-          const blobToDelete = file.blobName || file.filename;
-          const blockBlobClient = containerClient.getBlockBlobClient(blobToDelete);
-          await blockBlobClient.deleteIfExists();
+          await cloudinary.uploader.destroy(file.filename || file.public_id);
         } catch (err) {
-          console.error("Failed to cleanup Azure blob after validation failure:", err);
+          console.error("Failed to cleanup Cloudinary blob after validation failure:", err);
         }
       }
       throw new BadRequestError("Please provide all required fields");
@@ -274,11 +271,9 @@ class ExpenseService {
 
     if (expense.blobName || expense.receiptPublicId) {
       try {
-        const blobToDelete = expense.blobName || expense.receiptPublicId;
-        const blockBlobClient = containerClient.getBlockBlobClient(blobToDelete);
-        await blockBlobClient.deleteIfExists();
+        await cloudinary.uploader.destroy(expense.receiptPublicId || expense.blobName);
       } catch (err) {
-        console.error("Failed to delete expense receipt from Azure:", err);
+        console.error("Failed to delete expense receipt from Cloudinary:", err);
       }
     }
 
@@ -335,64 +330,24 @@ class ExpenseService {
 
   async processReceipt(file, documentType) {
     if (!file) throw new BadRequestError("Receipt image is required");
-
-    const isInvoice = documentType === "invoice";
-    const fileBuffer = file.buffer;
-    if (!fileBuffer) throw new BadRequestError("Failed to read uploaded file");
-
-    let extractedData;
-    try {
-      if (isInvoice) {
-        extractedData = await processInvoice(fileBuffer);
-      } else {
-        extractedData = await processReceipt(fileBuffer);
-      }
-
-      let description = "";
-      if (extractedData.merchantAddress || extractedData.vendorAddress) {
-        description += (extractedData.merchantAddress || extractedData.vendorAddress) + "\n";
-      }
-      
-      if (extractedData.items && extractedData.items.length > 0) {
-        description += "\nItems:\n";
-        extractedData.items.forEach((item, index) => {
-          const qty = item.quantity || 1;
-          const price = item.price || item.unitPrice || 0;
-          const total = item.totalPrice || item.amount || 0;
-          const itemDesc = item.description || `Item ${index + 1}`;
-          description += `- ${itemDesc} (Qty: ${qty}) - $${price.toFixed(2)} each = $${total.toFixed(2)}\n`;
-        });
-      }
-      
-      if (extractedData.subtotal) description += `\nSubtotal: $${extractedData.subtotal.toFixed(2)}`;
-      if (extractedData.tax) description += `\nTax: $${extractedData.tax.toFixed(2)}`;
-      if (extractedData.tip) description += `\nTip: $${extractedData.tip.toFixed(2)}`;
-      if (extractedData.total) description += `\nTotal: $${extractedData.total.toFixed(2)}`;
-
-      return {
-        title: extractedData.merchant || extractedData.vendor || "",
-        description: description.trim(),
-        amount: extractedData.total || 0,
-        category: "other",
-        vendor: extractedData.merchant || extractedData.vendor || "",
-        date: extractedData.date || new Date().toISOString(),
-        currency: extractedData.currency || "USD",
-        items: extractedData.items || [],
-        subtotal: extractedData.subtotal || 0,
-        tax: extractedData.tax || 0,
-        tip: extractedData.tip || 0,
-        confidence: extractedData.confidence || 0,
-        raw: extractedData
-      };
-    } catch (error) {
-      if (error.message.includes("Azure Document Intelligence API key")) {
-        throw new BadRequestError("Azure Document Intelligence service is not configured");
-      }
-      if (error.message.includes("No receipt data found") || error.message.includes("No invoice data found")) {
-        throw new BadRequestError("Could not extract data from the image. Please ensure the image is clear and try again.");
-      }
-      throw new BadRequestError("Error processing document: " + error.message);
-    }
+    
+    // Cloudinary automatically provides standard fields. Since Document Intelligence is removed,
+    // we return a standard fallback structure or rely on user's manual input on the frontend.
+    return {
+      title: "Extracted Receipt",
+      description: "Auto-extraction disabled. Please fill details manually.",
+      amount: 0,
+      category: "other",
+      vendor: "",
+      date: new Date().toISOString(),
+      currency: "USD",
+      items: [],
+      subtotal: 0,
+      tax: 0,
+      tip: 0,
+      confidence: 1,
+      raw: {}
+    };
   }
 
   async exportExpenses(user, companyId) {

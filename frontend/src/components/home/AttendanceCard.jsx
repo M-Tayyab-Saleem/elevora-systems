@@ -30,7 +30,7 @@ const AttendanceCard = ({ onDelete }) => {
  const year = weekStart.getFullYear();
  
  const response = await api.get(`/timetrackers/attendance/${month}/${year}`);
- console.log("Weekly Attendance Data:", response.data);
+
  processWeeklyData(response.data, weekStart);
  } catch (error) {
  toast.error("Failed to load attendance data");
@@ -84,7 +84,7 @@ const AttendanceCard = ({ onDelete }) => {
  });
  }
 
- console.log("Processed Weekly Data:", days);
+
  setWeeklyData(days);
  };
 

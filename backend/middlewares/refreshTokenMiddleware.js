@@ -47,15 +47,15 @@ const refreshTokenMiddleware = catchAsync(async (req, res, next) => {
       // First, find user by ID only to check if user exists
       const userExists = await User.findById(decodedRefresh.id);
       if (!userExists) {
-        console.log("User not found with ID:", decodedRefresh.id);
+
         return next(new UnauthorizedError("User not found, please login again"));
       }
 
       // Then check if refresh token matches
       if (userExists.refreshToken !== refreshToken) {
-        console.log("Refresh token mismatch for user:", decodedRefresh.id);
-        console.log("Expected:", userExists.refreshToken?.substring(0, 20) + "...");
-        console.log("Received:", refreshToken.substring(0, 20) + "...");
+
+
+
         return next(new UnauthorizedError("Session invalid, please login again"));
       }
 
@@ -94,7 +94,7 @@ const refreshTokenMiddleware = catchAsync(async (req, res, next) => {
       };
       req.token = newToken;
 
-      console.log("Token refreshed successfully for user:", user.email);
+
       return next();
     } catch (refreshError) {
       console.error("Refresh token error:", refreshError.message);

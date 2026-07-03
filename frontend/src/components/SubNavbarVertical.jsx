@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import { moduleConfigs } from "../routeConfig";
 import { useDispatch, useSelector } from "react-redux";
-import { useMsal } from "@azure/msal-react";
 import { logout } from "../slices/authSlice";
 import api from "../axios";
 import { useTheme } from "../context/ThemeContext";
@@ -32,7 +31,6 @@ const SubNavbarVertical = () => {
  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
  const settingsRef = useRef(null);
  const dispatch = useDispatch();
- const { instance } = useMsal();
 
  // Theme support
  const { themeMode, setThemeMode } = useTheme();
@@ -56,13 +54,7 @@ const SubNavbarVertical = () => {
       console.warn("Logout API failed:", err.message);
     } finally {
       dispatch(logout());
-      
-      const accounts = instance?.getAllAccounts?.();
-      if (accounts && accounts.length > 0) {
-        instance.logoutRedirect({ postLogoutRedirectUri: window.location.origin });
-      } else {
-        navigate("/auth/login");
-      }
+      navigate("/auth/login");
     }
   };
 

@@ -6,6 +6,12 @@ const getFileUrl = (req) => {
   if (!req.file) return null;
   if (req.file.url) return req.file.url; 
   if (req.file.location) return req.file.location; 
+  
+  // Cloudinary often stores the URL in req.file.path
+  if (req.file.path && req.file.path.startsWith('http')) {
+    return req.file.path;
+  }
+
   let cleanPath = req.file.path.replace(/\\/g, "/");
   cleanPath = cleanPath.replace(/^public\//, "");
   return `${req.protocol}://${req.get('host')}/${cleanPath}`;

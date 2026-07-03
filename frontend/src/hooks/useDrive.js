@@ -17,7 +17,7 @@ export function useFolderContents(folder) {
  setError(null)
  try {
  const { data } = await api.get(`/files/folders/${folderId}/contents`)
- console.log("getting files and folder", data)
+
  
  // Handle the response structure properly
  if (data.status === 'success') {
@@ -29,7 +29,7 @@ export function useFolderContents(folder) {
  }
  } catch (e) {
  setError(e)
- console.log(e, "get files")
+
  } finally {
  setLoading(false)
  }
@@ -50,7 +50,7 @@ export function useMyFiles() {
  setError(null);
  try {
  const { data } = await api.get('/files/files/getMyFiles');
- console.log("Fetched my files:", data);
+
  
  // Handle different response formats
  if (data.status === 'success') {
@@ -192,12 +192,12 @@ export function useFolderCreator() {
  parentId: parentId === 'root' ? null : parentId,
  ownerId 
  })
- console.log("Folder creation response:", data)
+
  
  return data.status === 'success' ? data.data : data;
  } catch (e) {
  setError(e)
- console.log(e.response?.data)
+
  throw e
  } finally {
  setLoading(false)

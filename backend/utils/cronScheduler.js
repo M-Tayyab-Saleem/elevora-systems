@@ -44,7 +44,7 @@ const sendEmailNotification = async (logsData) => {
   const adminUsers = await User.find({ role: "Admin" });
 
   if (adminUsers.length === 0) {
-    console.log("No admin users found.");
+
     return;
   }
 
@@ -53,7 +53,7 @@ const sendEmailNotification = async (logsData) => {
 
   // Define the email options
   const mailOptions = {
-    from: "no-reply@viaride.com", // Your email
+    from: "no-reply@elevora-systems-demo.com", // Your email
     to: adminEmails, // Send to all admin emails
     subject: "Logs from the Last 30 Minutes",
     html: `
@@ -62,7 +62,7 @@ const sendEmailNotification = async (logsData) => {
           <table style="width: 100%; background-color: #ffffff; padding: 20px;">
             <tr>
               <td>
-                <h2 style="font-size: 24px; color: #007bff; margin-bottom: 20px;">Viaride Portal - Logs Update</h2>
+                <h2 style="font-size: 24px; color: #007bff; margin-bottom: 20px;">Elevora Portal - Logs Update</h2>
                 <p style="font-size: 16px; line-height: 1.6; color: #555;">
                   Dear Admin,
                 </p>
@@ -77,13 +77,13 @@ const sendEmailNotification = async (logsData) => {
                 </p>
                 <p style="font-size: 16px; line-height: 1.6; color: #555;">
                   Best Regards,<br>
-                  <strong>The Viaride Team</strong><br>
-                  <a href="mailto:support@viaride.com" style="color: #007bff;">support@viaride.com</a>
+                  <strong>The Elevora Team</strong><br>
+                  <a href="mailto:support@elevora-systems-demo.com" style="color: #007bff;">support@elevora-systems-demo.com</a>
                 </p>
                 <hr style="border: 1px solid #f1f1f1;">
                 <footer style="text-align: center; font-size: 12px; color: #aaa; padding-top: 10px;">
-                  <p>&copy; 2025 Viaride. All rights reserved.</p>
-                  <p>For support or inquiries, contact us at <a href="mailto:support@viaride.com" style="color: #007bff;">support@viaride.com</a></p>
+                  <p>&copy; 2026 Elevora Systems. All rights reserved.</p>
+                  <p>For support or inquiries, contact us at <a href="mailto:support@elevora-systems-demo.com" style="color: #007bff;">support@elevora-systems-demo.com</a></p>
                 </footer>
               </td>
             </tr>
@@ -112,7 +112,7 @@ const sendEmailNotification = async (logsData) => {
       if (err) {
         console.error("Error deleting the temporary file:", err);
       } else {
-        console.log("Temporary file deleted.");
+
       }
     });
   });
@@ -124,7 +124,7 @@ cron.schedule("0 0 * * *", async () => {
     const now = new Date();
     const thirtyMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000); // Subtract 5 minutes from the current time
 
-    console.log(`Cron job executed at: ${now.toISOString()}`);
+
     console.log(
       `Searching for logs between ${thirtyMinutesAgo.toISOString()} and ${now.toISOString()}`
     );
@@ -150,7 +150,7 @@ cron.schedule("0 0 * * *", async () => {
         `${deletedLogs.deletedCount} logs deleted from the database.`
       );
     } else {
-      console.log("No logs found in the last 5 minutes.");
+
     }
   } catch (err) {
     console.error("Error processing logs:", err);

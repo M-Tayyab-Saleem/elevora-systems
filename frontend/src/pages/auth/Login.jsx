@@ -1,83 +1,80 @@
 import React, { useEffect } from "react";
-import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../../authConfig";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { syncAzureUser, setAzureAccount } from "../../slices/authSlice";
+import { loginAsDemoUser } from "../../slices/authSlice";
 import { toast } from "react-toastify";
+import { UserCircleIcon, ShieldCheckIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 
 const Login = () => {
- const { instance, accounts, inProgress } = useMsal();
- const navigate = useNavigate();
- const dispatch = useDispatch();
- const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
 
- const handleLogin = () => {
- instance.loginRedirect(loginRequest).catch((e) => {
- console.error("Login redirect error:", e);
- toast.error("Login failed. Please try again.");
- });
- };
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === 'Admin' || user.role === 'Super Admin') {
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        navigate("/people/home", { replace: true });
+      }
+    }
+  }, [isAuthenticated, user, navigate]);
 
- useEffect(() => {
- if (accounts.length > 0) {
- if (!isAuthenticated && !loading) {
- dispatch(setAzureAccount(accounts[0]));
- 
- dispatch(syncAzureUser())
- .unwrap()
- .then((userData) => {
- console.log("Sync successful:", userData);
- })
- .catch((error) => {
- console.error("Sync failed:", error);
- 
- // --- FIX: Show the REAL error from Backend (Access Denied) ---
- const errorMessage = error?.message || error || "Login failed";
- 
- if (errorMessage.includes("Access Denied") || errorMessage.includes("uninvited")) {
- toast.error("ACCESS DENIED: You must be invited to the portal by an Admin.");
- } else {
- toast.error(errorMessage);
- }
- });
- }
- }
- }, [accounts, dispatch, isAuthenticated, loading]);
+  const handleDemoLogin = (role) => {
+    dispatch(loginAsDemoUser(role))
+      .unwrap()
+      .then((userData) => {
+        toast.success(`Logged in as ${role}`);
+      })
+      .catch((error) => {
+        console.error("Demo login failed:", error);
+        toast.error(error?.message || "Demo login failed");
+      });
+  };
 
- useEffect(() => {
- if (isAuthenticated && user) {
- navigate("/people/home", { replace: true });
- }
- }, [isAuthenticated, user, navigate]);
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-app px-4 w-full">
+      <div className="glass-card p-8 shadow-md text-center max-w-md w-full mb-8">
+        <h1 className="text-4xl font-black text-amber-600 mb-2">Elevora</h1>
+        <h2 className="text-heading text-2xl font-bold mb-2">Portfolio Demo</h2>
+        <p className="text-muted mb-8 text-sm">Experience the platform from different perspectives without a password.</p>
 
- return (
- <div className="flex items-center justify-center min-h-screen bg-app px-4 w-full">
- <div className="glass-card p-8 shadow-md text-center max-w-md w-full">
- <div className="flex justify-center mb-6">
- <img src="https://cdn-icons-png.flaticon.com/512/732/732221.png" alt="Microsoft" className="w-16 h-16"/>
- </div>
-
- <h2 className="text-heading text-3xl font-bold mb-2">Welcome Back</h2>
- <p className="text-muted mb-8">Sign in with your corporate account</p>
-
- {loading || inProgress !== "none" ? (
- <div className="text-main">
- <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand mx-auto mb-2"></div>
- <p>Loading your profile...</p>
- </div>
- ) : (
- <button
- onClick={handleLogin}
- className="btn btn-primary w-full flex items-center justify-center gap-2"
- >
- <img src="https://learn.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_mssymbol_19.png" alt="" className="h-5"/>
- Sign in with Microsoft
- </button>
- )}
- </div>
- </div>
- );
+        {loading ? (
+          <div className="text-main">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-amber-600 mx-auto mb-2"></div>
+            <p>Loading demo workspace...</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={() => handleDemoLogin('Super Admin')}
+              className="btn btn-primary w-full flex items-center justify-center gap-2 hover:-translate-y-0.5 transition-transform"
+            >
+              <ShieldCheckIcon className="h-5 w-5" />
+              Continue as Super Admin
+            </button>
+            <button
+              onClick={() => handleDemoLogin('HR')}
+              className="btn bg-blue-600 hover:bg-blue-700 text-white w-full flex items-center justify-center gap-2 hover:-translate-y-0.5 transition-transform"
+            >
+              <UserGroupIcon className="h-5 w-5" />
+              Continue as HR Manager
+            </button>
+            <button
+              onClick={() => handleDemoLogin('Employee')}
+              className="btn bg-green-600 hover:bg-green-700 text-white w-full flex items-center justify-center gap-2 hover:-translate-y-0.5 transition-transform"
+            >
+              <UserCircleIcon className="h-5 w-5" />
+              Continue as Employee
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="text-center text-xs text-muted max-w-md">
+        <p>This is a portfolio showcase. All data is fictional and resets automatically. Destructive actions are simulated.</p>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

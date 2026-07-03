@@ -376,7 +376,7 @@ export default function EditProfile() {
  {/* --- BANNER (READONLY in edit mode) --- */}
  <div className="relative h-28 md:h-40 rounded-[1.5rem] overflow-hidden shadow-md bg-slate-200">
  <img
- src={user.coverImage || "https://data3262.blob.core.windows.net/hr-portal/abidiPro/users/profile_photos/Abidi-Solutions-Banner%201_1774560002057.jpg"}
+ src={user.coverImage || "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1200&q=80"}
  alt="Banner"
  className="w-full h-full object-cover"
  onError={(e) => {e.target.src = 'https://via.placeholder.com/1200x300?text=No+Cover+Image'}}

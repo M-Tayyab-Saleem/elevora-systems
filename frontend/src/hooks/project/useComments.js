@@ -11,7 +11,7 @@ export const useComments = (projectId) => {
  id: 1,
  user: {
  id: 1,
- name: "John Doe",
+ name: "Demo User",
  avatar: "/generic-person.png"
  },
  content: "Great progress on this project! The new design system looks amazing and will really help with consistency across the platform.",

@@ -39,37 +39,6 @@ const UploadModal = ({ onCreate }) => {
  <div className="flex justify-end">
  <button
  onClick={() => setIsOpen(true)}
-import GlassModal from "../../components/ui/GlassModal";
-
-const UploadModal = ({ onCreate }) => {
- const [isOpen, setIsOpen] = useState(false);
- const [folderName, setFolderName] = useState("");
-
- const handleClose = () => {
- setFolderName("");
- setIsOpen(false);
- };
-
- const handleSubmit = (e) => {
- e.preventDefault();
- if (!folderName.trim()) {
- toast.error("Folder name is required");
- return;
- }
- onCreate({
- name: folderName,
- file: "",
- createdAt: new Date().toISOString(),
- });
- handleClose();
- };
-
- return (
- <>
- {/* Trigger Button */}
- <div className="flex justify-end">
- <button
- onClick={() => setIsOpen(true)}
  className="flex items-center gap-2 bg-[#64748b] text-white text-[10px] font-black uppercase tracking-widest px-6 py-3 rounded-xl hover:brightness-110 transition-all shadow-lg shadow-slate-100"
  >
  <FiUpload className="text-sm" /> Upload Document

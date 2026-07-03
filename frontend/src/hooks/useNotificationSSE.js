@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addRealtimeNotification, fetchUnreadCount } from '../slices/notificationSlice';
-import { PublicClientApplication } from '@azure/msal-browser';
-import { msalConfig, loginRequest, msalInstance } from '../authConfig';
 import axios from '../axios';
 
 
@@ -16,25 +14,15 @@ import axios from '../axios';
  */
 export const useNotificationSSE = (isAuthenticated) => {
  const dispatch = useDispatch();
- const sourceRef = useRef(null);
- const reconnectTimer = useRef(null);
+  const sourceRef = useRef(null);
+  const reconnectTimer = useRef(null);
+  const token = useSelector((state) => state.auth?.token);
 
- const connect = async () => {
- try {
+  const connect = async () => {
+    try {
+      if (!token) return;
 
- const accounts = msalInstance.getAllAccounts();
- const activeAccount = msalInstance.getActiveAccount() || accounts[0];
- if (!activeAccount) return;
-
- const tokenResponse = await msalInstance.acquireTokenSilent({
- ...loginRequest,
- account: activeAccount,
- });
-
- const token = tokenResponse.idToken;
- if (!token) return;
-
- // Close any existing connection
+      // Close any existing connection
  if (sourceRef.current) {
  sourceRef.current.close();
  }
@@ -44,7 +32,7 @@ export const useNotificationSSE = (isAuthenticated) => {
  sourceRef.current = source;
 
  source.onopen = () => {
- console.log('[SSE] Notification stream connected.');
+
  // Refresh unread count on reconnect
  dispatch(fetchUnreadCount());
  };

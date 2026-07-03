@@ -16,9 +16,10 @@ export const useProject = (projectId) => {
  createdAt: "2024-01-15",
  teamMembers: [
  {
- id: 1,
- name: "John Doe",
- role: "Project Manager",
+ id: "demo-user",
+ name: "Demo User",
+ email: "demo@elevora-systems-demo.com",
+ role: "Demo",
  avatar: "/generic-person.png"
  },
  {

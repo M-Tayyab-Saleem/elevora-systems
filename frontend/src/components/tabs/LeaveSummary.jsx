@@ -57,7 +57,7 @@ const LeaveSummary = () => {
  try {
  const response = await api.get("/holidays");
  setHolidays(response.data?.data || response.data);
- console.log("holidays", response.data?.data || response.data);
+
 
  } catch (err) {
  console.error("Failed to fetch holidays:", err);

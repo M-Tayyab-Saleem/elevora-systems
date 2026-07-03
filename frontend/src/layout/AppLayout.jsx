@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useMsal } from "@azure/msal-react";
 import { logout } from "../slices/authSlice";
-
+import api from "../axios";
 import NavbarVertical from "../components/NavbarVertical";
 import SubNavbarVertical from "../components/SubNavbarVertical";
 import RightSidebar from "../components/RightSidebar";
@@ -12,7 +11,7 @@ import {
  XMarkIcon
 } from "@heroicons/react/24/solid";
 import NotificationModal from "../components/Notification";
-import ChangelogModal from "../components/ChangelogModal";
+
 
 const AppLayout = () => {
  const [isRightBarOpen, setRightBarOpen] = useState(true);
@@ -28,7 +27,6 @@ const AppLayout = () => {
  // -----------------------
 
  const dispatch = useDispatch();
- const { instance } = useMsal();
 
  useEffect(() => {
  setIsMobileMenuOpen(false);
@@ -44,27 +42,27 @@ const AppLayout = () => {
  return () => document.removeEventListener("mousedown", handleClickOutside);
  }, []);
 
- const handleLogout = () => {
- dispatch(logout());
- instance.logoutRedirect({
- postLogoutRedirectUri: window.location.origin,
- }).catch(e => {
- console.error("Logout error:", e);
- });
- };
+ const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch (e) {
+      console.error("Logout error:", e);
+    }
+    dispatch(logout());
+    window.location.href = "/auth/login";
+  };
 
  return (
  <div className="flex flex-col h-screen w-full bg-transparent font-sans overflow-hidden text-main">
  <NotificationModal isOpen={isNotificationOpen} onClose={() => setIsNotificationOpen(false)} />
- <ChangelogModal />
  {/* --- MOBILE HEADER --- */}
  <div className="md:hidden flex items-center justify-between px-4 py-3 bg-transparent z-50 shrink-0">
  <div className="flex items-center gap-2">
  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shadow-md theme-brand-badge">
- A
+ E
  </div>
  <span className="text-sm font-bold tracking-tight uppercase theme-mobile-label">
- Abidi Pro
+ Elevora
  </span>
  </div>
  <button

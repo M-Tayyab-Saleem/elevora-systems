@@ -1,7 +1,7 @@
 const Ticket = require("../models/ticketManagementSchema");
 const User = require("../models/userSchema");
 const { NotFoundError, BadRequestError, ForbiddenError } = require("../utils/ExpressError");
-const { containerClient } = require("../config/azureConfig");
+const { cloudinary } = require("../config/cloudinaryConfig");
 const { getSearchScope } = require("../utils/rbac");
 const sendEmail = require('../utils/emailService');
 const { createNotification } = require('../utils/notificationService');
@@ -142,6 +142,18 @@ class TicketService {
   async deleteTicket(companyId, ticketId) {
     const ticket = await Ticket.findOne({ _id: ticketId, company: companyId });
     if (!ticket) throw new NotFoundError("Ticket");
+
+    if (ticket.attachments && ticket.attachments.length > 0) {
+      for (const att of ticket.attachments) {
+        if (att.blobName) {
+          try {
+            await cloudinary.uploader.destroy(att.blobName);
+          } catch (err) {
+            console.error(`Failed to delete old attachment from Cloudinary: ${att.blobName}`, err);
+          }
+        }
+      }
+    }
 
     if (ticket.closedBy) {
       createNotification({
@@ -309,15 +321,7 @@ class TicketService {
     if (!attachment) throw new NotFoundError("Attachment");
 
     try {
-      if (attachment.blobName) {
-        const blockBlobClient = containerClient.getBlockBlobClient(attachment.blobName);
-        const sasUrl = await blockBlobClient.generateSasUrl({
-          permissions: "r",
-          expiresOn: new Date(new Date().valueOf() + 300 * 1000),
-          contentDisposition: `attachment; filename="${attachment.name}"`
-        });
-        return sasUrl;
-      } else if (attachment.url) {
+      if (attachment.url) {
         return attachment.url;
       } else {
         throw new BadRequestError("No valid attachment URL found");

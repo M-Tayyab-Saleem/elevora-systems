@@ -3,11 +3,7 @@ const mongooseDelete = require('mongoose-delete');
 
 const userSchema = new mongoose.Schema(
   {
-    azureId: {
-      type: String,
-      unique: true,
-      sparse: true,
-    },
+
     email: {
       type: String,
       required: true,

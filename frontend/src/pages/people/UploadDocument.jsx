@@ -162,7 +162,7 @@ const UploadDocument = () => {
  }
 
  const handleDeleteFile = async (fileId) => {
- console.log("Attempting to delete file:", fileId)
+
  if (!window.confirm("Are you sure you want to delete this file?")) return
 
  try {
@@ -177,7 +177,7 @@ const UploadDocument = () => {
  }
 
  const handleDeleteFolder = async (folderId) => {
- console.log("Attempting to delete folder:", folderId)
+
  if (!window.confirm("Are you sure you want to delete this folder?")) return
 
  try {
@@ -555,7 +555,7 @@ const UploadDocument = () => {
  >
  <MenuItem
  onClick={() => {
- console.log("Delete folder clicked:", selectedFolderId)
+
  handleDeleteFolder(selectedFolderId)
  }}
  sx={{ 
@@ -604,7 +604,7 @@ const UploadDocument = () => {
  </MenuItem>
  <MenuItem
  onClick={() => {
- console.log("Download file:", selectedFileId)
+
  handleFileDownload(selectedFileId)
  handleCloseFileMenu()
  }}
@@ -619,7 +619,7 @@ const UploadDocument = () => {
  </MenuItem>
  <MenuItem
  onClick={() => {
- console.log("Delete file clicked:", selectedFileId)
+
  handleDeleteFile(selectedFileId)
  }}
  sx={{ 
